@@ -1,23 +1,23 @@
 # Aquila
-Aquila is an open-source 32-bit RISC-V compliant processor for Xilinx FPGAs, released under the BSD-3-Clause Licence. The processor core is encapsulated as a reusable IP for Xilinx Vivado EDA tools. You can use the Vivado Block Diagram Editor to integrates Aquila with thousands of Vivado IPs to create an application processor SoC for different applications.
+Aquila is an open-source 32-bit RISC-V compliant processor for Xilinx FPGAs, released under the BSD-3-Clause Licence. The processor core is encapsulated as a reusable IP for Xilinx Vivado EDA tools. You can use the Vivado Block Diagram Editor to integrates Aquila with other IPs in Vivado IP catalog to create an application-specific processor SoC.
 
 Currently, the microarchitecture of Aquila implements the classical five-stage pipeline RISC architecture with in-order execution. Since Aquila is intended for HW-SW codesigned intelligent systems, heavy-lifting tasks will be handled by HW accelerators. Therefore, we are not in a hurry to move over to a superscalar architecture. System-level stability and full-feature OS support will be the focus of development for now.
 
-Aquila is designed for implementing intelligent system SoCs for Xilinx FPGAs from scratch. Therefore, in this preview version of Aquila, the default behavior of Aquila, when configured into a Xilinx FPGA, will execute a boot ROM to load a binary executable from the Host PC through the UART connection. We will provide different boot ROMs in the future to boot the system from other devices (such as the SD card).
+Aquila is designed for implementing intelligent system SoCs for Xilinx FPGAs. Therefore, in this preview version of Aquila, the default behavior, when configured into a Xilinx FPGA, is to execute a boot code stored in ROM to load a binary executable from the Host PC through the UART connection. We will provide different boot ROMs in the future to boot the system from other devices (such as the SD card) to facilitate the design of a turn-key system.
 
 # Specification
 The current version of Aquila is 0.9. This is a pre-view version with the following specification:
 
 - RV32IM ISA-compliant.
 - CSRs & related instructions for M mode.
-- L1 data and instruction caches.
+- L1 data and instruction caches (configurable sizes).
 - CLINT for standard timer interrupts.
 
 The following features are under development and should be ready by summer:
 
 - Atomic instructions.
 - MMU.
-- S-mode CSRs.
+- S mode CSRs.
 - Multi-core support.
 - Support for SD card I/O.
 
