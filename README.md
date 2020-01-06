@@ -29,7 +29,7 @@ We will provide Vivado workspace for other less expensive platforms, such as the
 # User's Guide
 A simple user's guide to Aquila is available [here](https://github.com/eisl-nctu/aquila/blob/master/docs/aquila_manual.pdf).
 
-# Snapshots of Vivado workspace of Aquila
+# Snapshots of Vivado Workspaces of Aquila
 It would be more convenient for users to test out Aquila if we archive different versions of the Vivado workspaces for Aquila. So, here it is.
 
 - Aquila version [0.9 preview](https://github.com/eisl-nctu/aquila/tree/master/archive/aquila_soc_0.9_preview.tgz). Tested with Vivado 2018.2 on Xilinx KC705.
