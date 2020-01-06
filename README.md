@@ -21,6 +21,11 @@ The following features are under development and should be ready by summer:
 - Multi-core support.
 - Support for SD card I/O.
 
+# Synthesis of Aquila
+Aquila is developed and tested using Xilinx KC-705 development platform. Implementing an Aquila SoC would be fairly straightforward if you are familiar with the GUI IDE of Vivado. If you have to modify the boot ROM memory file (inside the BDM IP), the source code and build script of the boot ROM is under sw/uartboot/. Please refer to the User’s Guide for more details about the Aquila SoC.
+
+We will provide Vivado workspace for other less expensive platforms, such as the Arty, soon. However, KC-705 will most likely the main development platform for Aquila SoCs.
+
 # User's Guide
 A simple user's guide to Aquila is available [here](https://github.com/eisl-nctu/aquila/blob/master/docs/aquila_manual.pdf).
 
@@ -31,3 +36,10 @@ It would be more convenient for users to test out Aquila if we archive different
 
 # Acknowledgment
 This work is partly funded by the Chip Implementation Center (CIC), National Applied Research Laboratories, Taiwan, ROC.
+
+# Contact Info
+Embedded Intelligent Systems Lab
+Department of Computer Science
+National Chiao Tung University
+
+eisl.nctu<at>gmail
