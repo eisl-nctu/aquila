@@ -9,9 +9,9 @@ Aquila is designed for implementing intelligent system SoCs for Xilinx FPGAs fro
 The current version of Aquila is 0.9. This is a pre-view version with the following specification:
 
 - RV32IM ISA-compliant.
-- CSRs & related instructions for M mode supported.
-- L1 data and instruction caches implemented.
-- CLINT implemented.
+- CSRs & related instructions for M mode.
+- L1 data and instruction caches.
+- CLINT for standard timer interrupts.
 
 The following features are under development and should be ready by summer:
 
