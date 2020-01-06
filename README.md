@@ -42,4 +42,4 @@ Embedded Intelligent Systems Lab (EISL)
 Department of Computer Science  
 National Chiao Tung University  
   
-eisl.nctu<at>gmail
+eisl.nctu-at-gmail
