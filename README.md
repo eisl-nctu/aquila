@@ -22,12 +22,12 @@ The following features are under development and should be ready by summer:
 - Support for SD card I/O.
 
 # User's Guide of Aquila
-A simple user's guide to Aquila is available [here](https://github.com//eisl-nctu/aquila/docs/aquila_manual.pdf).
+A simple user's guide to Aquila is available [here](https://github.com/eisl-nctu/aquila/docs/aquila_manual.pdf).
 
 # Snapshots of Vivado workspace for Aquila
 It would be more convenient for users to test out Aquila if we archive different versions of the Vivado workspaces for Aquila. So, here it is.
 
-- Aquila version [0.9 preview](https://github.com//eisl-nctu/aquila/archive). Tested with Vivado 2018.2 on Xilinx KC705.
+- Aquila version [0.9 preview](https://github.com/eisl-nctu/aquila/archive). Tested with Vivado 2018.2 on Xilinx KC705.
 
 # Acknowledgment
 This work is partly funded by the Chip Implementation Center (CIC), National Applied Research Laboratories, Taiwan, ROC.
