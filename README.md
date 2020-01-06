@@ -1,5 +1,5 @@
 # Aquila
-Aquila is an open-source 32-bit RISC-V compliant processor for Xilinx FPGAs. The processor core is encapsulated as a reusable IP for Xilinx Vivado EDA tools. You can use the Vivado Block Diagram Editor to integrates Aquila with thousands of Vivado IPs to create an application processor SoC for different applications.
+Aquila is an open-source 32-bit RISC-V compliant processor for Xilinx FPGAs, released under the BSD-3-Clause Licence. The processor core is encapsulated as a reusable IP for Xilinx Vivado EDA tools. You can use the Vivado Block Diagram Editor to integrates Aquila with thousands of Vivado IPs to create an application processor SoC for different applications.
 
 Currently, the microarchitecture of Aquila implements the classical five-stage pipeline RISC architecture with in-order execution. Since Aquila is intended for HW-SW codesigned intelligent systems, heavy-lifting tasks will be handled by HW accelerators. Therefore, we are not in a hurry to move over to a superscalar architecture. System-level stability and full-feature OS support will be the focus of development for now.
 
