@@ -12,6 +12,7 @@ The current version of Aquila is 0.9. This is a pre-view version with the follow
 - CSRs & related instructions for M mode.
 - L1 data and instruction caches (configurable sizes).
 - CLINT for standard timer interrupts.
+- The RTL model written in Verilog.
 
 The following features are under development and should be ready by summer:
 
@@ -19,10 +20,10 @@ The following features are under development and should be ready by summer:
 - MMU.
 - S mode CSRs.
 - Multi-core support.
-- Support for SD card I/O.
+- SD card I/O support.
 
 # Synthesis of Aquila
-Aquila is developed and tested using Xilinx KC-705 development platform. Implementing an Aquila SoC would be fairly straightforward if you are familiar with the GUI IDE of Vivado. If you have to modify the boot ROM memory file (inside the BDM IP), the source code and build script of the boot ROM is under sw/uartboot/. Please refer to the User’s Guide for more details about the Aquila SoC.
+Aquila is developed and tested using Xilinx KC-705 development platform. Implementing an Aquila SoC would be fairly straightforward if you are familiar with the GUI IDE of Vivado. If you have to modify the boot ROM memory file (inside the BDM IP), the source code and the build script of the boot ROM is under sw/uartboot/. Please refer to the User’s Guide for more details about the Aquila SoC.
 
 We will provide Vivado workspace for other less expensive platforms, such as the Arty, soon. However, KC-705 will most likely the main development platform for Aquila SoCs.
 
