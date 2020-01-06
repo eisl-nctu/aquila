@@ -38,10 +38,8 @@ It would be more convenient for users to test out Aquila if we archive different
 This work is partly funded by the Chip Implementation Center (CIC), National Applied Research Laboratories, Taiwan, ROC.
 
 # Contact Info
-Embedded Intelligent Systems Lab
-
-Department of Computer Science
-
-National Chiao Tung University
-
+Embedded Intelligent Systems Lab (EISL)  
+Department of Computer Science  
+National Chiao Tung University  
+  
 eisl.nctu<at>gmail
