@@ -5,7 +5,7 @@ Currently, the microarchitecture of Aquila implements the classical five-stage p
 
 Aquila is designed for implementing intelligent system SoCs for Xilinx FPGAs from scratch. Therefore, in this preview version of Aquila, the default behavior of Aquila, when configured into a Xilinx FPGA, will execute a boot ROM to load a binary executable from the Host PC through the UART connection. We will provide different boot ROMs in the future to boot the system from other devices (such as the SD card).
 
-# Specification of Aquila
+# Specification
 The current version of Aquila is 0.9. This is a pre-view version with the following specification:
 
 - RV32IM ISA-compliant.
@@ -21,13 +21,13 @@ The following features are under development and should be ready by summer:
 - Multi-core support.
 - Support for SD card I/O.
 
-# User's Guide of Aquila
+# User's Guide
 A simple user's guide to Aquila is available [here](https://github.com/eisl-nctu/aquila/blob/master/docs/aquila_manual.pdf).
 
 # Snapshots of Vivado workspace for Aquila
 It would be more convenient for users to test out Aquila if we archive different versions of the Vivado workspaces for Aquila. So, here it is.
 
-- Aquila version [0.9 preview](https://github.com/eisl-nctu/aquila/archive). Tested with Vivado 2018.2 on Xilinx KC705.
+- Aquila version [0.9 preview](https://github.com/eisl-nctu/aquila/tree/master/archive/aquila_soc_0.9_preview.tgz). Tested with Vivado 2018.2 on Xilinx KC705.
 
 # Acknowledgment
 This work is partly funded by the Chip Implementation Center (CIC), National Applied Research Laboratories, Taiwan, ROC.
