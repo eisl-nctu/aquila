@@ -39,7 +39,9 @@ This work is partly funded by the Chip Implementation Center (CIC), National App
 
 # Contact Info
 Embedded Intelligent Systems Lab
+
 Department of Computer Science
+
 National Chiao Tung University
 
 eisl.nctu<at>gmail
