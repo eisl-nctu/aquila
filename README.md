@@ -10,7 +10,7 @@ The current version of Aquila is 0.9. This is a pre-view version with the follow
 
 - RV32IM ISA-compliant.
 - CSRs & related instructions for M mode.
-- L1 data and instruction caches (configurable sizes).
+- L1 data and instruction caches (configurable size).
 - CLINT for standard timer interrupts.
 - The RTL model written in Verilog.
 
