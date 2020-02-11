@@ -313,6 +313,7 @@ wire bdm_1_M_BOOT_PORT_WVALID;
         .m_boot_port_wready(bdm_1_M_BOOT_PORT_WREADY),
         .m_boot_port_wstrb(bdm_1_M_BOOT_PORT_WSTRB),
         .m_boot_port_wvalid(bdm_1_M_BOOT_PORT_WVALID));
+
 aquila_soc_mock_smartconnect axi_smc
        (
         .ICACHE_AXI_araddr(aquila_0_M_ICACHE_PORT_ARADDR),

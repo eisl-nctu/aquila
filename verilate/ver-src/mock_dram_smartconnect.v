@@ -102,7 +102,8 @@ module aquila_soc_mock_smartconnect #
 	DCACHE_AXI_rready
 );
 
-
+input rst_n;
+input clk;
 
 input wire [0 : 0] ICACHE_AXI_awid;
 input wire [31 : 0] ICACHE_AXI_awaddr;
@@ -185,4 +186,93 @@ output wire DCACHE_AXI_rlast;
 output wire DCACHE_AXI_rvalid;
 input wire DCACHE_AXI_rready;
 
+MOCK_DCACHE_AXI_SLAVE mock_dcache_axi_slave(
+		.S_AXI_ACLK(clk),
+    .S_AXI_ARESETN(rst_n),
+    .S_AXI_AWID(DCACHE_AXI_awid),
+    .S_AXI_AWADDR(DCACHE_AXI_awaddr),
+    .S_AXI_AWLEN(DCACHE_AXI_awlen),
+    .S_AXI_AWSIZE(DCACHE_AXI_awsize),
+    .S_AXI_AWBURST(DCACHE_AXI_awburst),
+    .S_AXI_AWLOCK(DCACHE_AXI_awlock),
+    .S_AXI_AWCACHE(DCACHE_AXI_awcache),
+    .S_AXI_AWPROT(DCACHE_AXI_awprot),
+    .S_AXI_AWQOS(DCACHE_AXI_awqos),
+    .S_AXI_AWUSER(DCACHE_AXI_awuser),
+    .S_AXI_AWVALID(DCACHE_AXI_awvalid),
+    .S_AXI_AWREADY(DCACHE_AXI_awready),
+    .S_AXI_WDATA(DCACHE_AXI_wdata),
+    .S_AXI_WSTRB(DCACHE_AXI_wstrb),
+    .S_AXI_WLAST(DCACHE_AXI_wlast),
+    .S_AXI_WVALID(DCACHE_AXI_wvalid),
+    .S_AXI_WREADY(DCACHE_AXI_wready),
+    .S_AXI_BID(DCACHE_AXI_bid),
+    .S_AXI_BRESP(DCACHE_AXI_bresp),
+    .S_AXI_BUSER(DCACHE_AXI_buser),
+    .S_AXI_BVALID(DCACHE_AXI_bvalid),
+    .S_AXI_BREADY(DCACHE_AXI_bready),
+    .S_AXI_ARID(DCACHE_AXI_arid),
+    .S_AXI_ARADDR(DCACHE_AXI_araddr),
+    .S_AXI_ARLEN(DCACHE_AXI_arlen),
+    .S_AXI_ARSIZE(DCACHE_AXI_arsize),
+    .S_AXI_ARBURST(DCACHE_AXI_arburst),
+    .S_AXI_ARLOCK(DCACHE_AXI_arlock),
+    .S_AXI_ARCACHE(DCACHE_AXI_arcache),
+    .S_AXI_ARPROT(DCACHE_AXI_arprot),
+    .S_AXI_ARQOS(DCACHE_AXI_arqos),
+    .S_AXI_ARUSER(DCACHE_AXI_aruser),
+    .S_AXI_ARVALID(DCACHE_AXI_arvalid),
+    .S_AXI_ARREADY(DCACHE_AXI_arready),
+    .S_AXI_RID(DCACHE_AXI_rid),
+    .S_AXI_RDATA(DCACHE_AXI_rdata),
+    .S_AXI_RRESP(DCACHE_AXI_rresp),
+    .S_AXI_RLAST(DCACHE_AXI_rlast),
+    .S_AXI_RVALID(DCACHE_AXI_rvalid),
+    .S_AXI_RREADY(DCACHE_AXI_rready)
+);
+
+MOCK_ICACHE_AXI_SLAVE mock_icache_axi_slave(
+		.S_AXI_ACLK(clk),
+    .S_AXI_ARESETN(rst_n),
+    .S_AXI_AWID(ICACHE_AXI_awid),
+    .S_AXI_AWADDR(ICACHE_AXI_awaddr),
+    .S_AXI_AWLEN(ICACHE_AXI_awlen),
+    .S_AXI_AWSIZE(ICACHE_AXI_awsize),
+    .S_AXI_AWBURST(ICACHE_AXI_awburst),
+    .S_AXI_AWLOCK(ICACHE_AXI_awlock),
+    .S_AXI_AWCACHE(ICACHE_AXI_awcache),
+    .S_AXI_AWPROT(ICACHE_AXI_awprot),
+    .S_AXI_AWQOS(ICACHE_AXI_awqos),
+    .S_AXI_AWUSER(ICACHE_AXI_awuser),
+    .S_AXI_AWVALID(ICACHE_AXI_awvalid),
+    .S_AXI_AWREADY(ICACHE_AXI_awready),
+    .S_AXI_WDATA(ICACHE_AXI_wdata),
+    .S_AXI_WSTRB(ICACHE_AXI_wstrb),
+    .S_AXI_WLAST(ICACHE_AXI_wlast),
+    .S_AXI_WVALID(ICACHE_AXI_wvalid),
+    .S_AXI_WREADY(ICACHE_AXI_wready),
+    .S_AXI_BID(ICACHE_AXI_bid),
+    .S_AXI_BRESP(ICACHE_AXI_bresp),
+    .S_AXI_BUSER(ICACHE_AXI_buser),
+    .S_AXI_BVALID(ICACHE_AXI_bvalid),
+    .S_AXI_BREADY(ICACHE_AXI_bready),
+    .S_AXI_ARID(ICACHE_AXI_arid),
+    .S_AXI_ARADDR(ICACHE_AXI_araddr),
+    .S_AXI_ARLEN(ICACHE_AXI_arlen),
+    .S_AXI_ARSIZE(ICACHE_AXI_arsize),
+    .S_AXI_ARBURST(ICACHE_AXI_arburst),
+    .S_AXI_ARLOCK(ICACHE_AXI_arlock),
+    .S_AXI_ARCACHE(ICACHE_AXI_arcache),
+    .S_AXI_ARPROT(ICACHE_AXI_arprot),
+    .S_AXI_ARQOS(ICACHE_AXI_arqos),
+    .S_AXI_ARUSER(ICACHE_AXI_aruser),
+    .S_AXI_ARVALID(ICACHE_AXI_arvalid),
+    .S_AXI_ARREADY(ICACHE_AXI_arready),
+    .S_AXI_RID(ICACHE_AXI_rid),
+    .S_AXI_RDATA(ICACHE_AXI_rdata),
+    .S_AXI_RRESP(ICACHE_AXI_rresp),
+    .S_AXI_RLAST(ICACHE_AXI_rlast),
+    .S_AXI_RVALID(ICACHE_AXI_rvalid),
+    .S_AXI_RREADY(ICACHE_AXI_rready)
+);
 endmodule

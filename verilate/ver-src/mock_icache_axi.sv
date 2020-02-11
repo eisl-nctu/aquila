@@ -316,7 +316,7 @@ assign  ar_wrap_en = ((axi_araddr & ar_wrap_size) == ar_wrap_size)? 1'b1: 1'b0;
 // S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
 // de-asserted when reset is low.
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -349,7 +349,7 @@ end
 // This process is used to latch the address when both
 // S_AXI_AWVALID and S_AXI_WVALID are valid.
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -415,7 +415,7 @@ end
 // S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_wready is
 // de-asserted when reset is low.
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -442,7 +442,7 @@ end
 // This marks the acceptance of address and indicates the status of
 // write transaction.
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -462,7 +462,7 @@ begin
         begin
           if (S_AXI_BREADY && axi_bvalid)
           //check if bready is asserted while bvalid is high)
-          //(there is a possibility that bready is always asserted high)
+          //(there is a possibility that bready is always_ff asserted high)
             begin
               axi_bvalid <= 1'b0;
             end
@@ -477,7 +477,7 @@ begin
 // The read address is also latched when S_AXI_ARVALID is
 // asserted. axi_araddr is reset to zero on reset assertion.
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -506,7 +506,7 @@ end
 
 //This process is used to latch the address when both
 //S_AXI_ARVALID and S_AXI_RVALID are valid.
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -589,7 +589,7 @@ end
 // is deasserted on reset (active low). axi_rresp and axi_rdata are
 // cleared to zero on reset (active low).
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
@@ -618,9 +618,10 @@ generate
   if (USER_NUM_MEM >= 1)
     begin
       assign mem_select  = 1;
-      assign mem_address_non_mask = (axi_arv_arr_flag? axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:(axi_awv_awr_flag? axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:0));
+      //assign mem_address_non_mask = (axi_arv_arr_flag? axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:(axi_awv_awr_flag? axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:0));
+      assign mem_address_non_mask = (axi_arv_arr_flag? axi_araddr:(axi_awv_awr_flag? axi_awaddr:0));
       assign mem_address = mem_address_non_mask - CODE_RAM_ORIGIN;
-      mem_region_assert: assert property (@(posedge S_AXI_ACLK) (mem_address_non_mask >= CODE_RAM_ORIGIN && mem_address_non_mask < CODE_RAM_END)) else begin $error ("ICACHE port try to access non code segment!!!!!") end  
+      mem_region_assert: assert property (@(posedge S_AXI_ACLK) (mem_address_non_mask >= CODE_RAM_ORIGIN && mem_address_non_mask < CODE_RAM_END)) else begin $error ("ICACHE port try to access non code segment!!!!!"); end
     end
 endgenerate
 
@@ -631,7 +632,7 @@ wire mem_wren;
 assign mem_wren = axi_wready && S_AXI_WVALID ;
 assign mem_rden = axi_arv_arr_flag ; //& ~axi_rvalid
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if (mem_wren && S_AXI_WSTRB) //assume 32 bit 
     begin
@@ -642,7 +643,7 @@ begin
     end
 end
 
-always @( posedge S_AXI_ACLK )
+always_ff @( posedge S_AXI_ACLK )
 begin
   if (mem_rden)
     begin
@@ -655,7 +656,7 @@ end
 
 //Output register or memory read data
 
-always @( mem_data_out, axi_rvalid)
+always_ff @( mem_data_out, axi_rvalid)
 begin
   if (axi_rvalid)
     begin

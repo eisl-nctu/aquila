@@ -60,7 +60,8 @@ module MOCK_DCACHE_AXI_SLAVE #
 (
     // Users to add parameters here
     parameter integer DATA_RAM_ORIGIN = 32'h80008000,
-    parameter integer DATA_RAM_LENGTH = 32'h3ffe8000,
+    //parameter integer DATA_RAM_LENGTH = 32'h3ffe8000,
+    parameter integer DATA_RAM_LENGTH = 32'h80000,
     // 0x8000_0000 - 0x8000_8FFF: code section
     // 0x8000_8000 - 0x8100_7FFF: data section
     // 0x9000_0000 - 0xAFFF_FFFF: heap section
@@ -622,9 +623,10 @@ generate
   if (USER_NUM_MEM >= 1)
     begin
       assign mem_select  = 1;
-      assign mem_address_non_mask = (axi_arv_arr_flag? axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:(axi_awv_awr_flag? axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:0));
-      assign mem_address = mem_address_non_mask - CODE_RAM_ORIGIN;
-      data_mem_region_assert: assert property (@(posedge S_AXI_ACLK) (mem_address_non_mask >= DATA_RAM_ORIGIN && mem_address_non_mask < DATA_RAM_END)) else begin $error ("DCACHE port try to access non data segment!!!!!") end  
+      //assign mem_address_non_mask = (axi_arv_arr_flag? axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:(axi_awv_awr_flag? axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]:0));
+      assign mem_address_non_mask = (axi_arv_arr_flag ? axi_araddr : (axi_awv_awr_flag ? axi_awaddr : 0));
+      assign mem_address = mem_address_non_mask - DATA_RAM_ORIGIN;
+      data_mem_region_assert: assert property (@(posedge S_AXI_ACLK) (mem_address_non_mask >= DATA_RAM_ORIGIN && mem_address_non_mask < DATA_RAM_END)) else begin $error ("DCACHE port try to access non data segment!!!!!"); end  
     end
 endgenerate
 
