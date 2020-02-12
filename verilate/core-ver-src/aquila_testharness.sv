@@ -101,7 +101,7 @@ wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
 // Instiantiation of the top-level Aquila core module.
   aquila_top aquila_core(
       .clk(clk),
-      .rst(rst-N),
+      .rst(rst_n),
       .base_addr(main_memory_addr),
 
       .M_ICACHE_strobe(M_ICACHE_strobe),
