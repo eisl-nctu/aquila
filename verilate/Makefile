@@ -6,6 +6,7 @@ VERILATOR ?= verilator
 #export VERILATOR_ROOT
 #VERILATOR = $(VERILATOR_ROOT)/bin/verilator
 #endif
+CPPFLAGS = -I$(VDIR) `pkg-config --cflags verilator`
 
 AQUILA_CORE_SRC=../ip_repo/aquila/hdl/core_rtl/*.v \
 								../ip_repo/aquila/hdl/aquila.v
@@ -63,7 +64,7 @@ core_verilate:
 	$(VERILATOR) $(verilator_flag) $(AQUILA_CORE_SRC) $(CORE_VER_SRC) \
 	-Wno-lint -Wno-style -Wno-fatal \
 	-Mdir core_obj_dir \
-	--top-module aquila_testharness --exe  core-ver-src/aquila_core_tb.cpp
+	--top-module aquila_testharness  --trace --exe  core-ver-src/aquila_core_tb.cpp
 	make -j -C core_obj_dir -f Vaquila_testharness.mk Vaquila_testharness
 
 .PHONY: clean
