@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "Vaquila_soc.h"
+#include "Vaquila_testharness.h"
 #include "verilated.h"
 
 using namespace std;
@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   Verilated::commandArgs(argc,argv);
 	//sc_clock clk ("clk", 10, 0.5, 3, true);
 	Vaquila_soc* top;
-	top = new Vaquila_soc("top");
+	top = new Vaquila_testharness("top");
 	//top->clk(clk);
 	while (!Verilated::gotFinish()) { 
     top->eval();

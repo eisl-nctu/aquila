@@ -8,6 +8,7 @@ module dp_ram
   )(
     // Clock and Reset
     input  logic                      clk,
+    input  logic                      rst_n,
 
     input  logic                      strobe_icache
     input  logic [ADDR_WIDTH-1:0]     addr_icache_i,

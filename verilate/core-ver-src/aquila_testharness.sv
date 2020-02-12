@@ -101,22 +101,51 @@ always_comb
   RISCV_rst = rst_n;
 
 // Instiantiation of the top-level Aquila core module.
-aquila_top aquila_core(
+  aquila_top aquila_core(
+      .clk(clk),
+      .rst(RISCV_rst),
+      .base_addr(main_memory_addr),
+
+      .M_ICACHE_strobe(M_ICACHE_strobe),
+      .M_ICACHE_addr(M_ICACHE_addr),
+      .M_ICACHE_done(M_ICACHE_done),
+      .M_ICACHE_datain(M_ICACHE_datain),
+
+      .M_DCACHE_strobe(M_DCACHE_strobe),
+      .M_DCACHE_addr(M_DCACHE_addr),
+      .M_DCACHE_rw(M_DCACHE_rw),
+      .M_DCACHE_dataout(M_DCACHE_dataout),
+      .M_DCACHE_done(M_DCACHE_done),
+      .M_DCACHE_datain(M_DCACHE_datain),
+
+      .M_DEVICE_strobe(M_DEVICE_strobe),
+      .M_DEVICE_addr(M_DEVICE_addr),
+      .M_DEVICE_rw(M_DEVICE_rw),
+      .M_DEVICE_byte_enable(M_DEVICE_byte_enable),
+      .M_DEVICE_core2dev_data(M_DEVICE_core2dev_data),
+      .M_DEVICE_data_ready(M_DEVICE_data_ready),
+      .M_DEVICE_dev2core_data(M_DEVICE_dev2core_data)
+  );
+
+  dp_ram mock_ram(
     .clk(clk),
-    .rst(RISCV_rst),
-    .base_addr(main_memory_addr),
+    .rst_n(rst_n),
+    .strobe_icache(M_ICACHE_strobe),
+    .addr_icache_i(M_ICACHE_addr),
+    .rdata_icache_o(M_ICACHE_datain),
+    .done_icache_o(M_ICACHE_done),
 
-    .M_ICACHE_strobe(M_ICACHE_strobe),
-    .M_ICACHE_addr(M_ICACHE_addr),
-    .M_ICACHE_done(M_ICACHE_done),
-    .M_ICACHE_datain(M_ICACHE_datain),
+    .strobe_dcache(M_DCACHE_strobe),
+    .addr_dcache_i(M_DCACHE_addr),
+    .wdata_dcache_i(M_DCACHE_datain),
+    .rdata_dcache_o(M_DCACHE_dataout),
+    .rw_dcache_i(M_DCACHE_rw),
+    .done_dcache_o(M_DCACHE_done)
+  );
 
-    .M_DCACHE_strobe(M_DCACHE_strobe),
-    .M_DCACHE_addr(M_DCACHE_addr),
-    .M_DCACHE_rw(M_DCACHE_rw),
-    .M_DCACHE_dataout(M_DCACHE_dataout),
-    .M_DCACHE_done(M_DCACHE_done),
-    .M_DCACHE_datain(M_DCACHE_datain),
+  mock_uart mock_uart_0(
+    .clk(clk),
+    .rst_n(rst_n),
 
     .M_DEVICE_strobe(M_DEVICE_strobe),
     .M_DEVICE_addr(M_DEVICE_addr),
@@ -125,4 +154,5 @@ aquila_top aquila_core(
     .M_DEVICE_core2dev_data(M_DEVICE_core2dev_data),
     .M_DEVICE_data_ready(M_DEVICE_data_ready),
     .M_DEVICE_dev2core_data(M_DEVICE_dev2core_data)
-);
+  );
+endmodule
