@@ -6,7 +6,7 @@ module mock_uart # (
   parameter integer AXI_LANTENCY = 0,
   parameter integer UART_RXFIFO_ADDR = 32'hC0000000,
   parameter integer UART_TXFIFO_ADDR = 32'hC0000004,
-  parameter integer UART_STATUS_ADDR = 32'hC0000008,
+  parameter integer UART_STATUS_ADDR = 32'hC0000008
 )
 (
     input logic clk,       // AXI bus clock signal.
@@ -19,12 +19,11 @@ module mock_uart # (
     input  logic [ C_M_AXI_DATA_WIDTH/8-1 : 0] M_DEVICE_byte_enable, //don't care
     input  logic [ C_M_AXI_DATA_WIDTH - 1 : 0] M_DEVICE_core2dev_data,
     output logic                               M_DEVICE_data_ready,
-    output logic [ C_M_AXI_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data,
+    output logic [ C_M_AXI_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data
 
-)
+  );
 
   typedef enum [1:0] {IDLE=2'b0,READ,WRITE,DONE} axi_state_t;
-  typedef enum {IDLE,FULL} tx_state_t;
 
   axi_state_t cur_state,next_state;
 
@@ -116,6 +115,9 @@ module mock_uart # (
     else if (uart_tx_push)
       uart_tx_fifo_empty <= 0;
     else if (uart_tx_pop)
+      uart_tx_fifo_empty <= 1;
+    else
+      uart_tx_fifo_empty <= uart_tx_fifo_empty;
 
   always_comb
     uart_status = {uart_rx_fifo_full,uart_tx_fifo_empty,uart_rx_fifo_full,uart_rx_fifo_valid};

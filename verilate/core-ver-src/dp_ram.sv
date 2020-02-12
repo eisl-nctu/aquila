@@ -5,12 +5,13 @@ module dp_ram
     parameter int DATA_WIDTH = 32,
     parameter int MEM_SIZE = 32'h200000, //small memory for verilator
     parameter int ACCESS_LANTENCY = 8'h0 // done signal control
-  )(
+  )
+  (
     // Clock and Reset
     input  logic                      clk,
     input  logic                      rst_n,
 
-    input  logic                      strobe_icache
+    input  logic                      strobe_icache,
     input  logic [ADDR_WIDTH-1:0]     addr_icache_i,
     output logic [DATA_WIDTH-1:0]     rdata_icache_o,
     output logic                      done_icache_o,
@@ -96,7 +97,7 @@ module dp_ram
 
   always_comb begin
     case (dcache_cur_state)
-      IDLE: if (strobe_dcache) dcache_next_state = (rw_dcache_i ?) WRITE : READ;
+      IDLE: if (strobe_dcache) dcache_next_state = (rw_dcache_i ? WRITE : READ);
             else dcache_next_state = IDLE;
       READ: if (dcache_reads_done) dcache_next_state = DONE;
             else dcache_next_state = READ;
@@ -147,7 +148,7 @@ module dp_ram
   end
 
   function [31:0] readWord;
-    /* verilator public function method*/
+    /*verilator public*/
     input integer byte_addr;
     begin
       if (byte_addr < MEM_SIZE)
@@ -161,7 +162,7 @@ module dp_ram
   endfunction
 
   task writeWord;
-    /* verilator public function method*/
+    /*verilator public*/
     input integer byte_addr;
     input [31:0] val;
     begin
@@ -175,7 +176,7 @@ module dp_ram
   endtask
 
   task writeByte;
-    /* verilator public function method*/
+    /*verilator public*/
     input integer byte_addr;
     input [7:0] val;
     begin
@@ -186,13 +187,13 @@ module dp_ram
   endtask
 
   function [7:0] readByte;
-    /* verilator public function method*/
+    /*verilator public*/
     input integer byte_addr;
     begin
       if (byte_addr < MEM_SIZE)
-        readWord = mem[byte_addr[PART_ADDR_WIDTH-1:0];
+        readByte = mem[byte_addr[PART_ADDR_WIDTH-1:0]];
       else
-        readWord = 8'hef; //dummy
+        readByte = 8'hef; //dummy
     end
   endfunction
 endmodule

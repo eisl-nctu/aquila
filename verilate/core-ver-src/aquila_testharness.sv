@@ -77,7 +77,7 @@ module aquila_testharness #
   input logic   clk,
   input logic   rst_n,
   input logic   [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] main_memory_addr
-)
+);
 
 
 // Declaration of local signals.
@@ -97,13 +97,11 @@ wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_core2dev_data;
 wire                                      M_DEVICE_data_ready;
 wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
 
-always_comb
-  RISCV_rst = rst_n;
 
 // Instiantiation of the top-level Aquila core module.
   aquila_top aquila_core(
       .clk(clk),
-      .rst(RISCV_rst),
+      .rst(rst-N),
       .base_addr(main_memory_addr),
 
       .M_ICACHE_strobe(M_ICACHE_strobe),

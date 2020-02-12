@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
   Verilated::commandArgs(argc,argv);
 	//sc_clock clk ("clk", 10, 0.5, 3, true);
-	Vaquila_soc* top;
+	Vaquila_testharness* top;
 	top = new Vaquila_testharness("top");
 	//top->clk(clk);
 	while (!Verilated::gotFinish()) { 
