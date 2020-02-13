@@ -2,7 +2,7 @@
 module dp_ram
   #(
     parameter int ADDR_WIDTH = 32,
-    parameter int DATA_WIDTH = 32,
+    parameter int DATA_WIDTH = 256,
     parameter int MEM_SIZE = 32'h200000, //small memory for verilator
     parameter int ACCESS_LANTENCY = 8'h0 // done signal control
   )
@@ -108,28 +108,47 @@ module dp_ram
     endcase
   end
 
+  integer geni;
+
   always_ff @(posedge clk) begin
     if (dcache_cur_state == WRITE) begin
-      mem[dcache_addr] <=   wdata_dcache_i[7:0];
-      mem[dcache_addr+1] <= wdata_dcache_i[15:8];
-      mem[dcache_addr+2] <= wdata_dcache_i[23:16];
-      mem[dcache_addr+3] <= wdata_dcache_i[31:24];
+      for (geni = 0 ; geni < DATA_WIDTH/8 ; geni = geni + 1) begin
+        mem[dcache_addr+(DATA_WIDTH/8-1-geni)] <= wdata_dcache_i[geni*8+:8];
+      end
+      //mem[dcache_addr] <=   wdata_dcache_i[7:0];
+      //mem[dcache_addr+1] <= wdata_dcache_i[15:8];
+      //mem[dcache_addr+2] <= wdata_dcache_i[23:16];
+      //mem[dcache_addr+3] <= wdata_dcache_i[31:24];
     end
   end
 
   always_ff @(posedge clk) begin
     if (dcache_cur_state == READ) begin
-      rdata_dcache_o <= {mem[dcache_addr+3],mem[dcache_addr+2],mem[dcache_addr+1],mem[dcache_addr]};
+      rdata_dcache_o <= {mem[dcache_addr],mem[dcache_addr+1],mem[dcache_addr+2],mem[dcache_addr+3],
+                         mem[dcache_addr+4],mem[dcache_addr+5],mem[dcache_addr+6],mem[dcache_addr+7],
+                         mem[dcache_addr+8],mem[dcache_addr+9],mem[dcache_addr+10],mem[dcache_addr+11],
+                         mem[dcache_addr+12],mem[dcache_addr+13],mem[dcache_addr+14],mem[dcache_addr+15],
+                         mem[dcache_addr+16],mem[dcache_addr+17],mem[dcache_addr+18],mem[dcache_addr+19],
+                         mem[dcache_addr+20],mem[dcache_addr+21],mem[dcache_addr+22],mem[dcache_addr+23],
+                         mem[dcache_addr+24],mem[dcache_addr+25],mem[dcache_addr+26],mem[dcache_addr+27],
+                         mem[dcache_addr+28],mem[dcache_addr+29],mem[dcache_addr+30],mem[dcache_addr+31]};
     end else begin
-      rdata_dcache_o <= 0;
+      rdata_dcache_o <= rdata_dcache_o;
     end
   end
 
   always_ff @(posedge clk) begin
     if (icache_cur_state == READ) begin
-      rdata_icache_o <= {mem[icache_addr+3],mem[icache_addr+2],mem[icache_addr+1],mem[icache_addr]};
+      rdata_icache_o <= {mem[icache_addr],mem[icache_addr+1],mem[icache_addr+2],mem[icache_addr+3],
+                         mem[icache_addr+4],mem[icache_addr+5],mem[icache_addr+6],mem[icache_addr+7],
+                         mem[icache_addr+8],mem[icache_addr+9],mem[icache_addr+10],mem[icache_addr+11],
+                         mem[icache_addr+12],mem[icache_addr+13],mem[icache_addr+14],mem[icache_addr+15],
+                         mem[icache_addr+16],mem[icache_addr+17],mem[icache_addr+18],mem[icache_addr+19],
+                         mem[icache_addr+20],mem[icache_addr+21],mem[icache_addr+22],mem[icache_addr+23],
+                         mem[icache_addr+24],mem[icache_addr+25],mem[icache_addr+26],mem[icache_addr+27],
+                         mem[icache_addr+28],mem[icache_addr+29],mem[icache_addr+30],mem[icache_addr+31]};
     end else begin
-      rdata_icache_o <= 0;
+      rdata_icache_o <= rdata_icache_o;
     end
   end
 
@@ -152,10 +171,10 @@ module dp_ram
     input integer byte_addr;
     begin
       if (byte_addr < MEM_SIZE)
-        readWord = {mem[byte_addr[PART_ADDR_WIDTH-1:0]+3],
-                    mem[byte_addr[PART_ADDR_WIDTH-1:0]+2],
+        readWord = {mem[byte_addr[PART_ADDR_WIDTH-1:0]],
                     mem[byte_addr[PART_ADDR_WIDTH-1:0]+1],
-                    mem[byte_addr[PART_ADDR_WIDTH-1:0]]};
+                    mem[byte_addr[PART_ADDR_WIDTH-1:0]+2],
+                    mem[byte_addr[PART_ADDR_WIDTH-1:0]+3]};
       else
         readWord = 32'hdeadbeef;
     end
@@ -167,10 +186,10 @@ module dp_ram
     input [31:0] val;
     begin
       if (byte_addr < MEM_SIZE) begin
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]+3] = val[31:24];
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]+2] = val[23:16];
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]+1] = val[15:8];
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]] = val[7:0];
+        mem[byte_addr[PART_ADDR_WIDTH-1:0]] = val[31:24];
+        mem[byte_addr[PART_ADDR_WIDTH-1:0]+1] = val[23:16];
+        mem[byte_addr[PART_ADDR_WIDTH-1:0]+2] = val[15:8];
+        mem[byte_addr[PART_ADDR_WIDTH-1:0]+3] = val[7:0];
       end
     end
   endtask
