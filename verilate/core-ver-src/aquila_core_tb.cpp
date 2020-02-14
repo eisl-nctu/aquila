@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 #include "verilated_vcd_c.h"
 #include "Vaquila_testharness.h"
@@ -50,6 +51,7 @@ int main(int argc, char **argv)
   }
 
   top->rst_n = 0;
+  cout << "entry_addr = " << "0x" << setfill('0') << setw(8) << right << hex << entry_addr << endl;
   top->main_memory_addr = entry_addr;
   load_simple_asm();
   for (int i = 0 ; i < 5 ; i ++){
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
   top->rst_n = 1;
   //top->clk(clk);
 	
-  for (int i = 0 ; i < 1000 ; i ++){
+  for (int i = 0 ; i < 1000000 ; i ++){
     top->clk = 0;
     top->eval ();
     cpuTime += 5;

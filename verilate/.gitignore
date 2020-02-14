@@ -1,4 +1,4 @@
 ./build.log
-./obj_dir/*
-./core_obj_dir/*
-./full_obj_dir/*
+obj_dir/
+core_obj_dir/
+full_obj_dir/
