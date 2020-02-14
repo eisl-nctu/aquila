@@ -1,0 +1,67 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# custom
+# Vivado
+archive/aquila_soc_0.9_preview/*
+
+# Verilator
+verilate/build.log
+verilate/obj_dir/
+verilate/core_obj_dir/
+verilate/full_obj_dir/
+verilate/ver-test/*.bin
+verilate/ver-test/*.content
+verilate/ver-test/*.objdump
+verilate/ver-test/*.map
+verilate/ver-test/*.ebf
+
+# sw
+sw/test/*.bin
+sw/test/*.content
+sw/test/*.objdump
+sw/test/*.map
+sw/test/*.ebf
+
+
+sw/uartboot/*.bin
+sw/uartboot/*.content
+sw/uartboot/*.objdump
+sw/uartboot/*.map
+sw/uartboot/*.ebf
+sw/uartboot/*.mem
+sw/uartboot/*.s
+
+
+
+
