@@ -65,7 +65,7 @@ core_verilate:
 	-Wno-lint -Wno-style -Wno-fatal \
 	-Mdir core_obj_dir \
 	--top-module aquila_testharness  --trace --trace-max-array 0x200000 \
-	--trace-max-width 0x200000  --exe  core-ver-src/aquila_core_tb.cpp
+	--trace-max-width 0x200000  --exe  core-ver-src/aquila_core_tb.cpp core-ver-src/sim_mem.cpp
 	make -j -C core_obj_dir -f Vaquila_testharness.mk Vaquila_testharness
 
 .PHONY: clean

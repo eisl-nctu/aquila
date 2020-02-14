@@ -8,6 +8,8 @@
 #include "Vaquila_testharness__Syms.h"
 #include "verilated.h"
 
+#include "sim_mem.h"
+
 using namespace std;
 static vluint64_t cpuTime = 0;
 double sc_time_stamp() { return cpuTime; }
@@ -16,17 +18,39 @@ VerilatedVcdC* Vcdfp;
 
 void load_simple_asm();
 
+static void usage(const char * program_name)
+{
+  cout << "Usage: " << program_name << " [RISCV_TEST_ELF]" << endl;
+}
+
+
 int main(int argc, char **argv)
 {
   Verilated::commandArgs(argc,argv);
-	//sc_clock clk ("clk", 10, 0.5, 3, true);
-	top = new Vaquila_testharness("top");
+
+  if (argc < 2) {
+    usage(argv[0]);
+    cerr << "Please provide riscv test elf file" << endl;
+    return -1;
+  }
+
+  top = new Vaquila_testharness("top");
   Verilated::traceEverOn(true);
   Vcdfp = new VerilatedVcdC;
   top->trace(Vcdfp, 99);
   Vcdfp->open("aquila_core.vcd");
+
+  uint32_t entry_addr = 0x00000000;
+
+  int err = sim_mem_load_program(top->aquila_testharness->mock_ram, string(argv[1]), &entry_addr);
+
+  if (err < 0){
+    cerr << "failed to load program to mock ram.!!!!" << endl;
+    return - 1;
+  }
+
   top->rst_n = 0;
-  top->main_memory_addr = 0x00000000;
+  top->main_memory_addr = entry_addr;
   load_simple_asm();
   for (int i = 0 ; i < 5 ; i ++){
     top->clk = 0;
