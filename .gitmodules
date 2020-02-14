@@ -1,0 +1,3 @@
+[submodule "verilate/riscv-isa-sim"]
+	path = verilate/riscv-isa-sim
+	url = https://github.com/riscv/riscv-isa-sim
