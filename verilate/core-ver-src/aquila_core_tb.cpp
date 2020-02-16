@@ -53,7 +53,8 @@ int main(int argc, char **argv)
   top->rst_n = 0;
   cout << "entry_addr = " << "0x" << setfill('0') << setw(8) << right << hex << entry_addr << endl;
   top->main_memory_addr = entry_addr;
-  load_simple_asm();
+  //load_simple_asm();
+  sim_mem_dump_memory(top->aquila_testharness->mock_ram, "dump.mem");
   for (int i = 0 ; i < 5 ; i ++){
     top->clk = 0;
     top->eval ();

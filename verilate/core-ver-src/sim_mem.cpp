@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 #define bswap from_le
 
@@ -91,7 +92,27 @@ int sim_mem_load_program(Vaquila_testharness_dp_ram* ram, const std::string fn, 
   return 0;
 }
 
-void sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn)
+int sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn)
 {
+  std::fstream fs(fn, std::fstream::out);
+  if (!fs.is_open()){
+    std::cerr << "failed to open " << fn << " to write memory data.!!!" << std::endl;
+    return -1;
+  }
+  int mem_size = ram->MEM_SIZE;
+  std::cout << "memory size = " << mem_size << std::endl;
+  std::cout << "dump memory to \"" << fn << "\" finished!" << std::endl;
 
+  for (int i = 0 ; i < mem_size ; i+=4) {
+    fs << "0x" << std::setfill('0') << std::setw(8)
+        << std::right << std::hex << i << ":  0x";
+    for (int j = 3 ; j >=0 ; j--) {
+      fs << std::setfill('0') << std::setw(2) << std::right
+      << std::hex << (unsigned int)ram->mem[i+j];
+    }
+    fs << std::endl;
+  }
+
+  fs.close();
+  return 0;
 }

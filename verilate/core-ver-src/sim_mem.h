@@ -10,6 +10,6 @@
 #include <string>
 // riscv32
 int sim_mem_load_program(Vaquila_testharness_dp_ram* ram, const std::string fn, uint32_t* entry);
-void sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn);
+int sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn);
 
 #endif /* _SIM_MEM_H_ */

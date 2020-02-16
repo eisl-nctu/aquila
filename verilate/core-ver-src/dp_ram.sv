@@ -3,7 +3,7 @@ module dp_ram
   #(
     parameter int ADDR_WIDTH = 32,
     parameter int DATA_WIDTH = 256,
-    parameter int MEM_SIZE = 32'h200000, //small memory for verilator
+    parameter int MEM_SIZE /*verilator public*/= 32'h200000, //small memory for verilator
     parameter int ACCESS_LANTENCY = 8'h0 // done signal control
   )
   (
@@ -40,7 +40,7 @@ module dp_ram
 
   logic [PART_ADDR_WIDTH-1:0] icache_addr;
   logic [PART_ADDR_WIDTH-1:0] dcache_addr;
-  logic [7:0] mem [MEM_SIZE-1:0];
+  logic [7:0] mem [MEM_SIZE-1:0]/*verilator public_flat*/;
   logic [7:0] icache_delay_counter;
   logic [7:0] dcache_delay_counter;
   logic icache_reads_done;
