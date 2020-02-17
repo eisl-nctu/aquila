@@ -18,8 +18,12 @@ template<typename T> static inline T from_le(T n) { return n; }
 void sim_mem_write(Vaquila_testharness_dp_ram* ram,uint32_t addr, size_t length, const void* bytes)
 {
   //out of boundary protection?
-  for (int i = 0 ; i < length ; i ++ )
-    ram->writeByte(addr+i,*((unsigned char*)bytes+i));
+  for (int i = 0 ; i < length ; i +=4 ) {
+    ram->writeByte(addr+i,*((unsigned char*)bytes+i+3));
+    ram->writeByte(addr+i+1,*((unsigned char*)bytes+i+2));
+    ram->writeByte(addr+i+2,*((unsigned char*)bytes+i+1));
+    ram->writeByte(addr+i+3,*((unsigned char*)bytes+i));
+  }
 }
 
 
@@ -100,12 +104,13 @@ int sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn)
     return -1;
   }
   int mem_size = ram->MEM_SIZE;
+  unsigned int mem_offset = ram->MEM_OFFSET;
   std::cout << "memory size = " << mem_size << std::endl;
   std::cout << "dump memory to \"" << fn << "\" finished!" << std::endl;
 
   for (int i = 0 ; i < mem_size ; i+=4) {
     fs << "0x" << std::setfill('0') << std::setw(8)
-        << std::right << std::hex << i << ":  0x";
+        << std::right << std::hex << i + mem_offset << ":  0x";
     for (int j = 3 ; j >=0 ; j--) {
       fs << std::setfill('0') << std::setw(2) << std::right
       << std::hex << (unsigned int)ram->mem[i+j];

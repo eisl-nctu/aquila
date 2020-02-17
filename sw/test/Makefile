@@ -18,7 +18,7 @@ LIBC = ../elibc
 CCFLAGS = -Wall -I$(LIBC) -fomit-frame-pointer -fno-builtin -march=rv32im -mstrict-align -mabi=ilp32
 ASFLAGS = -march=rv32im
 LDFLAGS = -T$(PROJ).ld -Map=$(PROJ).map # -Ttext=0
-LD_SOFT_FP = -L/opt/riscv/lib/gcc/riscv32-unknown-elf/8.2.0 -lgcc
+LD_SOFT_FP = -L$(RISCV)/lib/gcc/riscv32-unknown-elf/8.2.0 -lgcc
 
 OCFLAGS = -O binary
 ODFLAGS = -d

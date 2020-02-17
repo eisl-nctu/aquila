@@ -4,7 +4,8 @@ module dp_ram
     parameter int ADDR_WIDTH = 32,
     parameter int DATA_WIDTH = 256,
     parameter int MEM_SIZE /*verilator public*/= 32'h200000, //small memory for verilator
-    parameter int ACCESS_LANTENCY = 8'h0 // done signal control
+    parameter int ACCESS_LANTENCY = 8'h10, // done signal control
+    parameter int MEM_OFFSET /*verilator public*/= 32'h80000000
   )
   (
     // Clock and Reset
@@ -40,6 +41,8 @@ module dp_ram
 
   logic [PART_ADDR_WIDTH-1:0] icache_addr;
   logic [PART_ADDR_WIDTH-1:0] dcache_addr;
+  logic [ADDR_WIDTH-1:0] tmp_addr_icache;
+  logic [ADDR_WIDTH-1:0] tmp_addr_dcache;
   logic [7:0] mem [MEM_SIZE-1:0]/*verilator public_flat*/;
   logic [7:0] icache_delay_counter;
   logic [7:0] dcache_delay_counter;
@@ -48,9 +51,14 @@ module dp_ram
   logic dcache_writes_done;
 
   always_comb
-    icache_addr = addr_icache_i[PART_ADDR_WIDTH-1:0];
+    tmp_addr_icache = addr_icache_i - MEM_OFFSET;
   always_comb
-    dcache_addr = addr_dcache_i[PART_ADDR_WIDTH-1:0];
+    tmp_addr_dcache = addr_dcache_i - MEM_OFFSET;
+
+  always_comb
+    icache_addr = tmp_addr_icache[PART_ADDR_WIDTH-1:0];
+  always_comb
+    dcache_addr = tmp_addr_dcache[PART_ADDR_WIDTH-1:0];
 
   always_ff @(posedge clk) begin
     if (icache_cur_state == IDLE || icache_cur_state == DONE) icache_delay_counter <= 0;
@@ -170,11 +178,13 @@ module dp_ram
     /*verilator public*/
     input integer byte_addr;
     begin
-      if (byte_addr < MEM_SIZE)
-        readWord = {mem[byte_addr[PART_ADDR_WIDTH-1:0]],
-                    mem[byte_addr[PART_ADDR_WIDTH-1:0]+1],
-                    mem[byte_addr[PART_ADDR_WIDTH-1:0]+2],
-                    mem[byte_addr[PART_ADDR_WIDTH-1:0]+3]};
+      reg [31:0] tmp_addr;
+      tmp_addr = byte_addr - MEM_OFFSET;
+      if (byte_addr >= MEM_OFFSET &&  byte_addr < MEM_OFFSET + MEM_SIZE)
+        readWord = {mem[tmp_addr[PART_ADDR_WIDTH-1:0]],
+                    mem[tmp_addr[PART_ADDR_WIDTH-1:0]+1],
+                    mem[tmp_addr[PART_ADDR_WIDTH-1:0]+2],
+                    mem[tmp_addr[PART_ADDR_WIDTH-1:0]+3]};
       else
         readWord = 32'hdeadbeef;
     end
@@ -185,11 +195,13 @@ module dp_ram
     input integer byte_addr;
     input [31:0] val;
     begin
-      if (byte_addr < MEM_SIZE) begin
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]] = val[31:24];
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]+1] = val[23:16];
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]+2] = val[15:8];
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]+3] = val[7:0];
+      reg [31:0] tmp_addr;
+      tmp_addr = byte_addr - MEM_OFFSET;
+      if (byte_addr >= MEM_OFFSET &&  byte_addr < MEM_OFFSET + MEM_SIZE) begin
+        mem[tmp_addr[PART_ADDR_WIDTH-1:0]] = val[31:24];
+        mem[tmp_addr[PART_ADDR_WIDTH-1:0]+1] = val[23:16];
+        mem[tmp_addr[PART_ADDR_WIDTH-1:0]+2] = val[15:8];
+        mem[tmp_addr[PART_ADDR_WIDTH-1:0]+3] = val[7:0];
       end
     end
   endtask
@@ -199,8 +211,10 @@ module dp_ram
     input integer byte_addr;
     input [7:0] val;
     begin
-      if (byte_addr < MEM_SIZE) begin
-        mem[byte_addr[PART_ADDR_WIDTH-1:0]] = val;
+      reg [31:0] tmp_addr;
+      tmp_addr = byte_addr - MEM_OFFSET;
+      if (byte_addr >= MEM_OFFSET &&  byte_addr < MEM_OFFSET+MEM_SIZE) begin
+        mem[tmp_addr[PART_ADDR_WIDTH-1:0]] = val;
       end
     end
   endtask
@@ -209,8 +223,10 @@ module dp_ram
     /*verilator public*/
     input integer byte_addr;
     begin
-      if (byte_addr < MEM_SIZE)
-        readByte = mem[byte_addr[PART_ADDR_WIDTH-1:0]];
+      reg [31:0] tmp_addr;
+      tmp_addr = byte_addr - MEM_OFFSET;
+      if (byte_addr >= MEM_OFFSET && byte_addr < MEM_OFFSET+MEM_SIZE)
+        readByte = mem[tmp_addr[PART_ADDR_WIDTH-1:0]];
       else
         readByte = 8'hef; //dummy
     end

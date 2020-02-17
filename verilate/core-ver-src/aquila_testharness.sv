@@ -76,7 +76,8 @@ module aquila_testharness #
 (
   input logic   clk,
   input logic   rst_n,
-  input logic   [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] main_memory_addr
+  input logic   [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] main_memory_addr,
+  output logic [31:0] cur_instr_addr
 );
 
 
@@ -97,7 +98,10 @@ wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_core2dev_data;
 wire                                      M_DEVICE_data_ready;
 wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
 
-
+// Debug pc
+wire [31:0] debug_pc/*verilator public_flat*/;
+assign debug_pc = aquila_core.instr_addr;
+assign cur_instr_addr = aquila_core.instr_addr;
 // Instiantiation of the top-level Aquila core module.
   aquila_top aquila_core(
       .clk(clk),

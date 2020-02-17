@@ -55,17 +55,19 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
+must start from 0x80000000 due to aquila hard code /
 */
-__heap_start  = 0x10000;
+
+__heap_start  = 0x80010000;
 __heap_size   = 0x10000;
-__stack_top =  0x30000;
+__stack_top =  0x80030000;
 __stack_size = 0x10000;
 __stack_start = __stack_top - __stack_size;
 
 MEMORY
 {
-    code_ram   (rx!rw) : ORIGIN = 0x00000000, LENGTH = 0x8000
-    data_ram   (rw!x)  : ORIGIN = 0x00008000, LENGTH = 0x2000
+    code_ram   (rx!rw) : ORIGIN = 0x80000000, LENGTH = 0x8000
+    data_ram   (rw!x)  : ORIGIN = 0x80008000, LENGTH = 0x2000
     heap_ram   (rw!x)  : ORIGIN = __heap_start, LENGTH = __heap_size
     stack_ram  (rw!x)  : ORIGIN = __stack_start, LENGTH = __stack_size
 }

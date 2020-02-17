@@ -56,6 +56,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "uart.h"
 
 void malloc_test(int nwords);
 void timer_isr_test();
@@ -98,16 +99,30 @@ void volatile enable_core_timer()
 
 int main(void)
 {
-    float ver = 0.9;
+    outbyte('H');
+    outbyte('e');
+    outbyte('l');
+    outbyte('l');
+    outbyte('o');
+    outbyte(' ');
+    outbyte('W');
+    outbyte('o');
+    outbyte('r');
+    outbyte('l');
+    outbyte('d');
+    outbyte('!');
+    outbyte('\n');
 
-    printf("Hello, Aquila %.1f!\n", ver);
-    printf("The address of 'ver' is 0x%X\n\n", (unsigned) &ver);
+    //float ver = 0.9;
+    printf("Hello world!\n");
+    //printf("Hello, Aquila %.1f!\n", ver);
+    //printf("The address of 'ver' is 0x%X\n\n", (unsigned) &ver);
 
     printf("First time tick = %d\n\n", clock());
-    malloc_test(1*1024);
+    //malloc_test(1*1024);
     printf("\nSecond time tick = %d\n\n", clock());
 
-    timer_isr_test();
+    //timer_isr_test();
     printf("Waiting for timer ISR ...");
 
     got_isr = 0;

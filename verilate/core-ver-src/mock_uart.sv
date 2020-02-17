@@ -3,7 +3,7 @@ module mock_uart # (
   parameter integer C_M_AXI_ADDR_WIDTH = 32, // Width of the AXI addr bus.
   parameter integer C_M_AXI_DATA_WIDTH = 32,  // Width of the AXI data bus.
   parameter integer UART_TX_FIFO_DELAY = 1, // must greater than 0
-  parameter integer AXI_LANTENCY = 0,
+  parameter integer AXI_LANTENCY = 10,
   parameter integer UART_RXFIFO_ADDR = 32'hC0000000,
   parameter integer UART_TXFIFO_ADDR = 32'hC0000004,
   parameter integer UART_STATUS_ADDR = 32'hC0000008
@@ -53,13 +53,13 @@ module mock_uart # (
   logic writes_done;
 
   always_comb
-    uart_tx_push = (M_DEVICE_addr == UART_TXFIFO_ADDR && M_DEVICE_rw == 1); //write
+    uart_tx_push = (M_DEVICE_addr == UART_TXFIFO_ADDR && M_DEVICE_rw == 1 && M_DEVICE_strobe); //write
   always_comb
     uart_tx_pop = (transmit_counter >= UART_TX_FIFO_DELAY); //write
   always_comb
     uart_rx_push = 0; //write
   always_comb
-    uart_rx_pop = (M_DEVICE_addr == UART_RXFIFO_ADDR && M_DEVICE_rw == 0); //read
+    uart_rx_pop = (M_DEVICE_addr == UART_RXFIFO_ADDR && M_DEVICE_rw == 0);  //read
 
   always_ff@(posedge clk) begin
     if (~rst_n) begin
@@ -68,8 +68,10 @@ module mock_uart # (
       transmit_counter <= 0;
     end else if (uart_tx_fifo_full) begin
       transmit_counter <= transmit_counter + 1;
-      if (transmit_counter == UART_TX_FIFO_DELAY)
+      if (transmit_counter == UART_TX_FIFO_DELAY)begin
         $write("%c",uart_tx_fifo); //put one char to stdout
+        //$display("uart_tx: %c",uart_tx_fifo); //put one char to stdout
+      end
     end else begin
       transmit_counter <= transmit_counter;
     end
@@ -213,4 +215,14 @@ module mock_uart # (
         M_DEVICE_dev2core_data <= 32'hdeadbeef;
     else
       M_DEVICE_dev2core_data <= M_DEVICE_dev2core_data;
+
+  always_ff @(posedge clk)
+    if (~rst_n)
+      M_DEVICE_data_ready <= 0;
+    else if (cur_state == IDLE)
+      M_DEVICE_data_ready <= 0;
+    else if (cur_state == DONE)
+      M_DEVICE_data_ready <= 1;
+    else
+      M_DEVICE_data_ready <= M_DEVICE_data_ready;
 endmodule

@@ -68,11 +68,12 @@ int main(int argc, char **argv)
   top->rst_n = 1;
   //top->clk(clk);
 	
-  for (int i = 0 ; i < 1000000 ; i ++){
+  for (int i = 0 ; i < 20000 ; i ++){
     top->clk = 0;
     top->eval ();
     cpuTime += 5;
     Vcdfp->dump(cpuTime);
+    cerr << i << " cur_instr_addr : 0x" << setfill('0') << setw(8) << right << hex << top->cur_instr_addr << endl;
     top->clk = 1;
     top->eval ();
     cpuTime += 5;
