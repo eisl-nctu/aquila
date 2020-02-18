@@ -65,7 +65,7 @@ int main(int argc,char* argv[])
         if (line_buffer[8] == ':') { //is instruction
           string instruction_contain = line_buffer.substr(10); //to end
           instr.insert(make_pair(addr_val,instruction_contain));
-          cout << "dump " << setw(8) << hex << right << addr_val << " " << instruction_contain << endl;
+          //cout << "dump " << setw(8) << hex << right << addr_val << " " << instruction_contain << endl;
         } else { // is function entry
           string function_data = line_buffer.substr(9); //to end
           function_entry_map.insert(pair<unsigned int,string>(addr_val,function_data));
@@ -87,7 +87,7 @@ int main(int argc,char* argv[])
         cumulation = 1;
         prev_instr_addr = addr_val;
         it = function_entry_map.find(addr_val);
-        cout << setw(8) << hex << addr_val << endl;
+        //cout << setw(8) << hex << addr_val << endl;
         if (it != function_entry_map.end()) {
           log_buffer << "function_entry:" << setfill('0') << setw(8) << right << hex
             << addr_val << function_entry_map[addr_val] << endl;

@@ -15,8 +15,7 @@ OD = $(CCPATH)/$(CROSS)-objdump
 
 LIBC = ../../sw/elibc
 
-#CCFLAGS = -Wall -I$(LIBC) -fomit-frame-pointer -fno-builtin -march=rv32im -mstrict-align -mabi=ilp32
-CCFLAGS = -Wall -I$(LIBC) -fno-builtin -march=rv32im -mstrict-align -mabi=ilp32
+CCFLAGS = -Wall -I$(LIBC) -fomit-frame-pointer -fno-builtin -march=rv32im -mstrict-align -mabi=ilp32
 ASFLAGS = -march=rv32im
 LDFLAGS = -T$(PROJ).ld -Map=$(PROJ).map # -Ttext=0
 LD_SOFT_FP = -L$(RISCV)/lib/gcc/riscv32-unknown-elf/8.2.0 -lgcc

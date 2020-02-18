@@ -113,8 +113,9 @@ int main(void)
     outbyte('!');
     outbyte('\n');
 
+    printf("Test Print\n");
     //float ver = 0.9;
-    printf("Hello world!\n");
+    //printf("Hello world!\n");
     //printf("Hello, Aquila %.1f!\n", ver);
     //printf("The address of 'ver' is 0x%X\n\n", (unsigned) &ver);
 
