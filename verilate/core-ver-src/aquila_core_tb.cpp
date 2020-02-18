@@ -35,6 +35,13 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  fstream log_file("cpu.log",fstream::out);
+
+  if (!log_file.is_open()) {
+    cerr << "Failed to open cpu.log file!!!" << endl;
+    return -1;
+  }
+
   top = new Vaquila_testharness("top");
   Verilated::traceEverOn(true);
   Vcdfp = new VerilatedVcdC;
@@ -73,15 +80,16 @@ int main(int argc, char **argv)
     top->eval ();
     cpuTime += 5;
     Vcdfp->dump(cpuTime);
-    cerr << i << " cur_instr_addr : 0x" << setfill('0') << setw(8) << right << hex << top->cur_instr_addr << endl;
+    log_file << "#" << setfill('0') << setw(10) << right << i <<
+      ":" << setfill('0') << setw(8) << right << hex << top->cur_instr_addr << endl;
     top->clk = 1;
     top->eval ();
     cpuTime += 5;
     Vcdfp->dump(cpuTime);
   }
-  /*while (!Verilated::gotFinish()) { 
+  /*while (!Verilated::gotFinish()) {
     top->eval();
-    //sc_start(1, SC_NS); 
+    //sc_start(1, SC_NS);
   }*/
 	Vcdfp->close();
   delete Vcdfp;

@@ -102,6 +102,14 @@ wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
 wire [31:0] debug_pc/*verilator public_flat*/;
 assign debug_pc = aquila_core.instr_addr;
 assign cur_instr_addr = aquila_core.instr_addr;
+
+//wire [31:0] debug_rf [0:31]/*verilator public_flat*/;
+//genvar idx;
+//generate
+//for (idx = 0 ; idx < 32 ; idx = idx + 1)
+//  assign debug_rf[i] = aquila_core.RISCV_CORE0.Register_File.rf[i];
+//endgenerate
+
 // Instiantiation of the top-level Aquila core module.
   aquila_top aquila_core(
       .clk(clk),

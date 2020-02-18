@@ -4,7 +4,7 @@ module dp_ram
     parameter int ADDR_WIDTH = 32,
     parameter int DATA_WIDTH = 256,
     parameter int MEM_SIZE /*verilator public*/= 32'h200000, //small memory for verilator
-    parameter int ACCESS_LANTENCY = 8'h10, // done signal control
+    parameter int ACCESS_LANTENCY = 8'h50, // done signal control
     parameter int MEM_OFFSET /*verilator public*/= 32'h80000000
   )
   (
@@ -160,19 +160,13 @@ module dp_ram
     end
   end
 
-  always_ff @(posedge clk) begin
-    if (icache_cur_state == DONE)
-      done_icache_o <= 1;
-    else
-      done_icache_o <= 0;
-  end
+  //to deal with strobe delay one cycle fall issue
+  always_comb
+    done_icache_o = (icache_cur_state == READ && icache_reads_done);
 
-  always_ff @(posedge clk) begin
-    if (dcache_cur_state == DONE)
-      done_dcache_o <= 1;
-    else
-      done_dcache_o <= 0;
-  end
+  //to deal with strobe delay one cycle fall issue
+  always_comb
+    done_dcache_o = (dcache_cur_state == READ && dcache_reads_done) || (dcache_cur_state == WRITE && dcache_writes_done);
 
   function [31:0] readWord;
     /*verilator public*/
