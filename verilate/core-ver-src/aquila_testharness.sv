@@ -147,8 +147,8 @@ assign cur_instr_addr = aquila_core.instr_addr;
 
     .strobe_dcache(M_DCACHE_strobe),
     .addr_dcache_i(M_DCACHE_addr),
-    .wdata_dcache_i(M_DCACHE_datain),
-    .rdata_dcache_o(M_DCACHE_dataout),
+    .wdata_dcache_i(M_DCACHE_dataout),
+    .rdata_dcache_o(M_DCACHE_datain),
     .rw_dcache_i(M_DCACHE_rw),
     .done_dcache_o(M_DCACHE_done)
   );
