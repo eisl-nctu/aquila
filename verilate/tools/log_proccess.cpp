@@ -17,6 +17,8 @@ using namespace std;
 map<unsigned int,string> function_entry_map;
 map<unsigned int,string> instr;
 
+bool compress = true;
+
 bool is_number(const std::string& s)
 {
   return !s.empty() && std::find_if(s.begin(),
@@ -86,10 +88,13 @@ int main(int argc,char* argv[])
       if (prev_instr_addr != addr_val) {
         cumulation = 1;
         prev_instr_addr = addr_val;
+        if (compress && log_buffer.rdbuf()->in_avail() != 0)
+          dec_log << log_buffer.rdbuf();
         it = function_entry_map.find(addr_val);
         //cout << setw(8) << hex << addr_val << endl;
+
         if (it != function_entry_map.end()) {
-          log_buffer << "function_entry:" << setfill('0') << setw(8) << right << hex
+          dec_log << "function_entry:" << setfill('0') << setw(8) << right << hex
             << addr_val << function_entry_map[addr_val] << endl;
         }
         log_buffer << "clock = " << setfill(' ') << setw(8) << clk << ": instr_cycle:"
@@ -97,11 +102,14 @@ int main(int argc,char* argv[])
           << setfill('0') << setw(8) << right << hex << addr_val << ":    " << instr[addr_val] << endl;
       } else {
         cumulation++;
+        if (compress)
+          log_buffer.str(string());
         log_buffer << "clock = " << setfill(' ') << setw(8) << clk << ": instr_cycle:"
           << setw(5) << dec << cumulation << " instruction:"
           << setfill('0') << setw(8) << right << hex << addr_val << ":    " << instr[addr_val] << endl;
       }
-      dec_log << log_buffer.rdbuf();
+      if (!compress)
+        dec_log << log_buffer.rdbuf();
     } else {
       dec_log << line_buffer << endl;
     }

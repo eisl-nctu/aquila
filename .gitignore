@@ -62,6 +62,7 @@ sw/uartboot/*.ebf
 sw/uartboot/*.mem
 sw/uartboot/*.s
 
-
+# tools
+verilate/tools/dec_cpu.log
 
 

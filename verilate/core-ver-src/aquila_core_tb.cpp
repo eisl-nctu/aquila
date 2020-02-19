@@ -75,7 +75,7 @@ int main(int argc, char **argv)
   top->rst_n = 1;
   //top->clk(clk);
 	
-  for (int i = 0 ; i < 20000 ; i ++){
+  for (int i = 0 ; i < 1000000 ; i ++){
     top->clk = 0;
     top->eval ();
     cpuTime += 5;
