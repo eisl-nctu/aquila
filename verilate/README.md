@@ -68,6 +68,30 @@ $ ./log_proccess ../ver-test-bug/test.objdump ../core_obj_dir/cpu.log
 ```
 You can change `compress` boolean varible in log_proccess.cpp to generate cycle based log or instruction based log.
 ## verilator model advance usage
+### Basic diagram
+![](img/aquila_core_ver_src.png)
+### code structure
+* `aquila_testharness` is top module to connect `dp_ram` and`mock_uart` to `aquila_top`. 
+* `aquila_core_tb.cpp` is C++ wrapper for this verilator model.
+* `sim_mem.h` is header as elf file loader.
+### parameter
+* dp_ram.sv
+
+| Name  | Description | limitation | default |
+| -------- | -------- | -------- | ---------|
+| MEM_SIZE | mock ddr main memory  size | verilator cannot synthesis large verilog array vector | 32'h200000 |
+|ACCESS_LANTENCY|add latency to memory access to simulate real world scenario|bitwidth:8 bit|8'h50|
+|MEM_OFFSET|memory offset,make main memory address similar to FPGA configuration|don't modify this parameter,see ip_repo/aquila/hdl/core_rtl/aquila_top.v for more information|32'h80000000|
+
+*  mock_uart.sv
+
+| Name  | Description | limitation | default |
+| -------- | -------- | -------- | ---------|
+| AXI_LANTENCY | add latency to axi slave to simulate real world scenario | bitwidth:8 bit| 8'h0A| 
+|UART_TX_FIFO_DELAY|UART TX transmit delay|bitwidth:8 bit,must greater than 1|8'h01|
+|UART_RXFIFO_ADDR|memory map io register address for UART_RXFIFO|don't modify|32'hC0000000|
+|UART_TXFIFO_ADDR|memory map io register address for UART_TXFIFO|don't modify|32'hC0000004|
+|UART_STATUS_ADDR|memory map io register address for UART_STATUS|don't modify|32'hC0000008|
 ## TODO
 * simple dual port mcok ram for simulation
 	+ load riscv-test program memory
