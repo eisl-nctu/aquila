@@ -85,6 +85,8 @@ You can change `compress` boolean varible in log_proccess.cpp to generate cycle 
 
 *  mock_uart.sv
 
+> :warning: **Current mock uart don't support RX**: Be very careful here!
+
 | Name  | Description | limitation | default |
 | -------- | -------- | -------- | ---------|
 | AXI_LANTENCY | add latency to axi slave to simulate real world scenario | bitwidth:8 bit| 8'h0A| 
