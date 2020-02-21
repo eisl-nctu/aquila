@@ -65,4 +65,5 @@ sw/uartboot/*.s
 # tools
 verilate/tools/dec_cpu.log
 
-
+# tmp
+verilate/tmp/

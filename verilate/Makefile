@@ -68,6 +68,12 @@ core_verilate:
 	--trace-max-width 2560  --exe  core-ver-src/aquila_core_tb.cpp core-ver-src/sim_mem.cpp
 	make -j -C core_obj_dir -f Vaquila_testharness.mk Vaquila_testharness
 
+.PHONY: build_riscv_tests
+build_riscv_rests:
+	mkdir tmp
+	cd tmp
+	git clone https://github.com/riscv/riscv-tests --recursive
+
 .PHONY: clean
 clean:
 	rm -rf core_obj_dir
