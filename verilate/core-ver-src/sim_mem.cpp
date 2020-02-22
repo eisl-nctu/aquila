@@ -27,12 +27,13 @@ void sim_mem_write(Vaquila_testharness_dp_ram* ram,uint32_t addr, size_t length,
 }
 
 
-int sim_mem_load_program(Vaquila_testharness_dp_ram* ram, const std::string fn, uint32_t* entry)
+std::map<std::string, uint64_t> sim_mem_load_program(Vaquila_testharness_dp_ram* ram, const std::string fn, uint32_t* entry)
 {
+  std::map<std::string, uint64_t> symbols;
   // https://codereview.stackexchange.com/questions/22901/reading-all-bytes-from-a-file
   std::ifstream bpfs(fn, std::ios::binary|std::ios::ate);
   if (!bpfs.is_open())
-    return -1;
+    return symbols;
   std::ifstream::pos_type pos = bpfs.tellg();
 
   int f_length = pos;
@@ -47,7 +48,6 @@ int sim_mem_load_program(Vaquila_testharness_dp_ram* ram, const std::string fn, 
   std::cout << "file size : " << size << std::endl;
 
   std::vector<uint8_t> zeros;
-  std::map<std::string, uint64_t> symbols;
 
 	do {
     Elf32_Ehdr* eh = (Elf32_Ehdr*)buf;
@@ -93,7 +93,7 @@ int sim_mem_load_program(Vaquila_testharness_dp_ram* ram, const std::string fn, 
       }
     }
   } while(0);
-  return 0;
+  return symbols;
 }
 
 int sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn)
@@ -120,4 +120,15 @@ int sim_mem_dump_memory(Vaquila_testharness_dp_ram* ram, const std::string fn)
 
   fs.close();
   return 0;
+}
+
+uint32_t sim_mem_tohost_monitor(Vaquila_testharness_dp_ram* ram, uint64_t tohost_addr)
+{
+  uint32_t mem_offset = ram->MEM_OFFSET;
+  uint32_t data = 0;
+  data = (ram->mem[tohost_addr-mem_offset] & 0xff);
+  data = data | (ram->mem[tohost_addr+1-mem_offset] & 0xff) << 8;
+  data = data | (ram->mem[tohost_addr+2-mem_offset] & 0xff) << 16;
+  data = data | (ram->mem[tohost_addr+3-mem_offset] & 0xff) << 24;
+  return data;
 }

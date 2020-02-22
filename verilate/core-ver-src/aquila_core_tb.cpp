@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <string>
+#include <map>
+#include <cstdint>
 
 #include "verilated_vcd_c.h"
 #include "Vaquila_testharness.h"
@@ -11,8 +14,13 @@
 
 #include "sim_mem.h"
 
+#define FENCE_ENABLE
+#undef FENCE_ENABLE
+#define MAX_SIM_CYCLE 100000
+
 using namespace std;
 static vluint64_t cpuTime = 0;
+uint32_t tohost_addr = 0;
 double sc_time_stamp() { return cpuTime; }
 Vaquila_testharness* top;
 VerilatedVcdC* Vcdfp;
@@ -21,13 +29,15 @@ void load_simple_asm();
 
 static void usage(const char * program_name)
 {
-  cout << "Usage: " << program_name << " [RISCV_TEST_ELF]" << endl;
+  cout << "Usage: " << program_name << " [RISCV_TEST_ELF] [RVTEST(0/1),default 0]" <<endl;
 }
 
 
 int main(int argc, char **argv)
 {
   Verilated::commandArgs(argc,argv);
+  map<string,uint64_t> elf_symbols;
+  bool rv_test_enable = false;
 
   if (argc < 2) {
     usage(argv[0]);
@@ -42,6 +52,12 @@ int main(int argc, char **argv)
     return -1;
   }
 
+  if (argc >=3 ) {
+    if (argv[2][0] == '1')
+      rv_test_enable = true;
+    cout << "set rv_test_enable to " << (rv_test_enable ? "\"true\"" : "\"false\"") << endl;
+  }
+
   top = new Vaquila_testharness("top");
   Verilated::traceEverOn(true);
   Vcdfp = new VerilatedVcdC;
@@ -50,11 +66,15 @@ int main(int argc, char **argv)
 
   uint32_t entry_addr = 0x00000000;
 
-  int err = sim_mem_load_program(top->aquila_testharness->mock_ram, string(argv[1]), &entry_addr);
+  elf_symbols = sim_mem_load_program(top->aquila_testharness->mock_ram, string(argv[1]), &entry_addr);
 
-  if (err < 0){
-    cerr << "failed to load program to mock ram.!!!!" << endl;
-    return - 1;
+  if (rv_test_enable) {
+    if (elf_symbols.count("tohost")){
+      tohost_addr = static_cast<uint32_t>(elf_symbols["tohost"]);
+    } else {
+      cerr << "no tohost symbols existed.!!!" << endl;
+      return -1;
+    }
   }
 
   top->rst_n = 0;
@@ -73,9 +93,10 @@ int main(int argc, char **argv)
     Vcdfp->dump(cpuTime);
   }
   top->rst_n = 1;
-  //top->clk(clk);
-	
-  for (int i = 0 ; i < 1000000 ; i ++){
+
+  uint32_t tohost_val;
+
+  for (int i = 0 ; i < MAX_SIM_CYCLE ; i ++){
     top->clk = 0;
     top->eval ();
     cpuTime += 5;
@@ -86,15 +107,30 @@ int main(int argc, char **argv)
     top->eval ();
     cpuTime += 5;
     Vcdfp->dump(cpuTime);
+
+    if (rv_test_enable) {
+#ifdef FENCE_ENABLE
+      tohost_val = sim_mem_tohost_monitor(top->aquila_testharness->mock_ram, tohost_addr);
+#else
+      tohost_val = top->aquila_testharness->mock_uart_0->read_tohost();
+#endif
+      if (tohost_val != 0){
+        if (tohost_val == 1)
+          cout << "pass testcase: " << argv[1] << endl;
+        else
+          cout << "testcase #" << tohost_val << " failed !!!!!\ntestcase:" << argv[1] << endl;
+        break;
+      }
+    }
   }
-  /*while (!Verilated::gotFinish()) {
-    top->eval();
-    //sc_start(1, SC_NS);
-  }*/
 	Vcdfp->close();
   delete Vcdfp;
   delete top;
-	exit(0);
+
+	if (rv_test_enable && tohost_val != 1)
+    exit(-1);
+  else
+    exit(0);
 }
 
 void load_simple_asm()
