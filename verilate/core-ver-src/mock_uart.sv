@@ -6,7 +6,8 @@ module mock_uart # (
   parameter integer AXI_LANTENCY = 10,
   parameter integer UART_RXFIFO_ADDR = 32'hC0000000,
   parameter integer UART_TXFIFO_ADDR = 32'hC0000004,
-  parameter integer UART_STATUS_ADDR = 32'hC0000008
+  parameter integer UART_STATUS_ADDR = 32'hC0000008,
+  parameter integer TOHOST_VAL_ADDR/*verilator public*/ =  32'hC1000000
 )
 (
     input logic clk,       // AXI bus clock signal.
@@ -22,6 +23,7 @@ module mock_uart # (
     output logic [ C_M_AXI_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data
 
   );
+  /*verilator public_module*/
 
   typedef enum [1:0] {IDLE=2'b0,READ,WRITE,DONE} axi_state_t;
 
@@ -31,6 +33,8 @@ module mock_uart # (
   localparam TX_FIFO_EMPTY_bit = 2;
   localparam RX_FIFO_FULL_bit = 1;
   localparam RX_FIFO_VALID_bit = 0;
+
+  logic [31:0] tohost_val/*verilator public_flat*/;
 
   logic [7:0] uart_tx_fifo;
   logic [7:0] uart_rx_fifo;
@@ -201,6 +205,16 @@ module mock_uart # (
       uart_rx_fifo <= M_DEVICE_core2dev_data[7:0];
     else
       uart_rx_fifo <= uart_rx_fifo;
+
+  //riscv-test tohost hacking
+  always_ff @(posedge clk)
+    if (~rst_n)
+      tohost_val <= 0;
+    else if (cur_state == WRITE && M_DEVICE_addr == TOHOST_VAL_ADDR)
+      tohost_val <= M_DEVICE_core2dev_data;
+    else
+      tohost_val <= tohost_val;
+
   always_ff @(posedge clk)
     if (~rst_n)
       M_DEVICE_dev2core_data <= 32'h0;
@@ -225,4 +239,12 @@ module mock_uart # (
       M_DEVICE_data_ready <= 1;
     else
       M_DEVICE_data_ready <= M_DEVICE_data_ready;
+
+  function [31:0] read_tohost;
+    /*verilator public*/
+    begin
+        read_tohost = tohost_val;
+    end
+  endfunction
+
 endmodule
