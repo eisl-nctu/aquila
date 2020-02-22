@@ -6,6 +6,8 @@ VERILATOR ?= verilator
 #export VERILATOR_ROOT
 #VERILATOR = $(VERILATOR_ROOT)/bin/verilator
 #endif
+CUR_DIR=$(shell pwd)
+
 CPPFLAGS = -I$(VDIR) `pkg-config --cflags verilator`
 
 AQUILA_CORE_SRC=../ip_repo/aquila/hdl/core_rtl/*.v \
@@ -69,13 +71,22 @@ core_verilate:
 	make -j -C core_obj_dir -f Vaquila_testharness.mk Vaquila_testharness
 
 .PHONY: build_riscv_tests
-build_riscv_rests:
+.ONESHELL:
+build_riscv_tests:
 	mkdir tmp
 	cd tmp
-	git clone https://github.com/riscv/riscv-tests --recursive
+	git clone https://github.com/riscv/riscv-tests
+	cd riscv-tests
+	rmdir env
+	git clone https://github.com/Daichou/riscv-test-env env
+	autoconf
+	./configure --prefix=$(CUR_DIR)/tmp/target
+	make
+	make install
 
 .PHONY: clean
 clean:
 	rm -rf core_obj_dir
 	rm -rf full_obj_dir
 	rm build.log
+	rm -rf tmp
