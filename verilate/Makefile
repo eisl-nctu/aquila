@@ -84,6 +84,22 @@ build_riscv_tests:
 	make
 	make install
 
+.PHONY: run_riscv_ui_p_tests
+.ONESHELL:
+run_riscv_ui_p_tests:
+	cd ci
+	./run_rv_test.sh riscv32ui-p.list
+
+.PHONY: run_riscv_ui_p_tests
+.ONESHELL:
+run_riscv_um_p_tests:
+	cd ci
+	./run_rv_test.sh riscv32um-p.list
+
+.PHONY: run_riscv_ui_tests
+.ONESHELL:
+run_riscv_ui_tests: run_riscv_ui_p_tests run_riscv_um_p_tests
+
 .PHONY: clean
 clean:
 	rm -rf core_obj_dir

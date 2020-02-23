@@ -47,7 +47,7 @@ if [ ! -f $V_MODEL ]; then
   echo "$V_MODEL dose not exist, build start..."
   cd ../
   make core_verilate
-  cd ../ci
+  cd ci
 fi
 
 # check log dir exist
