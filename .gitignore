@@ -67,3 +67,9 @@ verilate/tools/dec_cpu.log
 
 # tmp
 verilate/tmp/
+
+# ci
+verilate/ci/*.log
+verilate/ci/*.bak
+verilate/ci/log/
+verilate/ci/log.bak/

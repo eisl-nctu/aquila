@@ -11,6 +11,7 @@ LOG_DIR=./log
 ORIGIN_MEM=dump.mem
 ORIGIN_CPU_LOG=cpu.log
 ORIGIN_DEC_LOG=dec_cpu.log
+ORIGIN_VCD=aquila_core.vcd
 # check $1 exists
 if [ -f $1 ]; then
   echo "start $1 testsuite"
@@ -57,6 +58,7 @@ if [ ! -d $LOG_DIR ]; then
   mkdir -p $LOG_DIR/mem
   mkdir -p $LOG_DIR/objdump
   mkdir -p $LOG_DIR/dec_log
+  mkdir -p $LOG_DIR/vcd
 else
   echo "$LOG_DIR exist, backup..."
   mv $LOG_DIR "${LOG_DIR}.bak"
@@ -65,6 +67,7 @@ else
   mkdir -p $LOG_DIR/mem
   mkdir -p $LOG_DIR/objdump
   mkdir -p $LOG_DIR/dec_log
+  mkdir -p $LOG_DIR/vcd
 fi
 
 readarray fname_array < $1
@@ -89,6 +92,7 @@ for row in "${fname_array[@]}";do
   mv $ORIGIN_DEC_LOG "${LOG_DIR}/dec_log/${testcase}.dec.log"
   mv $ORIGIN_MEM "${LOG_DIR}/mem/${testcase}.mem.log"
   mv $ORIGIN_CPU_LOG "${LOG_DIR}/cpu/${testcase}.cpu.log"
+  mv $ORIGIN_VCD "${LOG_DIR}/vcd/${testcase}.vcd"
   cp "${RV_TEST_PATH}/${testcase}.dump" "${LOG_DIR}/objdump/${testcase}.objdump"
 done
 
