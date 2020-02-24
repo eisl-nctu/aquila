@@ -17,7 +17,7 @@ RUN git clone https://github.com/riscv/riscv-gnu-toolchain \
     && git submodule update --init --recursive
 
 RUN cd riscv-gnu-toolchain \
-    ./configure --prefix=/opt/riscv \
+    && ./configure --prefix=/opt/riscv \
     && make -j8
 
 RUN cd riscv-gnu-toolchain \
