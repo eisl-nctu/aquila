@@ -19,11 +19,11 @@ addons:
       - autoconf
       - automake
       - autotools-dev
-  		- curl
+      - curl
       - python3
-			- git
-			- ca-certificates
-	    - libmpc-dev
+      - git
+      - ca-certificates
+      - libmpc-dev
       - libmpfr-dev
       - libgmp-dev
       - gawk
@@ -33,20 +33,20 @@ addons:
       - texinfo
       - libusb-1.0-0-dev
       - gperf
-			- libtool
-			- patchutils
-			- bc
-			- libexpat-dev
-			- zlib1g-dev
+      - libtool
+      - patchutils
+      - bc
+      - libexpat-dev
+      - zlib1g-dev
       - valgrind
-			- verilator
+      - verilator
 env:
   global:
     - RISCV="/home/travis/riscv_install"
 
 branches:
   only:
-  - master
+    - master
 
 before_install:
   - export CXX=g++-7 CC=gcc-7
@@ -93,4 +93,4 @@ jobs:
       script:
         - cd verilate/ci
         - run_rv_test.sh riscv32um-p.list
-
+install: travis_wait
