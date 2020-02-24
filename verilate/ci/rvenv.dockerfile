@@ -14,9 +14,13 @@ RUN mkdir /opt/riscv/
 
 RUN git clone https://github.com/riscv/riscv-gnu-toolchain \
     && cd riscv-gnu-toolchain \
-    && git submodule update --init --recursive \
-    && ./configure --prefix=/opt/riscv \
-    && make -j8 \
+    && git submodule update --init --recursive
+
+RUN cd riscv-gnu-toolchain \
+    ./configure --prefix=/opt/riscv \
+    && make -j8
+
+RUN cd riscv-gnu-toolchain \
     && ./configure --prefix=/opt/riscv --with-arch=rv32gc --with-abi=ilp32 \
     && make -j8
 
