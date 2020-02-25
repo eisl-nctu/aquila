@@ -8,7 +8,7 @@ VERILATOR ?= verilator
 #endif
 CUR_DIR=$(shell pwd)
 
-CPPFLAGS = -I$(VDIR) `pkg-config --cflags verilator`
+CPPFLAGS = -std=c++11 -I$(VDIR) `pkg-config --cflags verilator`
 
 AQUILA_CORE_SRC=../ip_repo/aquila/hdl/core_rtl/*.v \
 								../ip_repo/aquila/hdl/aquila.v
