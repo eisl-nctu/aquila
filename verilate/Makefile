@@ -66,6 +66,7 @@ core_verilate:
 	$(VERILATOR) $(verilator_flag) $(AQUILA_CORE_SRC) $(CORE_VER_SRC) \
 	-Wno-lint -Wno-style -Wno-fatal \
 	-Mdir core_obj_dir \
+	-CFLAGS $(CPPFLAGS) \
 	--top-module aquila_testharness  --trace --trace-max-array 3000 \
 	--trace-max-width 2560  --exe  core-ver-src/aquila_core_tb.cpp core-ver-src/sim_mem.cpp
 	make -j -C core_obj_dir -f Vaquila_testharness.mk Vaquila_testharness
