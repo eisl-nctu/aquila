@@ -21,8 +21,8 @@ FULL_AQUILA_CORE_SRC=../ip_repo/aquila/hdl/core_rtl/*.v \
 FULL_VER_SRC=./full-ver-src/*.v \
 				./full-ver-src/*.sv
 
-verilator_flag=--cc --assert --clk cfg_dev_aclk  -O3
-verilator_lint_flag=--lint-only
+verilator_flag=--cc --assert --clk cfg_dev_aclk  -O3  -Wno-MODDUP
+verilator_lint_flag=--lint-only  -Wno-MODDUP
 
 .PHONY: full_lint
 full_lint:
