@@ -88,10 +88,10 @@ jobs:
       name: run riscv ui-p
       script:
         - cd verilate/ci
-        - run_rv_test.sh riscv32ui-p.list
+        - ./run_rv_test.sh riscv32ui-p.list 0
     - stage: test
       name: run riscv um-p
       script:
         - cd verilate/ci
-        - run_rv_test.sh riscv32um-p.list
+        - ./run_rv_test.sh riscv32um-p.list 0
 install: travis_wait
