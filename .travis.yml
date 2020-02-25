@@ -8,8 +8,8 @@ cache:
   timeout: 1000
 
 # required packages to install
-  dist: bionic
-  addons:
+dist: bionic
+addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
