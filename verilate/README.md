@@ -8,6 +8,7 @@
 ├── riscv-isa-sim
 ├── tools
 ├── ver-test
+├── ci
 └── ver-test-bug
 ```
 * core-ver-src
@@ -20,7 +21,11 @@
 * tools
     + log_proccess tool
 * ver-test
-    + simple test program 
+    + simple test program
+* ci
+	+ test script
+	+ auto build toolchain script
+	+ testcase list 
 ## usage
 Go and get the [RISCV gnu toolchain](https://github.com/riscv/riscv-gnu-toolchain) and configure with soft float point support.
 
@@ -45,11 +50,15 @@ After `make core_verilate` or `make core_versyn` command,it will create *core_ob
 
 To run verilator model, in *core_obj_dir* execute:
 ```bash
-$ ./Vaquila_testharness [RISCV_TEST_ELF]
+$ ./Vaquila_testharness [RISCV_TEST_ELF] [RVTEST(0/1),default 0]
 ```
 For example:
 ```bash
-$ ./Vaquila_testharness ../ver-test-bug/_test.o
+$ ./Vaquila_testharness ../ver-test-bug/_test.o 0
+```
+If you want to run risc-tests. It will check tohost value and measure your test status:
+```bash
+$ ./Vaquila_testharness ../tmp/target/share/riscv-tests/isa/rv32ui-p-andi 1
 ```
 It will print UART TX data to stdout, and generate aquila_core.vcd, cpu.log and dump.mem for debug.
 You can use gtkwave to view waveform:
@@ -94,15 +103,16 @@ You can change `compress` boolean varible in log_proccess.cpp to generate cycle 
 |UART_RXFIFO_ADDR|memory map io register address for UART_RXFIFO|don't modify|32'hC0000000|
 |UART_TXFIFO_ADDR|memory map io register address for UART_TXFIFO|don't modify|32'hC0000004|
 |UART_STATUS_ADDR|memory map io register address for UART_STATUS|don't modify|32'hC0000008|
-## TODO
-* simple dual port mcok ram for simulation
-	+ load riscv-test program memory
-* bootrom for simulation
-    1. set the stack pointer to __stack_start ~ __stack_top
-    2. jump to main
-    3. jump to 0x80000000 to start program
-* full system simulation
-    + remove cache outward port wrapper
-    + create mock ideal local memory (icache/Dcache)
-    + keep S_CONFIG , DEVICE ,port
+|TOHOST_VAL_ADDR|memory map io register address for fesvr "tohost" varible|don't modify|32'hC1000000|
+## CI
+Continuous Integration(CI) bases on Travis CI that run riscv-tests RISCV assembly tests. Travis CI runs these tests on Verilator. Travis CI builds riscv-gnu-toolchain, verilator model and run riscv-tests automatically.
 
+Aquila CI test current only execute 2 case sets: riscv32um-p, riscv32ui-p.
+
+There are two script in `ci` folder. One is `riscv_gcc_check.sh`. It can check whether riscv-gnu-toolchain exists on $RISCV path and builds it(optional). Another is `run_rv_test.sh`. It can check all dependency (except for riscv-gnu-toolchain) and execute riscv-tests set.
+```bash
+$ ./run_rv_test.sh [test case list] [create log(0/1) default is 1]
+```
+## TODO
+* RISCV torture tests
+* local CI runner (drone CI)
