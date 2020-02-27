@@ -66,7 +66,6 @@ core_versyn:
 .PHONY: core_verilate
 core_verilate:
 	$(VERILATOR) $(verilator_flag) $(AQUILA_CORE_SRC) $(CORE_VER_SRC) \
-	--threads $(VERILATOR_THREAD) \
 	-Wno-lint -Wno-style -Wno-fatal \
 	-Mdir core_obj_dir \
 	-CFLAGS $(CPPFLAGS) \
