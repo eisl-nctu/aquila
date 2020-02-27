@@ -83,6 +83,7 @@ jobs:
       name: build verilator model
       script:
         - cd verilate
+        - make clean
         - make core_verilate
     - stage: test
       name: run riscv ui-p
