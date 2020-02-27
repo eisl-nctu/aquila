@@ -14,9 +14,11 @@
 
 #include "sim_mem.h"
 
+#define TRACE
+//#undef TRACE
 #define FENCE_ENABLE
 #undef FENCE_ENABLE
-#define MAX_SIM_CYCLE 100000
+#define MAX_SIM_CYCLE 1000000
 
 using namespace std;
 static vluint64_t cpuTime = 0;
@@ -59,11 +61,12 @@ int main(int argc, char **argv)
   }
 
   top = new Vaquila_testharness("top");
+#ifdef TRACE
   Verilated::traceEverOn(true);
   Vcdfp = new VerilatedVcdC;
   top->trace(Vcdfp, 99);
   Vcdfp->open("aquila_core.vcd");
-
+#endif
   uint32_t entry_addr = 0x00000000;
 
   elf_symbols = sim_mem_load_program(top->aquila_testharness->mock_ram, string(argv[1]), &entry_addr);
@@ -86,11 +89,15 @@ int main(int argc, char **argv)
     top->clk = 0;
     top->eval ();
     cpuTime += 5;
+#ifdef TRACE
     Vcdfp->dump(cpuTime);
+#endif
     top->clk = 1;
     top->eval ();
     cpuTime += 5;
+#ifdef TRACE
     Vcdfp->dump(cpuTime);
+#endif
   }
   top->rst_n = 1;
 
@@ -100,14 +107,17 @@ int main(int argc, char **argv)
     top->clk = 0;
     top->eval ();
     cpuTime += 5;
+#ifdef TRACE
     Vcdfp->dump(cpuTime);
+#endif
     log_file << "#" << setfill('0') << setw(10) << right << i <<
       ":" << setfill('0') << setw(8) << right << hex << top->cur_instr_addr << endl;
     top->clk = 1;
     top->eval ();
     cpuTime += 5;
+#ifdef TRACE
     Vcdfp->dump(cpuTime);
-
+#endif
     if (rv_test_enable) {
 #ifdef FENCE_ENABLE
       tohost_val = sim_mem_tohost_monitor(top->aquila_testharness->mock_ram, tohost_addr);
@@ -123,8 +133,10 @@ int main(int argc, char **argv)
       }
     }
   }
+#ifdef TRACE
 	Vcdfp->close();
   delete Vcdfp;
+#endif
   delete top;
 
 	if (rv_test_enable && tohost_val != 1)
