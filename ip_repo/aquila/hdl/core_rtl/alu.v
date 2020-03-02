@@ -76,7 +76,7 @@ assign result_sll = a << b[4:0];                              // sll
 assign result_slt = ($signed(a) < $signed(b)) ? 1 : 0;        // slt
 assign result_sltu = (a < b) ? 1 : 0;                         // sltu
 assign result_xor = a ^ b;                                    // xor
-assign result_sr = shift_sel? (a >>> b[4:0]) : (a >> b[4:0]); // sra, srl
+assign result_sr = shift_sel? ($signed(a) >>> b[4:0]) : ($signed(a) >> b[4:0]); // sra, srl
 assign result_or = a | b;                                     // or
 assign result_and = a & b;                                    // and
 
