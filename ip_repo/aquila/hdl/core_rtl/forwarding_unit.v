@@ -56,7 +56,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
-module forwarding_unit #(DATA_WIDTH = 32)
+module forwarding_unit #(parameter DATA_WIDTH = 32)
 (
     // from Decode_Eexcute_Pipeline Register
     input  [4: 0]             rs1_addr,

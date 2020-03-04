@@ -53,7 +53,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
-module writeback#(DATA_WIDTH = 32)
+module writeback#(parameter DATA_WIDTH = 32)
 (
     // External Signals
     input                     clk,

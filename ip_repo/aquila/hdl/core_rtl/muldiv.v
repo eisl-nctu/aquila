@@ -88,7 +88,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-module muldiv#(DATA_WIDTH = 32)
+module muldiv#(parameter DATA_WIDTH = 32)
 (
     input                         clk,
     input                         rst,

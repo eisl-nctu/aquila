@@ -55,7 +55,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
-module execute #(DATA_WIDTH = 32)
+module execute #(parameter DATA_WIDTH = 32)
 (
     // System Signals
     input                         clk,

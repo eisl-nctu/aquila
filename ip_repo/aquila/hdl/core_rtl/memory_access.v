@@ -54,7 +54,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
-module memory_access#(DATA_WIDTH = 32)
+module memory_access#(parameter DATA_WIDTH = 32)
 (
     // from Execute_Memory_Pipeline
     input  [DATA_WIDTH-1 : 0]     unaligned_data,       // from rs2

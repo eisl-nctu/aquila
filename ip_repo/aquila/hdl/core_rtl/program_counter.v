@@ -55,7 +55,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
-module program_counter#(ADDR_WIDTH = 32, DATA_WIDTH = 32)
+module program_counter#(parameter ADDR_WIDTH = 32, parameter DATA_WIDTH = 32)
 (
     // System signals
     input                     clk,
