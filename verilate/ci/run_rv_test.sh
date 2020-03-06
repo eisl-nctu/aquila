@@ -14,7 +14,7 @@ ORIGIN_DEC_LOG=dec_cpu.log
 ORIGIN_VCD=aquila_core.vcd
 SAVE_LOG=1
 # check $1 exists
-if [ -f $1 ]; then
+if [ -f "$1" ]; then
   echo "start $1 testsuite"
 else
   echo "$1 does not exist"
@@ -49,7 +49,7 @@ if [ "$SAVE_LOG" -eq "1" ]; then
   # check log dir exist
   if [ ! -d $LOG_DIR ]; then
     echo "$LOG_DIR dose not exists, create new one"
-    mkdir $LOG_DIR
+    mkdir -p $LOG_DIR
     mkdir -p $LOG_DIR/cpu
     mkdir -p $LOG_DIR/mem
     mkdir -p $LOG_DIR/objdump
@@ -58,7 +58,7 @@ if [ "$SAVE_LOG" -eq "1" ]; then
   else
     echo "$LOG_DIR exist, backup..."
     mv $LOG_DIR "${LOG_DIR}.bak"
-    mkdir $LOG_DIR
+    mkdir -p $LOG_DIR
     mkdir -p $LOG_DIR/cpu
     mkdir -p $LOG_DIR/mem
     mkdir -p $LOG_DIR/objdump
