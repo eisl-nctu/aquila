@@ -116,3 +116,4 @@ $ ./run_rv_test.sh [test case list] [create log(0/1) default is 1]
 ## TODO
 * RISCV torture tests
 * local CI runner (drone CI)
+* Csmith Fuzzy test
