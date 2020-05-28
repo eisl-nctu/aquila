@@ -42,5 +42,6 @@ This work is partly funded by the Chip Implementation Center (CIC), National App
 Embedded Intelligent Systems Lab (EISL)  
 Department of Computer Science  
 National Chiao Tung University  
-  
+Hsinchu, Taiwan
+
 eisl.nctu-at-gmail
