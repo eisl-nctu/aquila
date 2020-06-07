@@ -25,7 +25,7 @@ FULL_VER_SRC=./full-ver-src/*.v \
 
 verilator_flag=--cc --assert --clk cfg_dev_aclk  -O3  -Wno-MODDUP
 verilator_lint_flag=--lint-only  -Wno-MODDUP
-TORTURE_CASE=100
+TORTURE_CASE=10
 
 .PHONY: full_lint
 full_lint:
@@ -123,7 +123,7 @@ build_riscv_torture:
 .ONESHELL:
 run_riscv_torture:
 	cd ci
-	./run_torture_test.sh
+	./run_rv_torture.sh
 
 .PHONY: clean
 clean:

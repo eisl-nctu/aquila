@@ -73,5 +73,5 @@ verilate/ci/*.log
 verilate/ci/*.bak
 verilate/ci/log/
 verilate/ci/log.bak/
-verilate/ci/torture_loglog/
+verilate/ci/torture_log/
 verilate/ci/torture_log.bak/
