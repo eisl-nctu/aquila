@@ -1,5 +1,5 @@
 
-
+SHELL := /bin/bash
 #ifeq ($(VERILATOR_ROOT),)
 VERILATOR ?= verilator
 #else
@@ -25,6 +25,7 @@ FULL_VER_SRC=./full-ver-src/*.v \
 
 verilator_flag=--cc --assert --clk cfg_dev_aclk  -O3  -Wno-MODDUP
 verilator_lint_flag=--lint-only  -Wno-MODDUP
+TORTURE_CASE=100
 
 .PHONY: full_lint
 full_lint:
@@ -77,8 +78,9 @@ core_verilate:
 .PHONY: build_riscv_tests
 .ONESHELL:
 build_riscv_tests:
-	mkdir tmp
+	if [ ! -d "tmp" ]; then mkdir tmp; fi;
 	cd tmp
+	if [ -d "riscv-tests" ]; then rm -rf riscv-tests; fi;
 	git clone https://github.com/riscv/riscv-tests
 	cd riscv-tests
 	rmdir env
@@ -103,6 +105,25 @@ run_riscv_um_p_tests:
 .PHONY: run_riscv_ui_tests
 .ONESHELL:
 run_riscv_ui_tests: run_riscv_ui_p_tests run_riscv_um_p_tests
+
+.PHONY: build_riscv_torture
+.ONESHELL:
+build_riscv_torture:
+	if [ ! -d "tmp" ];then  mkdir tmp; fi;
+	cd tmp
+	if [ -d "riscv-torture" ]; then rm -rf riscv-torture; fi;
+	git clone --recursive https://github.com/Daichou/riscv-torture
+	cd riscv-torture
+	make gencase NUM_CASE=$(TORTURE_CASE)
+	cd output
+	make
+	ls | grep ".S" | sed 's/\.S//' > torture.list
+
+.PHONY: run_riscv_torture
+.ONESHELL:
+run_riscv_torture:
+	cd ci
+	./run_torture_test.sh
 
 .PHONY: clean
 clean:
