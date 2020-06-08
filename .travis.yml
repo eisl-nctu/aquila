@@ -100,5 +100,5 @@ jobs:
       name: run riscv torture
       script:
         - cd verilate/ci
-        - ./run_torture.sh 0
+        - ./run_rv_torture.sh 0
 install: travis_wait
