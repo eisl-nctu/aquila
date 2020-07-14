@@ -3,7 +3,6 @@
 ```
 .
 ├── core-ver-src
-├── full-ver-src
 ├── Makefile
 ├── riscv-isa-sim
 ├── tools
@@ -13,8 +12,6 @@
 ```
 * core-ver-src
     + aquila_top as DUT
-* full-ver-src
-    + deprecated
 * riscv-isa-sim
     + provide fesvr/elf.h for sim_mem.cpp
     + fesvr
