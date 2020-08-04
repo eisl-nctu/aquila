@@ -12,8 +12,7 @@ CUR_DIR=$(shell pwd)
 
 CPPFLAGS = -std=c++11 -I$(VDIR) `pkg-config --cflags verilator`
 
-AQUILA_CORE_SRC=../ip_repo/aquila/hdl/core_rtl/*.v \
-								../ip_repo/aquila/hdl/aquila.v
+AQUILA_CORE_SRC=../ip_repo/aquila/hdl/core_rtl/*.v
 
 CORE_VER_SRC=./core-ver-src/*v \
 						 ./core-ver-src/*.sv
