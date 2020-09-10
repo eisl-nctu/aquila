@@ -62,12 +62,12 @@ clock_t clock(void)
     size_t cycles, cyclesh;
     long long mhz_cycles;
 
-    // Use the counter instruction 'rdcycle' and 'rdcycleh' to read
-    // the user-mode cpu cycle counter, then convert it to return the
-    // 1MHz-tick counts since reset. Here, we assume the CPU is
-    // clocked at 100MHz.
-    asm volatile ("rdcycle %0" : "=r" (cycles));
-    asm volatile ("rdcycleh %0" : "=r" (cyclesh));
+    // Use the counter instruction 'csrrs' to read the machine-mode
+    // cpu cycle counter, then convert it to return the 1MHz-tick
+    // counts since reset. Here, we assume the CPU is clocked at 100MHz.
+    //
+    asm volatile ("csrrs %0, mcycle, x0" : "=r" (cycles));
+    asm volatile ("csrrs %0, mcycleh, x0" : "=r" (cyclesh));
     mhz_cycles = ((long long) cyclesh << 32) + cycles;
     mhz_ticks = (size_t) ((mhz_cycles/CPU_CLOCK) & 0xFFFFFFFFL);
 

@@ -4,8 +4,7 @@
 //  Date    : Dec/09/2019
 // -----------------------------------------------------------------------------
 //  Description:
-//  This is the minimal stdlib library for aquila.  The malloc()/free() functions
-//  are derived from the FreeRTOS project.
+//  This is the minimal stdlib library for Aquila.
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
@@ -56,16 +55,75 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef unsigned long ulong;
+
+extern ulong __heap_start; /* declared in the linker script */
+extern ulong __heap_size;  /* declared in the linker script */
+static ulong heap_top = (ulong) &__heap_start;
+static ulong heap_size = (ulong) &__heap_size;
+static ulong *curr_top = (ulong *) 0xFFFFFFF0, *heap_end = (ulong *) 0xFFFFFFF0;
+
 void *malloc(size_t n)
 {
-    /* This function is derived from FreeRTOS_v8 heap_4.c. */
-    return pvPortMalloc(n);
+    void *return_ptr;
+    ulong *ptr, temp;
+    int r;
+
+    if (curr_top == heap_end) // first time to call malloc()?
+    {
+        curr_top = (ulong *) heap_top;
+        heap_end = (ulong *) ((heap_top + heap_size) & 0xFFFFFFF0);
+        *curr_top = (ulong) heap_end;
+    }
+
+    // Search for a large-enough free memory block (FMB).
+    return_ptr = NULL;
+    for (ptr = curr_top; ptr < heap_end; ptr = (ulong *) *ptr)
+    {
+        if ((*ptr & 1) == 0 && (*ptr - (ulong) ptr > n))
+        {
+            temp = ((ulong) ptr) & 0xFFFFFFFE;
+            return_ptr = (void *) (temp + sizeof(ulong));
+
+            // Update the FMB link list structure.
+            r = n % sizeof(ulong);
+            temp = n + sizeof(ulong) + ((r)? 4-r : 0);
+            *(ptr + temp/sizeof(ulong)) = *ptr;
+            curr_top = ptr + temp/sizeof(ulong);
+            *ptr = (*ptr + temp) | 1;
+            break;
+        }
+    }
+
+    if (return_ptr != NULL) return return_ptr;
+
+    // Search again for a FMB from heap_top to curr_top
+    for (ptr = (ulong *) heap_top; ptr < curr_top; ptr = (ulong *) *ptr)
+    {
+        if ((*ptr & 1) == 0 && (*ptr - (ulong) ptr > n))
+        {
+            temp = ((ulong) ptr) & 0xFFFFFFFE;
+            return_ptr = (void *) (temp + sizeof(ulong));
+
+            // Update the FMB link list structure.
+            r = n % sizeof(ulong);
+            temp = n + sizeof(ulong) + ((r)? 4-r : 0);
+            *(ptr + temp/sizeof(ulong)) = *ptr;
+            curr_top = ptr + temp/sizeof(ulong);
+            *ptr = (*ptr + temp) | 1;
+            break;
+        }
+    }
+
+    return return_ptr;
 }
 
 void free(void *mptr)
 {
-    /* This function is derived from FreeRTOS_v8 heap_4.c. */
-    vPortFree(mptr);
+    ulong *ptr;
+
+    ptr = ((ulong *) mptr) - 1;
+    *ptr = *ptr & 0xFFFFFFFE; // Free the FMB.
 }
 
 void *calloc(size_t n, size_t size)
@@ -109,6 +167,8 @@ int abs(int n)
 	return j;
 }
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 void exit(int status)
 {
 	printf("\nProgram exit with a status code %d\n", status);
@@ -117,6 +177,7 @@ void exit(int status)
     printf("Press <reset> on the FPGA board to reboot the cpu ...\n\n");
     while (1);
 }
+#pragma GCC pop_options
 
 static int rand_seed = 27182;
 
@@ -129,3 +190,4 @@ int rand(void)
 {
     return(((rand_seed = rand_seed * 214013L + 2531011L) >> 16) & 0x7fff);
 }
+

@@ -56,8 +56,6 @@
 #define __STDLIB__H__
 #include <stddef.h>
 
-void *pvPortMalloc( size_t xWantedSize ); /* from FreeRTOS v8 */
-void vPortFree( void *pv );               /* from FreeRTOS v8 */
 void *malloc(size_t n);
 void free(void *m);
 void *calloc(size_t n, size_t sz);
