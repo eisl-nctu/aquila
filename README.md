@@ -1,5 +1,5 @@
 # The Aquila SoC
-Aquila is an open-source 32-bit RISC-V RV32IMA compliant processor core for Xilinx FPGAs, released under the BSD-3-Clause Licence. The processor core is encapsulated as a reusable IP for Xilinx Vivado EDA tools. You can use the Vivado Block Diagram Editor to integrates Aquila with other IPs in Vivado IP catalog to create an application-specific processor SoC.
+Aquila is an open-source 32-bit RISC-V RV32IMA compliant processor core for Xilinx FPGAs, released under the BSD-3-Clause Licence. The processor core is encapsulated as a reusable IP for Xilinx Vivado EDA tools. You can use the Vivado Block Diagram Editor to integrate Aquila with other IPs in Vivado IP catalog to create an application-specific processor SoC.
 
 ![](docs/aquila_soc.jpg)
 
@@ -36,7 +36,7 @@ A simple user's guide to Aquila is available [here](docs/aquila_manual.pdf).
 To create the complete Vivado workspace for the Aquila SoC, you can use the hw/build.tcl script and follow the instructions [here](hw/readme.md).
 
 We also have the tar files for previous versions of Aquila in the archive directory.
-- Aquila version [0.9 preview](https://github.com/eisl-nctu/aquila/tree/master/archive/aquila_soc_0.9_preview.tgz). Tested with Vivado 2018.2 on Xilinx KC705.
+- Aquila version [0.9 preview](archive/aquila_soc_0.9_preview.tgz). Tested with Vivado 2018.2 on Xilinx KC705.
 
 # Acknowledgment
 This work is partly funded by the Chip Implementation Center (CIC), National Applied Research Laboratories, Taiwan, ROC.
