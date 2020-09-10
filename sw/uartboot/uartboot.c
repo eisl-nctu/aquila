@@ -1,5 +1,5 @@
 // =============================================================================
-//  Program : ultraboot.c
+//  Program : uartboot.c
 //  Author  : Chun-Jen Tsai
 //  Date    : Nov/04/2019
 // -----------------------------------------------------------------------------
@@ -11,7 +11,9 @@
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
-//  None.
+//  Jan/14/2020, by Chun-Jen Tsai:
+//    Change the *.ebf format to support code loading at different start
+//    addresses.
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -59,33 +61,39 @@
 
 // ------------------------------------------------------------------------------
 //  Memory Map for KC-705:
-//     0x80000000 ~ 0x80007FFF: code area (32KB)
-//     0x80080000 ~ 0x81007FFF: data area (16MB)
-//     0x90000000 ~ 0xAFFFFFFF: heap area (512MB)
-//     0xB0000000 ~ 0xB0001FFF: boot code area (8KB)
-//     0xB0002000 ~ 0xB0004000: boot data area (8KB)
-//     0xBFFE0000 ! 0xBFFF0000: stack area (64KB)
+//     0x00000000 ~ 0x0000FFFF: on-chip memory (64KB, boot code)
+//     0x80000000 ~ 0x8FFFFFFF: code/data area (256MB)
+//     0x90000000 ~ 0xAFFEFFFF: heap area (511MB)
+//     0xAFFF0000 ~ 0xAFFFFFF0: stack area (64KB)
+//     0xB0000000 ~ 0xBFFFFFFF: unused area (256MB)
 // ------------------------------------------------------------------------------
 //  Memory Map for Arty:
-//     0x80000000 ~ 0x80007FFF: code area (32KB)
-//     0x80080000 ~ 0x81007FFF: data area (16MB)
-//     0x82000000 ~ 0x8EFFFFFF: heap area (208MB)
-//     0x8F000000 ~ 0x8F001FFF: boot code area (8KB)
-//     0x8F002000 ~ 0x8F003FFF: boot data area (8KB)
-//     0x8FFE0000 ! 0x8FFF0000: stack area (64KB)
+//     0x00000000 ~ 0x0000FFFF: on-chip memory (boot code)
+//     0x80000000 ~ 0x81FFFFFF: code/data area (16MB)
+//     0x82000000 ~ 0x8FFEFFFF: heap area (208MB)
+//     0x8FFF0000 ~ 0x8FFFFFF0: stack area (64KB)
 // ------------------------------------------------------------------------------
+
+unsigned int addr;
 
 int main(void)
 {
-    volatile unsigned char *prog = (unsigned char *) 0x80000000;
+    volatile unsigned char *prog;
     unsigned char code;
     unsigned int size;
-    int year = 2019;
+    int year = 2020;
     char *organization = "EISL@NCTU, Hsinchu, Taiwan";
 
-    printf("Copyright (c) %d, %s.\n", year, organization);
+    printf("===========================================================");
+    printf("============\n");
+    printf("Copyright (c) 2019-%d, %s.\n", year, organization);
     printf("The Aquila SoC is ready to go.\n");
     printf("Waiting for a program to be sent from the UART ...\n");
+    addr = inbyte();
+    addr = addr + (inbyte() << 8);
+    addr = addr + (inbyte() << 16);
+    addr = addr + (inbyte() << 24);
+    prog = (unsigned char *) addr;
     size = inbyte();
     size = size + (inbyte() << 8);
     size = size + (inbyte() << 16);
@@ -95,19 +103,19 @@ int main(void)
         code = inbyte();
         prog[idx] = code;
     }
-    printf("Aquila execution begins.\n");
+    printf("Aquila executes code at 0x%x, size = 0x%x bytes.\n", addr, size);
     printf("-----------------------------------------------------------");
     printf("------------\n");
 
-    // Jump to the entry point for execution.
-    asm("lui ra, 0x80000");
-    asm("jalr ra, ra, 0");
+    // Call the entry point for execution.
+    asm volatile ("lui t0, %hi(addr)");
+    asm volatile ("lw ra, %lo(addr)(t0)");
+    asm volatile ("jalr ra, ra, 0");
 
-    // Enters a halt state in case the program returns.
+    // Go back to wait for execution state when the program returns.
     printf("\n-----------------------------------------------------------");
-    printf("------------\nAquila execution finished.\n");
-    printf("Press <reset> on the FPGA board to reboot the cpu ...\n\n");
-    while (1);
+    printf("------------\nAquila execution finished.\n\n");
 
     return 0;
 }
+

@@ -63,9 +63,9 @@
 
 // Declare the I/O registers of the Xilinx axi_uartlite device.
 // This device requires no initialization.
-volatile unsigned int *uart_rxfifo = (unsigned int volatile *) 0xC0000000;
-volatile unsigned int *uart_txfifo = (unsigned int volatile *) 0xC0000004;
-volatile unsigned int *uart_status = (unsigned int volatile *) 0xC0000008;
+volatile unsigned int *uart_rxfifo = (unsigned int *) 0xC0000000;
+volatile unsigned int *uart_txfifo = (unsigned int *) 0xC0000004;
+volatile unsigned int *uart_status = (unsigned int *) 0xC0000008;
 
 // Declare the axi_uartlite status register control bits.
 #define TX_FIFO_FULL  8
@@ -110,7 +110,13 @@ void putd(int num)
     unsigned int divisor = 1000000000; /* only for 32-bit integer */
     int digit, leading_zero = 1;
 
-    if (num < 0) num = -num, putchar('-');
+    if (num == 0)
+    {
+        putchar('0');
+        return;
+    }
+    else if (num < 0) num = -num, putchar('-');
+
     do
     {
          digit = num / divisor;
@@ -121,15 +127,15 @@ void putd(int num)
          }
          divisor /= 10;
          if (!leading_zero) putchar(digit + '0');
-    } while (num != 0);
+    } while (divisor);
 }
 
-void putx(unsigned int num)
+void putx(unsigned int num, int prefix_zeros)
 {
-    char *HEX = "0123456789abcdef";
+    char *HEX = "0123456789ABCDEF";
     int digit, leading_zero = 1;
 
-    for (int idx = 8; idx > 0; idx --) /* only for 32-bit integer */
+    for (int idx = 8; idx > 0; idx--) /* only for 32-bit integer */
     {
         digit = num >> ((idx-1)*4);
         if (digit)
@@ -137,7 +143,7 @@ void putx(unsigned int num)
             leading_zero = 0;
             num = (num << ((9 - idx)*4)) >> ((9 - idx)*4);
         }
-        if (!leading_zero) putchar(HEX[digit]);
+        if ((!leading_zero) || prefix_zeros) putchar(HEX[digit]);
     }
 }
 
@@ -151,16 +157,23 @@ int printf(char *fmt, ...)
 {
     char *str;
     va_list ap;
+    int prefix_zeros = 0;
 
     for (va_start(ap, fmt); *fmt; fmt++)
     {
         if (*fmt == '%')
         {
             fmt++;
+            if (*fmt == '0')
+            {
+                prefix_zeros = 1;
+                fmt++;
+            }
             switch(*fmt)
             {
             case 'x':
-                putx(va_arg(ap, int));
+            case 'X':
+                putx(va_arg(ap, int), prefix_zeros);
                 break;
 
             case 'd':
@@ -184,3 +197,16 @@ int printf(char *fmt, ...)
 
     return 0;
 }
+
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+void exit(int status)
+{
+	printf("\nProgram exit with a status code %d\n", status);
+    printf("\n-----------------------------------------------------------");
+    printf("------------\nAquila execution finished.\n");
+    printf("Press <reset> on the FPGA board to reboot the cpu ...\n\n");
+    while (1);
+}
+#pragma GCC pop_options
+
