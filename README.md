@@ -16,8 +16,8 @@ The current version of Aquila is 1.0, with the following specification:
 - L1 data and instruction caches.
 - CLINT for standard timer interrupts.
 - The RTL model written in Verilog.
-- Multi-core support with coherent data cache controller (not in the released RTL model).
 - SD card I/O support (not in the released model yet, but coming soon).
+- Multi-core support with coherent data cache controller (not in the released RTL model yet).
 
 The following features are under development and should be ready in 2021:
 
