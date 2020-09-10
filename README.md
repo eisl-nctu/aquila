@@ -30,7 +30,7 @@ We will provide Vivado workspace for other less expensive platforms, such as the
 # User's Guide
 A simple user's guide to Aquila is available [here](https://github.com/eisl-nctu/aquila/blob/master/docs/aquila_manual.pdf).
 
-# Creation of the complete Vivado Workspaces of Aquila
+# Creation of the complete Vivado workspaces of Aquila
 To create the complete Vivado workspace for the Aquila SoC, you can use the hw/build.tcl script and follow the instructions [here].(https://github.com/eisl-nctu/aquila/tree/master/hw/readme.md).
 
 We also have the tar files for previous versions of Aquila in the archive directory.
