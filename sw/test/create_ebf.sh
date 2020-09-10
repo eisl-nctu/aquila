@@ -19,6 +19,11 @@
 fname="${1%.*}"
 fsize=`stat --printf="%s" $fname.bin`
 fsize=`printf "%08x\n" $fsize`
-echo $fsize | xxd -r -p | xxd -e -g4 | xxd -r > _header_.bin
+
+# The start addr of the executable is extracted from the linker script
+start=`sed -e 's/^[ \t]*//' $fname.ld | grep ^code_ram | cut -d= -f2 | cut -d, -f1 | sed -e 's/^[ \t]*//' | cut -c 3-`
+
+echo $start | xxd -r -p | xxd -e -g4 | xxd -r > _header_.bin
+echo $fsize | xxd -r -p | xxd -e -g4 | xxd -r >> _header_.bin
 cat _header_.bin $fname.bin > $fname.ebf
 rm -f _header_.bin
