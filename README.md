@@ -5,7 +5,7 @@ Aquila is an open-source 32-bit RISC-V RV32IMA compliant processor core for Xili
 
 Currently, the microarchitecture of Aquila implements the classical five-stage pipeline RISC architecture with in-order execution. Since Aquila is intended for HW-SW codesigned intelligent systems, heavy-lifting tasks will be handled by HW accelerators. Therefore, we are not in a hurry to move over to a superscalar architecture. System-level stability and full-feature OS support will be the focus of our development for now.
 
-Aquila is designed for implementing intelligent system SoCs for Xilinx FPGAs. Therefore, in this preview version of Aquila, the default behavior, when configured into a Xilinx FPGA, is to execute a boot code stored in ROM to load a binary executable from the Host PC through the UART connection. We will provide different boot ROMs in the future to boot the system from other devices (such as the SD card) to facilitate the design of a turn-key system.
+Aquila is designed for intelligent system SoCs for Xilinx FPGAs. The default behavior of the Aquila SoC, when configured into a Xilinx FPGA, is to execute a boot code stored in ROM to load a binary executable from the Host PC through the UART connection. We will provide different boot ROMs in the future to boot the system from other devices (such as the SD card) to facilitate the design of a turn-key system.
 
 # Specification
 The current version of Aquila is 1.0, with the following specification:
