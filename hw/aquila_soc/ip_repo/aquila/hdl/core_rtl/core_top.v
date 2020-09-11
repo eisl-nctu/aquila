@@ -148,7 +148,6 @@ wire [11: 0]      dec_csr_addr2fwd;
 wire [XLEN-1 : 0] dec_csr_data2fwd;
 
 // Signals sent to CSR only
-wire [11 : 0]     dec_sys_jump_csr_addr;
 wire [11 : 0]     dec_csr_addr2csr;
 wire              dec_is_csr_instr;
 
@@ -164,9 +163,9 @@ wire [ 4 : 0]     dec_amo_type2exe;
 
 wire              dec_fetch_valid2exe;
 wire              dec_sys_jump2exe;
-wire [ 1: 0]      dec_sys_jump_csr_addr2exe;
+wire [ 1 : 0]     dec_sys_jump_csr_addr2exe;
 wire              dec_xcpt_valid2exe;
-wire [ 3: 0]      dec_xcpt_cause2exe;
+wire [ 3 : 0]     dec_xcpt_cause2exe;
 wire [XLEN-1 : 0] dec_xcpt_tval2exe;
 
 // ------------------------------
@@ -689,7 +688,7 @@ decode Decode(
 
     // System Jump operation
     .sys_jump_o(dec_sys_jump2exe),
-    .sys_jump_csr_addr_o(dec_sys_jump_csr_addr),
+    .sys_jump_csr_addr_o(dec_sys_jump_csr_addr2exe),
 
     // Has instruction fetch being successiful?
     .fetch_valid_i(fet_valid2dec),
