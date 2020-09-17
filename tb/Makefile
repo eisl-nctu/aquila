@@ -58,7 +58,7 @@ build_riscv_tests:
 	git clone https://github.com/riscv/riscv-tests
 	cd riscv-tests
 	rmdir env
-	git clone https://github.com/Daichou/riscv-test-env env
+	cp -r ../../riscv-test-env env
 	autoconf
 	./configure --prefix=$(CUR_DIR)/tmp/target
 	make

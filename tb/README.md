@@ -5,6 +5,7 @@
 ├── core-ver-src
 ├── Makefile
 ├── riscv-isa-sim
+├── riscv-test-env
 ├── tools
 ├── ci
 ```
@@ -13,6 +14,8 @@
 * riscv-isa-sim
     + provide fesvr/elf.h for sim_mem.cpp
     + fesvr
+* riscv-test-env
+    + provide riscv-tests env (begin and end section)
 * tools
     + log_proccess tool
 * ci
