@@ -36,15 +36,15 @@
 archive/aquila_soc_0.9_preview/*
 
 # Verilator
-verilate/build.log
-verilate/obj_dir/
-verilate/core_obj_dir/
-verilate/full_obj_dir/
-verilate/ver-test/*.bin
-verilate/ver-test/*.content
-verilate/ver-test/*.objdump
-verilate/ver-test/*.map
-verilate/ver-test/*.ebf
+tb/build.log
+tb/obj_dir/
+tb/core_obj_dir/
+tb/full_obj_dir/
+tb/ver-test/*.bin
+tb/ver-test/*.content
+tb/ver-test/*.objdump
+tb/ver-test/*.map
+tb/ver-test/*.ebf
 
 # sw
 sw/test/*.bin
@@ -63,16 +63,16 @@ sw/uartboot/*.mem
 sw/uartboot/*.s
 
 # tools
-verilate/tools/dec_cpu.log
+tb/tools/dec_cpu.log
 
 # tmp
-verilate/tmp/
+tb/tmp/
 
 # ci
-verilate/ci/bootrom.mem
-verilate/ci/*.log
-verilate/ci/*.bak
-verilate/ci/log/
-verilate/ci/log.bak/
-verilate/ci/torture_log/
-verilate/ci/torture_log.bak/
+tb/ci/bootrom.mem
+tb/ci/*.log
+tb/ci/*.bak
+tb/ci/log/
+tb/ci/log.bak/
+tb/ci/torture_log/
+tb/ci/torture_log.bak/

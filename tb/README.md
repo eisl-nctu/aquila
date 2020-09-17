@@ -1,4 +1,4 @@
-# Verilator
+# Verilator Model Test Suite
 ## folder structure
 ```
 .
@@ -6,9 +6,7 @@
 ├── Makefile
 ├── riscv-isa-sim
 ├── tools
-├── ver-test
 ├── ci
-└── ver-test-bug
 ```
 * core-ver-src
     + aquila_top as DUT
@@ -17,19 +15,12 @@
     + fesvr
 * tools
     + log_proccess tool
-* ver-test
-    + simple test program
 * ci
 	+ test script
 	+ auto build toolchain script
 	+ testcase list 
 ## usage
 Go and get the [RISCV gnu toolchain](https://github.com/riscv/riscv-gnu-toolchain) and configure with soft float point support.
-
-In *ver-test* folder,build test program by makefile,make sure that your gcc version is 8.2.0 with soft float point and rv32im support,it will create _test.o which is rv32 executable binary and test.objdump for debug purpose:
-```bash
-$ make all
-```
 
 In *veriate* folder,build the verilator model of Aquila by using the Makefile:
 ```bash

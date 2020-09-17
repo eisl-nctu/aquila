@@ -76,31 +76,31 @@ jobs:
     - stage: checkout
       name: checkout gcc
       script:
-        - verilate/ci/riscv_gcc_check.sh 0
+        - tb/ci/riscv_gcc_check.sh 0
     - stage: compile1
       name: build gcc
       script:
-        - verilate/ci/riscv_gcc_check.sh 1
+        - tb/ci/riscv_gcc_check.sh 1
         - rm -rf $RISCV/riscv-gnu-toolchain
     - stage: build_model
       name: build verilator model
       script:
-        - cd verilate
+        - cd tb
         - make clean
-        - make core_verilate
+        - make core_tb
     - stage: test
       name: run riscv ui-p
       script:
-        - cd verilate/ci
+        - cd tb/ci
         - ./run_rv_test.sh riscv32ui-p.list 0
     - stage: test
       name: run riscv um-p
       script:
-        - cd verilate/ci
+        - cd tb/ci
         - ./run_rv_test.sh riscv32um-p.list 0
     - stage: test
       name: run riscv torture
       script:
-        - cd verilate/ci
+        - cd tb/ci
         - ./run_rv_torture.sh 0
 install: travis_wait
