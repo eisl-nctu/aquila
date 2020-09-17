@@ -98,4 +98,9 @@ jobs:
       script:
         - cd tb/ci
         - ./run_rv_test.sh riscv32um-p.list 0
+    - stage: test
+      name: run riscv ua-p
+      script:
+        - cd tb/ci
+        - ./run_rv_test.sh riscv32ua-p.list 0
 install: travis_wait

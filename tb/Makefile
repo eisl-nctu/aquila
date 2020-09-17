@@ -76,6 +76,12 @@ run_riscv_um_p_tests:
 	cd ci
 	./run_rv_test.sh riscv32um-p.list
 
+.PHONY: run_riscv_ua_p_tests
+.ONESHELL:
+run_riscv_ua_p_tests:
+	cd ci
+	./run_rv_test.sh riscv32ua-p.list
+
 .PHONY: run_riscv_ui_tests
 .ONESHELL:
 run_riscv_ui_tests: run_riscv_ui_p_tests run_riscv_um_p_tests
