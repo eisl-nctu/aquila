@@ -59,6 +59,8 @@ void outbyte(unsigned char);
 int getchar(void);
 int putchar(int c);
 void putd(int);
-void putx(unsigned int);
+void putx(unsigned int, int);
 int puts(char *str);
 int printf(char *fmt, ...);
+void exit(int status);
+

@@ -160,7 +160,7 @@ void putx(unsigned int num, int upper_case, int prefix_zeros)
             leading_zero = 0;
             num = (num << ((9 - idx)*4)) >> ((9 - idx)*4);
         }
-        if (!leading_zero) putchar(HEX[upper_case][digit]);
+        if ((!leading_zero) || prefix_zeros) putchar(HEX[upper_case][digit]);
     }
 }
 
@@ -188,12 +188,14 @@ int printf(char *fmt, ...)
     char *str;
     va_list ap;
     int nd = 6, positive = 0;
+    int prefix_zeros = 0;
 
     for (va_start(ap, fmt); *fmt; fmt++)
     {
         if (*fmt == '%')
         {
             fmt++;
+            if (*fmt == '0') prefix_zeros = 1;
             while (*fmt >= '0' && *fmt <= '9') fmt++; /* skip, do nothing */
             if (*fmt == 'u')
             {
@@ -212,11 +214,11 @@ int printf(char *fmt, ...)
             switch(*fmt)
             {
             case 'x':
-                putx(va_arg(ap, int), 0, 0);
+                putx(va_arg(ap, int), 0, prefix_zeros);
                 break;
 
             case 'X':
-                putx(va_arg(ap, int), 1, 0);
+                putx(va_arg(ap, int), 1, prefix_zeros);
                 break;
 
             case 'd':

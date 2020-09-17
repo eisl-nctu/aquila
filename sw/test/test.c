@@ -3,8 +3,8 @@
 //  Author  : Chun-Jen Tsai
 //  Date    : Dec/09/2019
 // -----------------------------------------------------------------------------
-//  Description:
-//  This is the minimal time library for aquila.
+//  This is the entry point of the application code. Must be located at
+//  the beginning of the text section in the linker script.
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
@@ -59,20 +59,22 @@
 
 void malloc_test(int nwords);
 void timer_isr_test();
-void sleep(int msec);
 
-volatile int got_isr;
+void sleep(int msec)
+{
+    unsigned long volatile *clint_mem = (unsigned long *) 0xF0000000;
+    unsigned int tick;
+
+    tick = clint_mem[0];
+    while (clint_mem[0] - tick < msec) /* busy waiting */;
+}
 
 void volatile timer_isr()
 {
-    printf("\nISR responded!\n\n");
-    got_isr = 1;
+    printf("\nISR responded! Wait a few seconds...\n\n");
 
     asm volatile ("addi t0, zero, 0");
-    asm volatile ("csrw mie, t0");
-    asm volatile ("lw ra, 12(sp)");
-    asm volatile ("addi sp,sp,16");
-    asm volatile ("mret");
+    asm volatile ("csrw mie, zero");
 }
 
 void volatile install_isr(unsigned int isr)
@@ -85,9 +87,8 @@ void volatile install_isr(unsigned int isr)
 void volatile set_timer_period(unsigned long msec)
 {
     unsigned long volatile *clint_mem = (unsigned long *) 0xF0000000;
-    clint_mem[2] = msec;
-    clint_mem[1] = 0;
-    clint_mem[0] = clint_mem[1] = 0;
+    clint_mem[2] = msec; clint_mem[3] = 0;   // mtimecmp
+    clint_mem[0] = clint_mem[1] = 0;         // mtime
 }
 
 void volatile enable_core_timer()
@@ -96,26 +97,26 @@ void volatile enable_core_timer()
     asm volatile ("csrw mie, t0");
 }
 
+unsigned int addr = 0;
+
 int main(void)
 {
-    float ver = 0.9;
+    float ver = 1.0;
 
     printf("Hello, Aquila %.1f!\n", ver);
     printf("The address of 'ver' is 0x%X\n\n", (unsigned) &ver);
 
     printf("First time tick = %d\n\n", clock());
-    malloc_test(400*1024);
+    malloc_test(5000);
     printf("\nSecond time tick = %d\n\n", clock());
 
     timer_isr_test();
-    printf("Waiting for timer ISR ...");
+    printf("Waiting for timer ISR ...\n");
+    // busy waiting ...
+    sleep(5000);
 
-    got_isr = 0;
-    while (! got_isr)
-    {
-        /* busy waiting */
-    }
     printf("Test finished.\n");
+
     return 0;
 }
 
@@ -138,12 +139,14 @@ void malloc_test(int nwords)
     printf("\n...\n");
     for (idx = 10; idx > 0; idx--)
     {
-        printf("Addr 0x%X, buf[%d] = %d\n",(unsigned) &(buf[idx]), nwords-idx, buf[nwords-idx]);
+        printf("Addr 0x%X, buf[%d] = %d\n",(unsigned) &(buf[nwords-idx]), nwords-idx, buf[nwords-idx]);
     }
     free(buf);
     printf("Buffer freed.\n");
 }
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 void timer_isr_test()
 {
     char str[10];
@@ -168,3 +171,4 @@ void timer_isr_test()
     // Enable the timer interrupts.
     enable_core_timer();
 }
+#pragma GCC pop_options

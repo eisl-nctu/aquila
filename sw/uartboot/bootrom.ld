@@ -57,16 +57,12 @@
 // =============================================================================
 */
 
-/* The following configurations are for Xilinx KC705 */
-__stack_top = 0xBFFF0000;
-__stack_size = 0x10000;
-__stack_start = __stack_top - __stack_size;
+__stack_top = 0x000000FF0;
 
 MEMORY
 {
-    code_ram   (rx!rw) : ORIGIN = 0xB0000000, LENGTH = 0x2000
-    data_ram   (rw!x)  : ORIGIN = 0xB0002000, LENGTH = 0x2000
-    stack_ram  (rw!x)  : ORIGIN = __stack_start, LENGTH = __stack_size
+    code_ram   (rx!rw) : ORIGIN = 0x00000000, LENGTH = 0x600
+    data_ram   (rw!x)  : ORIGIN = 0x00000600, LENGTH = 0x400
 }
 
 SECTIONS
@@ -85,13 +81,4 @@ SECTIONS
         *(.rodata*)
 
     } > data_ram
-
-    .stack :
-    {
-        . = ALIGN(4);
-        _estack = .;
-        . = . + __stack_size;
-        . = ALIGN(4);
-        _sstack = .;
-    } > stack_ram
 }
