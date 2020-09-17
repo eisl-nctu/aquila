@@ -87,7 +87,7 @@ jobs:
       script:
         - cd tb
         - make clean
-        - make core_tb
+        - make core_verilate
     - stage: test
       name: run riscv ui-p
       script:
