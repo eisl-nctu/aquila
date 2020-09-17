@@ -62,6 +62,14 @@ sw/uartboot/*.ebf
 sw/uartboot/*.mem
 sw/uartboot/*.s
 
+sw/Dhrystone/*.bin
+sw/Dhrystone/*.content
+sw/Dhrystone/*.objdump
+sw/Dhrystone/*.map
+sw/Dhrystone/*.ebf
+sw/Dhrystone/*.mem
+sw/Dhrystone/*.s
+
 # tools
 tb/tools/dec_cpu.log
 

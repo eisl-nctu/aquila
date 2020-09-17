@@ -66,7 +66,7 @@ $ ./log_proccess ../ver-test-bug/test.objdump ../core_obj_dir/cpu.log
 You can change `compress` boolean varible in log_proccess.cpp to generate cycle based log or instruction based log.
 ## verilator model advance usage
 ### Basic diagram
-![](img/aquila_core_ver_src.png)
+![](../docs/aquila_core_ver_src.png)
 ### code structure
 * `aquila_testharness` is top module to connect `dp_ram` and`mock_uart` to `aquila_top`. 
 * `aquila_core_tb.cpp` is C++ wrapper for this verilator model.
@@ -95,7 +95,7 @@ You can change `compress` boolean varible in log_proccess.cpp to generate cycle 
 ## CI
 Continuous Integration(CI) bases on Travis CI that run riscv-tests RISCV assembly tests. Travis CI runs these tests on Verilator. Travis CI builds riscv-gnu-toolchain, verilator model and run riscv-tests automatically.
 
-Aquila CI test current only execute 2 case sets: riscv32um-p, riscv32ui-p.
+Aquila CI test current only execute 3 case sets: riscv32um-p, riscv32ui-p. riscv32ua-p
 
 There are two script in `ci` folder. One is `riscv_gcc_check.sh`. It can check whether riscv-gnu-toolchain exists on $RISCV path and builds it(optional). Another is `run_rv_test.sh`. It can check all dependency (except for riscv-gnu-toolchain) and execute riscv-tests set.
 ```bash
