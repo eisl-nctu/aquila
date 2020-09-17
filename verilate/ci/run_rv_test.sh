@@ -13,6 +13,15 @@ ORIGIN_CPU_LOG=cpu.log
 ORIGIN_DEC_LOG=dec_cpu.log
 ORIGIN_VCD=aquila_core.vcd
 SAVE_LOG=1
+
+#check bootrom.mem exists
+if [ -f "bootrom.mem" ]; then
+    echo "bootrom.mem exists"
+else
+    echo "bootrom.mem dose not exist, start copy bootrom.mem to ci folder"
+    cp ../../hw/aquila_soc/ip_repo/aquila/hdl/mem/bootrom.mem .
+fi
+
 # check $1 exists
 if [ -f "$1" ]; then
   echo "start $1 testsuite"

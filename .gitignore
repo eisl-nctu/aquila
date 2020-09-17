@@ -69,6 +69,7 @@ verilate/tools/dec_cpu.log
 verilate/tmp/
 
 # ci
+verilate/ci/bootrom.mem
 verilate/ci/*.log
 verilate/ci/*.bak
 verilate/ci/log/

@@ -12,17 +12,17 @@ module dp_ram
     input  logic                      clk,
     input  logic                      rst_n,
 
-    input  logic                      strobe_icache,
-    input  logic [ADDR_WIDTH-1:0]     addr_icache_i,
-    output logic [DATA_WIDTH-1:0]     rdata_icache_o,
-    output logic                      done_icache_o,
+    input  logic                      strobe_imem,
+    input  logic [ADDR_WIDTH-1:0]     addr_imem_i,
+    output logic [DATA_WIDTH-1:0]     rdata_imem_o,
+    output logic                      done_imem_o,
 
-    input  logic                      strobe_dcache,
-    input  logic [ADDR_WIDTH-1:0]     addr_dcache_i,
-    input  logic [DATA_WIDTH-1:0]     wdata_dcache_i,
-    output logic [DATA_WIDTH-1:0]     rdata_dcache_o,
-    input  logic                      rw_dcache_i,
-    output logic                      done_dcache_o
+    input  logic                      strobe_dmem,
+    input  logic [ADDR_WIDTH-1:0]     addr_dmem_i,
+    input  logic [DATA_WIDTH-1:0]     wdata_dmem_i,
+    output logic [DATA_WIDTH-1:0]     rdata_dmem_o,
+    input  logic                      rw_dmem_i,
+    output logic                      done_dmem_o
   );
 
   typedef enum logic [1:0] {IDLE = 2'b0, READ, WRITE, DONE} state_t;
@@ -36,137 +36,137 @@ module dp_ram
 
   localparam PART_ADDR_WIDTH = clogb2(MEM_SIZE);
 
-  state_t icache_cur_state, icache_next_state;
-  state_t dcache_cur_state, dcache_next_state;
+  state_t imem_cur_state, imem_next_state;
+  state_t dmem_cur_state, dmem_next_state;
 
-  logic [PART_ADDR_WIDTH-1:0] icache_addr;
-  logic [PART_ADDR_WIDTH-1:0] dcache_addr;
-  logic [ADDR_WIDTH-1:0] tmp_addr_icache;
-  logic [ADDR_WIDTH-1:0] tmp_addr_dcache;
+  logic [PART_ADDR_WIDTH-1:0] imem_addr;
+  logic [PART_ADDR_WIDTH-1:0] dmem_addr;
+  logic [ADDR_WIDTH-1:0] tmp_addr_imem;
+  logic [ADDR_WIDTH-1:0] tmp_addr_dmem;
   logic [7:0] mem [MEM_SIZE-1:0]/*verilator public_flat*/;
-  logic [7:0] icache_delay_counter;
-  logic [7:0] dcache_delay_counter;
-  logic icache_reads_done;
-  logic dcache_reads_done;
-  logic dcache_writes_done;
+  logic [7:0] imem_delay_counter;
+  logic [7:0] dmem_delay_counter;
+  logic imem_reads_done;
+  logic dmem_reads_done;
+  logic dmem_writes_done;
 
   always_comb
-    tmp_addr_icache = addr_icache_i - MEM_OFFSET;
+    tmp_addr_imem = addr_imem_i - MEM_OFFSET;
   always_comb
-    tmp_addr_dcache = addr_dcache_i - MEM_OFFSET;
+    tmp_addr_dmem = addr_dmem_i - MEM_OFFSET;
 
   always_comb
-    icache_addr = tmp_addr_icache[PART_ADDR_WIDTH-1:0];
+    imem_addr = tmp_addr_imem[PART_ADDR_WIDTH-1:0];
   always_comb
-    dcache_addr = tmp_addr_dcache[PART_ADDR_WIDTH-1:0];
+    dmem_addr = tmp_addr_dmem[PART_ADDR_WIDTH-1:0];
 
   always_ff @(posedge clk) begin
-    if (icache_cur_state == IDLE || icache_cur_state == DONE) icache_delay_counter <= 0;
-    else icache_delay_counter <= icache_delay_counter + 1;
+    if (imem_cur_state == IDLE || imem_cur_state == DONE) imem_delay_counter <= 0;
+    else imem_delay_counter <= imem_delay_counter + 1;
   end
 
   always_ff @(posedge clk) begin
-    if (dcache_cur_state == IDLE || dcache_cur_state == DONE) dcache_delay_counter <= 0;
-    else dcache_delay_counter <= dcache_delay_counter + 1;
+    if (dmem_cur_state == IDLE || dmem_cur_state == DONE) dmem_delay_counter <= 0;
+    else dmem_delay_counter <= dmem_delay_counter + 1;
   end
 
   always_comb
-    icache_reads_done = icache_delay_counter >= ACCESS_LANTENCY;
+    imem_reads_done = imem_delay_counter >= ACCESS_LANTENCY;
 
   always_comb
-    dcache_reads_done = dcache_delay_counter >= ACCESS_LANTENCY;
+    dmem_reads_done = dmem_delay_counter >= ACCESS_LANTENCY;
   always_comb
-    dcache_writes_done = dcache_delay_counter >= ACCESS_LANTENCY;
+    dmem_writes_done = dmem_delay_counter >= ACCESS_LANTENCY;
 
   always_ff @(posedge clk) begin
     if (~rst_n)
-      icache_cur_state <= IDLE;
+      imem_cur_state <= IDLE;
     else
-      icache_cur_state <= icache_next_state;
+      imem_cur_state <= imem_next_state;
   end
 
   always_ff @(posedge clk) begin
     if (~rst_n)
-      dcache_cur_state <= IDLE;
+      dmem_cur_state <= IDLE;
     else
-      dcache_cur_state <= dcache_next_state;
+      dmem_cur_state <= dmem_next_state;
   end
 
   always_comb begin
-    case (icache_cur_state)
-      IDLE: if (strobe_icache) icache_next_state = READ;
-            else icache_next_state = IDLE;
-      READ: if (icache_reads_done) icache_next_state = DONE;
-            else icache_next_state = READ;
-      DONE: icache_next_state = IDLE;
-      default: icache_next_state = IDLE;
+    case (imem_cur_state)
+      IDLE: if (strobe_imem) imem_next_state = READ;
+            else imem_next_state = IDLE;
+      READ: if (imem_reads_done) imem_next_state = DONE;
+            else imem_next_state = READ;
+      DONE: imem_next_state = IDLE;
+      default: imem_next_state = IDLE;
     endcase
   end
 
   always_comb begin
-    case (dcache_cur_state)
-      IDLE: if (strobe_dcache) dcache_next_state = (rw_dcache_i ? WRITE : READ);
-            else dcache_next_state = IDLE;
-      READ: if (dcache_reads_done) dcache_next_state = DONE;
-            else dcache_next_state = READ;
-      WRITE:if (dcache_writes_done) dcache_next_state = DONE;
-            else dcache_next_state = WRITE;
-      DONE: dcache_next_state = IDLE;
-      default: dcache_next_state = IDLE;
+    case (dmem_cur_state)
+      IDLE: if (strobe_dmem) dmem_next_state = (rw_dmem_i ? WRITE : READ);
+            else dmem_next_state = IDLE;
+      READ: if (dmem_reads_done) dmem_next_state = DONE;
+            else dmem_next_state = READ;
+      WRITE:if (dmem_writes_done) dmem_next_state = DONE;
+            else dmem_next_state = WRITE;
+      DONE: dmem_next_state = IDLE;
+      default: dmem_next_state = IDLE;
     endcase
   end
 
   integer geni;
 
   always_ff @(posedge clk) begin
-    if (dcache_cur_state == WRITE) begin
+    if (dmem_cur_state == WRITE) begin
       for (geni = 0 ; geni < DATA_WIDTH/8 ; geni = geni + 1) begin
-        mem[dcache_addr+(DATA_WIDTH/8-1-geni)] <= wdata_dcache_i[geni*8+:8];
+        mem[dmem_addr+(DATA_WIDTH/8-1-geni)] <= wdata_dmem_i[geni*8+:8];
       end
-      //mem[dcache_addr] <=   wdata_dcache_i[7:0];
-      //mem[dcache_addr+1] <= wdata_dcache_i[15:8];
-      //mem[dcache_addr+2] <= wdata_dcache_i[23:16];
-      //mem[dcache_addr+3] <= wdata_dcache_i[31:24];
+      //mem[dmem_addr] <=   wdata_dmem_i[7:0];
+      //mem[dmem_addr+1] <= wdata_dmem_i[15:8];
+      //mem[dmem_addr+2] <= wdata_dmem_i[23:16];
+      //mem[dmem_addr+3] <= wdata_dmem_i[31:24];
     end
   end
 
   always_ff @(posedge clk) begin
-    if (dcache_cur_state == READ) begin
-      rdata_dcache_o <= {mem[dcache_addr],mem[dcache_addr+1],mem[dcache_addr+2],mem[dcache_addr+3],
-                         mem[dcache_addr+4],mem[dcache_addr+5],mem[dcache_addr+6],mem[dcache_addr+7],
-                         mem[dcache_addr+8],mem[dcache_addr+9],mem[dcache_addr+10],mem[dcache_addr+11],
-                         mem[dcache_addr+12],mem[dcache_addr+13],mem[dcache_addr+14],mem[dcache_addr+15],
-                         mem[dcache_addr+16],mem[dcache_addr+17],mem[dcache_addr+18],mem[dcache_addr+19],
-                         mem[dcache_addr+20],mem[dcache_addr+21],mem[dcache_addr+22],mem[dcache_addr+23],
-                         mem[dcache_addr+24],mem[dcache_addr+25],mem[dcache_addr+26],mem[dcache_addr+27],
-                         mem[dcache_addr+28],mem[dcache_addr+29],mem[dcache_addr+30],mem[dcache_addr+31]};
+    if (dmem_cur_state == READ) begin
+      rdata_dmem_o <= {mem[dmem_addr],mem[dmem_addr+1],mem[dmem_addr+2],mem[dmem_addr+3],
+                         mem[dmem_addr+4],mem[dmem_addr+5],mem[dmem_addr+6],mem[dmem_addr+7],
+                         mem[dmem_addr+8],mem[dmem_addr+9],mem[dmem_addr+10],mem[dmem_addr+11],
+                         mem[dmem_addr+12],mem[dmem_addr+13],mem[dmem_addr+14],mem[dmem_addr+15],
+                         mem[dmem_addr+16],mem[dmem_addr+17],mem[dmem_addr+18],mem[dmem_addr+19],
+                         mem[dmem_addr+20],mem[dmem_addr+21],mem[dmem_addr+22],mem[dmem_addr+23],
+                         mem[dmem_addr+24],mem[dmem_addr+25],mem[dmem_addr+26],mem[dmem_addr+27],
+                         mem[dmem_addr+28],mem[dmem_addr+29],mem[dmem_addr+30],mem[dmem_addr+31]};
     end else begin
-      rdata_dcache_o <= rdata_dcache_o;
+      rdata_dmem_o <= rdata_dmem_o;
     end
   end
 
   always_ff @(posedge clk) begin
-    if (icache_cur_state == READ) begin
-      rdata_icache_o <= {mem[icache_addr],mem[icache_addr+1],mem[icache_addr+2],mem[icache_addr+3],
-                         mem[icache_addr+4],mem[icache_addr+5],mem[icache_addr+6],mem[icache_addr+7],
-                         mem[icache_addr+8],mem[icache_addr+9],mem[icache_addr+10],mem[icache_addr+11],
-                         mem[icache_addr+12],mem[icache_addr+13],mem[icache_addr+14],mem[icache_addr+15],
-                         mem[icache_addr+16],mem[icache_addr+17],mem[icache_addr+18],mem[icache_addr+19],
-                         mem[icache_addr+20],mem[icache_addr+21],mem[icache_addr+22],mem[icache_addr+23],
-                         mem[icache_addr+24],mem[icache_addr+25],mem[icache_addr+26],mem[icache_addr+27],
-                         mem[icache_addr+28],mem[icache_addr+29],mem[icache_addr+30],mem[icache_addr+31]};
+    if (imem_cur_state == READ) begin
+      rdata_imem_o <= {mem[imem_addr],mem[imem_addr+1],mem[imem_addr+2],mem[imem_addr+3],
+                         mem[imem_addr+4],mem[imem_addr+5],mem[imem_addr+6],mem[imem_addr+7],
+                         mem[imem_addr+8],mem[imem_addr+9],mem[imem_addr+10],mem[imem_addr+11],
+                         mem[imem_addr+12],mem[imem_addr+13],mem[imem_addr+14],mem[imem_addr+15],
+                         mem[imem_addr+16],mem[imem_addr+17],mem[imem_addr+18],mem[imem_addr+19],
+                         mem[imem_addr+20],mem[imem_addr+21],mem[imem_addr+22],mem[imem_addr+23],
+                         mem[imem_addr+24],mem[imem_addr+25],mem[imem_addr+26],mem[imem_addr+27],
+                         mem[imem_addr+28],mem[imem_addr+29],mem[imem_addr+30],mem[imem_addr+31]};
     end else begin
-      rdata_icache_o <= rdata_icache_o;
+      rdata_imem_o <= rdata_imem_o;
     end
   end
 
   //to deal with strobe delay one cycle fall issue
   always_comb
-    done_icache_o = (icache_cur_state == READ && icache_reads_done);
+    done_imem_o = (imem_cur_state == READ && imem_reads_done);
 
   //to deal with strobe delay one cycle fall issue
   always_comb
-    done_dcache_o = (dcache_cur_state == READ && dcache_reads_done) || (dcache_cur_state == WRITE && dcache_writes_done);
+    done_dmem_o = (dmem_cur_state == READ && dmem_reads_done) || (dmem_cur_state == WRITE && dmem_writes_done);
 
   function [31:0] readWord;
     /*verilator public*/

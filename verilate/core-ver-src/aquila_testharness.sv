@@ -56,52 +56,60 @@
 
 module aquila_testharness #
 (
-    // Parameters of Axi Slave Bus Interface S_CONFIG_PORT
-    parameter integer C_S_CONFIG_PORT_DATA_WIDTH    = 32,
-    //parameter integer C_S_CONFIG_PORT_ADDR_WIDTH    = 5,
     // Parameters of Axi Master Bus Interface M_ICACHE_PORT
-    parameter integer C_M_ICACHE_PORT_ID_WIDTH		= 1,
-    parameter integer C_M_ICACHE_PORT_ADDR_WIDTH	= 32,
-    parameter integer C_M_ICACHE_PORT_DATA_WIDTH	= 32,
+    parameter integer C_M_IMEM_PORT_ID_WIDTH		= 1,
+    parameter integer C_M_IMEM_PORT_ADDR_WIDTH	= 32,
+    parameter integer C_M_IMEM_PORT_DATA_WIDTH	= 32,
+    parameter integer C_M_IMEM_PORT_AWUSER_WIDTH	= 0,
+    parameter integer C_M_IMEM_PORT_ARUSER_WIDTH	= 0,
+    parameter integer C_M_IMEM_PORT_WUSER_WIDTH	= 0,
+    parameter integer C_M_IMEM_PORT_RUSER_WIDTH	= 0,
+    parameter integer C_M_IMEM_PORT_BUSER_WIDTH	= 0,
 
-    // Parameters of Axi Master Bus Interface M_DCACHE_PORT
-    parameter integer C_M_DCACHE_PORT_ID_WIDTH		= 1,
-    parameter integer C_M_DCACHE_PORT_ADDR_WIDTH	= 32,
-    parameter integer C_M_DCACHE_PORT_DATA_WIDTH	= 32,
+    // Parameters of Axi Master Bus Interface M_DMEM_PORT
+    parameter integer C_M_DMEM_PORT_ID_WIDTH		= 1,
+    parameter integer C_M_DMEM_PORT_ADDR_WIDTH	= 32,
+    parameter integer C_M_DMEM_PORT_DATA_WIDTH	= 32,
+    parameter integer C_M_DMEM_PORT_AWUSER_WIDTH	= 0,
+    parameter integer C_M_DMEM_PORT_ARUSER_WIDTH	= 0,
+    parameter integer C_M_DMEM_PORT_WUSER_WIDTH	= 0,
+    parameter integer C_M_DMEM_PORT_RUSER_WIDTH	= 0,
+    parameter integer C_M_DMEM_PORT_BUSER_WIDTH	= 0,
 
     // Parameters of Axi Master Bus Interface M_DEVICE_PORT
     parameter integer C_M_DEVICE_PORT_ADDR_WIDTH    = 32,
     parameter integer C_M_DEVICE_PORT_DATA_WIDTH    = 32
 )
 (
-  input logic   clk,
-  input logic   rst_n,
-  input logic   [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] main_memory_addr,
-  output logic [31:0] cur_instr_addr
+    input logic   clk,
+    input logic   rst_n,
+    input logic   [31 : 0] main_memory_addr,
+    output logic [31:0] cur_instr_addr
 );
 
 
 // Declaration of local signals.
 wire                                      RISCV_rst;
-
-wire                                      M_ICACHE_strobe, M_ICACHE_done;
-wire                                      M_DCACHE_strobe, M_DCACHE_done;
-wire                                      M_DCACHE_rw;
-wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_ICACHE_addr, M_DCACHE_addr;
-wire [255 : 0] M_ICACHE_datain, M_DCACHE_datain, M_DCACHE_dataout;
+wire                                      M_IMEM_strobe, M_IMEM_done;
+wire                                      M_DMEM_strobe, M_DMEM_done;
+wire                                      M_DMEM_rw;
+wire [C_M_IMEM_PORT_DATA_WIDTH - 1 : 0] M_IMEM_addr;
+wire [C_M_DMEM_PORT_DATA_WIDTH - 1 : 0] M_DMEM_addr;
+wire [255 : 0] M_IMEM_datain, M_DMEM_datain, M_DMEM_dataout;
 
 wire                                      M_DEVICE_strobe;
-wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_addr;
+wire [C_M_DEVICE_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_addr;
 wire                                      M_DEVICE_rw;
-wire [C_S_CONFIG_PORT_DATA_WIDTH/8-1 : 0] M_DEVICE_byte_enable;
-wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_core2dev_data;
+wire [C_M_DEVICE_PORT_DATA_WIDTH/8-1 : 0] M_DEVICE_byte_enable;
+wire [C_M_DEVICE_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_core2dev_data;
 wire                                      M_DEVICE_data_ready;
-wire [C_S_CONFIG_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
+wire [C_M_DEVICE_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
+
 
 // Debug pc
 wire [31:0] debug_pc/*verilator public_flat*/;
-assign debug_pc = aquila_core.instr_addr;
-assign cur_instr_addr = aquila_core.instr_addr;
+assign debug_pc = aquila_core.p_i_addr;
+assign cur_instr_addr = aquila_core.p_i_addr;
 
 //wire [31:0] debug_rf [0:31]/*verilator public_flat*/;
 //genvar idx;
@@ -111,49 +119,49 @@ assign cur_instr_addr = aquila_core.instr_addr;
 //endgenerate
 
 // Instiantiation of the top-level Aquila core module.
-  aquila_top aquila_core(
-      .clk(clk),
-      .rst(~rst_n),
-      .base_addr(main_memory_addr),
+aquila_top aquila_core(
+    .clk_i(clk),
+    .rst_i(~rst_n),
+    .base_addr_i(main_memory_addr),
 
-      .M_ICACHE_strobe(M_ICACHE_strobe),
-      .M_ICACHE_addr(M_ICACHE_addr),
-      .M_ICACHE_done(M_ICACHE_done),
-      .M_ICACHE_datain(M_ICACHE_datain),
+    .M_IMEM_strobe_o(M_IMEM_strobe),
+    .M_IMEM_addr_o(M_IMEM_addr),
+    .M_IMEM_done_i(M_IMEM_done),
+    .M_IMEM_data_i(M_IMEM_datain),
 
-      .M_DCACHE_strobe(M_DCACHE_strobe),
-      .M_DCACHE_addr(M_DCACHE_addr),
-      .M_DCACHE_rw(M_DCACHE_rw),
-      .M_DCACHE_dataout(M_DCACHE_dataout),
-      .M_DCACHE_done(M_DCACHE_done),
-      .M_DCACHE_datain(M_DCACHE_datain),
+    .M_DMEM_strobe_o(M_DMEM_strobe),
+    .M_DMEM_addr_o(M_DMEM_addr),
+    .M_DMEM_rw_o(M_DMEM_rw),
+    .M_DMEM_data_o(M_DMEM_dataout),
+    .M_DMEM_done_i(M_DMEM_done),
+    .M_DMEM_data_i(M_DMEM_datain),
 
-      .M_DEVICE_strobe(M_DEVICE_strobe),
-      .M_DEVICE_addr(M_DEVICE_addr),
-      .M_DEVICE_rw(M_DEVICE_rw),
-      .M_DEVICE_byte_enable(M_DEVICE_byte_enable),
-      .M_DEVICE_core2dev_data(M_DEVICE_core2dev_data),
-      .M_DEVICE_data_ready(M_DEVICE_data_ready),
-      .M_DEVICE_dev2core_data(M_DEVICE_dev2core_data)
-  );
+    .M_DEVICE_strobe_o(M_DEVICE_strobe),
+    .M_DEVICE_addr_o(M_DEVICE_addr),
+    .M_DEVICE_rw_o(M_DEVICE_rw),
+    .M_DEVICE_byte_enable_o(M_DEVICE_byte_enable),
+    .M_DEVICE_data_o(M_DEVICE_core2dev_data),
+    .M_DEVICE_data_ready_i(M_DEVICE_data_ready),
+    .M_DEVICE_data_i(M_DEVICE_dev2core_data)
+);
 
-  dp_ram mock_ram(
+dp_ram mock_ram(
     .clk(clk),
     .rst_n(rst_n),
-    .strobe_icache(M_ICACHE_strobe),
-    .addr_icache_i(M_ICACHE_addr),
-    .rdata_icache_o(M_ICACHE_datain),
-    .done_icache_o(M_ICACHE_done),
+    .strobe_imem(M_IMEM_strobe),
+    .addr_imem_i(M_IMEM_addr),
+    .rdata_imem_o(M_IMEM_datain),
+    .done_imem_o(M_IMEM_done),
 
-    .strobe_dcache(M_DCACHE_strobe),
-    .addr_dcache_i(M_DCACHE_addr),
-    .wdata_dcache_i(M_DCACHE_dataout),
-    .rdata_dcache_o(M_DCACHE_datain),
-    .rw_dcache_i(M_DCACHE_rw),
-    .done_dcache_o(M_DCACHE_done)
-  );
+    .strobe_dmem(M_DMEM_strobe),
+    .addr_dmem_i(M_DMEM_addr),
+    .wdata_dmem_i(M_DMEM_dataout),
+    .rdata_dmem_o(M_DMEM_datain),
+    .rw_dmem_i(M_DMEM_rw),
+    .done_dmem_o(M_DMEM_done)
+);
 
-  mock_uart mock_uart_0(
+mock_uart mock_uart_0(
     .clk(clk),
     .rst_n(rst_n),
 
@@ -164,5 +172,5 @@ assign cur_instr_addr = aquila_core.instr_addr;
     .M_DEVICE_core2dev_data(M_DEVICE_core2dev_data),
     .M_DEVICE_data_ready(M_DEVICE_data_ready),
     .M_DEVICE_dev2core_data(M_DEVICE_dev2core_data)
-  );
+);
 endmodule
