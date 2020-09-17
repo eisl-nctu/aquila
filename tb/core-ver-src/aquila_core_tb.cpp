@@ -14,19 +14,19 @@
 
 #include "sim_mem.h"
 
-#define TRACE
+#define TRACE //enable to generate vcd waveform file
 //#undef TRACE
 #define FENCE_ENABLE
 #undef FENCE_ENABLE
-#define MAX_SIM_CYCLE 1000000
+#define MAX_SIM_CYCLE 1000000 //change here to simulate more cycle
 
 using namespace std;
 static vluint64_t cpuTime = 0;
 uint32_t tohost_addr = 0;
-double sc_time_stamp() { return cpuTime; }
 Vaquila_testharness* top;
 VerilatedVcdC* Vcdfp;
 
+double sc_time_stamp() { return cpuTime; }
 void load_simple_asm();
 
 static void usage(const char * program_name)
