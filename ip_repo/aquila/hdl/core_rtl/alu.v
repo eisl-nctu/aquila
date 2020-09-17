@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 // =============================================================================
 //  Program : alu.v
 //  Author  : Jin-you Wu
@@ -54,6 +53,7 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
+`timescale 1 ns / 1 ps
 module alu #(parameter DATA_WIDTH = 32)
 (
     input  [DATA_WIDTH-1 : 0] a,
