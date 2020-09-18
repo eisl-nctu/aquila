@@ -1,0 +1,86 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# custom
+# Vivado
+archive/aquila_soc_0.9_preview/*
+
+# Verilator
+tb/build.log
+tb/obj_dir/
+tb/core_obj_dir/
+tb/full_obj_dir/
+tb/ver-test/*.bin
+tb/ver-test/*.content
+tb/ver-test/*.objdump
+tb/ver-test/*.map
+tb/ver-test/*.ebf
+
+# sw
+sw/test/*.bin
+sw/test/*.content
+sw/test/*.objdump
+sw/test/*.map
+sw/test/*.ebf
+
+
+sw/uartboot/*.bin
+sw/uartboot/*.content
+sw/uartboot/*.objdump
+sw/uartboot/*.map
+sw/uartboot/*.ebf
+sw/uartboot/*.mem
+sw/uartboot/*.s
+
+sw/Dhrystone/*.bin
+sw/Dhrystone/*.content
+sw/Dhrystone/*.objdump
+sw/Dhrystone/*.map
+sw/Dhrystone/*.ebf
+sw/Dhrystone/*.mem
+sw/Dhrystone/*.s
+
+# tools
+tb/tools/dec_cpu.log
+
+# tmp
+tb/tmp/
+
+# ci
+tb/ci/bootrom.mem
+tb/ci/*.log
+tb/ci/*.bak
+tb/ci/log/
+tb/ci/log.bak/
+tb/ci/torture_log/
+tb/ci/torture_log.bak/

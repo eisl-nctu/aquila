@@ -1,0 +1,6 @@
+rv32si-p-csr
+rv32si-p-dirty
+rv32si-p-ma_fetch
+rv32si-p-sbreak
+rv32si-p-scall
+rv32si-p-wfi
