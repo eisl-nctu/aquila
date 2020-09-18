@@ -1,28 +1,39 @@
 # Verilator Model Test Suite
-## folder structure
+## Folder Structure
 ```
 .
-├── core-ver-src
+├── csrc
+├── vsrc
 ├── Makefile
-├── riscv-isa-sim
 ├── riscv-test-env
+├── ThirdParty
 ├── tools
 ├── ci
 ```
-* core-ver-src
-    + aquila_top as DUT
-* riscv-isa-sim
-    + provide fesvr/elf.h for sim_mem.cpp
-    + fesvr
+* csrc
+    + cpp source of aquila verilator testbench
+* vsrc
+    + verilog/SystemVerilog source of aquila verilator testbench
+* Thirdparty
+    + riscv-isa-sim elf.h for sim_mem.cpp
+    + Thirdparty License
 * riscv-test-env
     + provide riscv-tests env (begin and end section)
+    + Thirdparty License
 * tools
     + log_proccess tool
 * ci
 	+ test script
 	+ auto build toolchain script
-	+ testcase list 
-## usage
+	+ testcase list
+## Dependency
+
+* verilator: 4.034 or later version
+* GNU Make
+* gcc/g++
+* riscv-gnu-toolchain
+
+## Usage
 Go and get the [RISCV gnu toolchain](https://github.com/riscv/riscv-gnu-toolchain) and configure with soft float point support.
 
 In *veriate* folder,build the verilator model of Aquila by using the Makefile:
@@ -67,14 +78,14 @@ For example:
 $ ./log_proccess ../ver-test-bug/test.objdump ../core_obj_dir/cpu.log
 ```
 You can change `compress` boolean varible in log_proccess.cpp to generate cycle based log or instruction based log.
-## verilator model advance usage
+## Verilator Model Advance Usage
 ### Basic diagram
 ![](../docs/aquila_core_ver_src.png)
-### code structure
+### Code structure
 * `aquila_testharness` is top module to connect `dp_ram` and`mock_uart` to `aquila_top`. 
 * `aquila_core_tb.cpp` is C++ wrapper for this verilator model.
 * `sim_mem.h` is header as elf file loader.
-### parameter
+### Parameter
 * dp_ram.sv
 
 | Name  | Description | limitation | default |
