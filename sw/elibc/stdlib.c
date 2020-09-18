@@ -88,9 +88,9 @@ void *malloc(size_t n)
             // Update the FMB link list structure.
             r = n % sizeof(ulong);
             temp = n + sizeof(ulong) + ((r)? 4-r : 0);
-            *(ptr + temp/sizeof(ulong)) = *ptr;
             curr_top = ptr + temp/sizeof(ulong);
-            *ptr = (*ptr + temp) | 1;
+            *curr_top = *ptr;
+            *ptr = (ulong) curr_top | 1;
             break;
         }
     }
@@ -108,9 +108,9 @@ void *malloc(size_t n)
             // Update the FMB link list structure.
             r = n % sizeof(ulong);
             temp = n + sizeof(ulong) + ((r)? 4-r : 0);
-            *(ptr + temp/sizeof(ulong)) = *ptr;
             curr_top = ptr + temp/sizeof(ulong);
-            *ptr = (*ptr + temp) | 1;
+            *curr_top = *ptr;
+            *ptr = (ulong) curr_top | 1;
             break;
         }
     }
@@ -120,10 +120,16 @@ void *malloc(size_t n)
 
 void free(void *mptr)
 {
-    ulong *ptr;
+    ulong *ptr, *next;
 
     ptr = ((ulong *) mptr) - 1;
     *ptr = *ptr & 0xFFFFFFFE; // Free the FMB.
+    next = (ulong *) *ptr;
+    if ((*next & 1) == 0)
+    {
+        *ptr = *next; // Merge with the next FMB.
+        curr_top = ptr;
+    }
 }
 
 void *calloc(size_t n, size_t size)
