@@ -1,7 +1,7 @@
 // This code is modified https://github.com/riscv/riscv-isa-sim/blob/master/fesvr/elfloader.cc
 // See LICENSE in https://github.com/riscv/riscv-isa-sim for license details.
 #include "sim_mem.h"
-#include "../riscv-isa-sim/fesvr/elf.h"
+#include "../ThirdParty/riscv-isa-sim/elf.h"
 #include <string>
 #include <cstring>
 #include <cassert>

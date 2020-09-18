@@ -14,8 +14,8 @@ CPPFLAGS = -std=c++11 -I$(VDIR) `pkg-config --cflags verilator`
 
 AQUILA_CORE_SRC=../hw/aquila_soc/ip_repo/aquila/hdl/core_rtl/*v
 
-CORE_VER_SRC=./core-ver-src/*v \
-						 ./core-ver-src/*.sv
+CORE_VER_SRC=./vsrc/*v \
+			 ./vsrc/*.sv
 
 verilator_flag=--cc --assert --clk cfg_dev_aclk  -O3  -Wno-MODDUP
 verilator_lint_flag=--lint-only  -Wno-MODDUP
@@ -45,7 +45,7 @@ core_verilate:
 	-CFLAGS $(CPPFLAGS) \
 	-LDFLAGS "-lpthread" \
 	--top-module aquila_testharness  --trace --trace-max-array 3000 \
-	--trace-max-width 2560  --exe  core-ver-src/aquila_core_tb.cpp core-ver-src/sim_mem.cpp
+	--trace-max-width 2560  --exe  csrc/aquila_core_tb.cpp csrc/sim_mem.cpp
 	make -j -C core_obj_dir -f Vaquila_testharness.mk Vaquila_testharness
 	cp ../hw/aquila_soc/ip_repo/aquila/hdl/mem/bootrom.mem core_obj_dir
 
