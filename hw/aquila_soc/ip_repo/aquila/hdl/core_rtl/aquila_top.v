@@ -144,11 +144,11 @@ wire [4 : 0]              m_d_amo_type; // Atomic type to D-memory.
 
 // Connections from the RISCV Core to the Atomic Unit, then to D-memory.
 wire                      atomic_unit_strobe;
-wire [31      : 0]        atomic_unit_addr;
+wire [XLEN-1 : 0]         atomic_unit_addr;
 wire                      atomic_unit_rw;
-wire [255 : 0]            atomic_unit_dataout;
+wire [CLSIZE-1 : 0]       atomic_unit_dataout;
 wire                      atomic_unit_done;
-wire [255 : 0]            atomic_unit_datain;
+wire [CLSIZE-1 : 0]       atomic_unit_datain;
 
 // Interrupt signals.
 wire tmr_irq, sft_irq;
