@@ -25,7 +25,7 @@ The following features are under development and should be ready in 2021:
 - Full M, S, U modes support in CSRs.
 
 # Performance
-On Xilinx KC-705, we synthesize the Aquila SoC @ 100MHz. Its Dhrystone number is 0.71 DMIPS/MHz. This number can go up to 0.78 DMIPS/MHz if we fine-tune the Writeback stage for optimized TCM execution.
+On Xilinx KC-705, we synthesize the Aquila SoC @ 100MHz. Its Dhrystone number is 0.91 DMIPS/MHz.
 
 # Synthesis of Aquila
 Aquila is developed and tested using Xilinx KC-705 development platform. Implementing an Aquila SoC would be fairly straightforward if you are familiar with the GUI IDE of Vivado. If you have to modify the boot ROM memory file, its source code and the build script is under sw/uartboot/. Please refer to the User’s Guide for more details about the Aquila SoC.
