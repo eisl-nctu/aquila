@@ -64,12 +64,12 @@ clock_t clock(void)
 
     // Use the counter instruction 'csrrs' to read the machine-mode
     // cpu cycle counter, then convert it to return the 1MHz-tick
-    // counts since reset. Here, we assume the CPU is clocked at 100MHz.
+    // counts since reset.
     //
     asm volatile ("csrrs %0, mcycle, x0" : "=r" (cycles));
     asm volatile ("csrrs %0, mcycleh, x0" : "=r" (cyclesh));
     mhz_cycles = ((long long) cyclesh << 32) + cycles;
-    mhz_ticks = (size_t) ((mhz_cycles/CPU_CLOCK) & 0xFFFFFFFFL);
+    mhz_ticks = (size_t) ((mhz_cycles/CPU_FREQ_MHZ) & 0xFFFFFFFFL);
 
     return mhz_ticks;
 }
