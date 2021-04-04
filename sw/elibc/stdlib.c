@@ -8,6 +8,11 @@
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
+//  Apr/01/2021, by Po-wei Ho:
+//     Fixed two bugs in malloc(). The first bug is that the for-loop index 'ptr'
+//     was sometimes updated without clearing the used/unused flag.
+//     The second bug is that 'curr_top' can somtimes point to itself.
+//
 //  None.
 // -----------------------------------------------------------------------------
 //  License information:
@@ -78,7 +83,7 @@ void *malloc(size_t n)
 
     // Search for a large-enough free memory block (FMB).
     return_ptr = NULL;
-    for (ptr = curr_top; ptr < heap_end; ptr = (ulong *) *ptr)
+    for (ptr = curr_top; ptr < heap_end; ptr = (ulong *) (*ptr & 0xFFFFFFFE))
     {
         if ((*ptr & 1) == 0 && (*ptr - (ulong) ptr > n))
         {
@@ -89,7 +94,8 @@ void *malloc(size_t n)
             r = n % sizeof(ulong);
             temp = n + sizeof(ulong) + ((r)? 4-r : 0);
             curr_top = ptr + temp/sizeof(ulong);
-            *curr_top = *ptr;
+            if (curr_top != (ulong *) *ptr)
+                *curr_top = *ptr;
             *ptr = (ulong) curr_top | 1;
             break;
         }
@@ -98,7 +104,7 @@ void *malloc(size_t n)
     if (return_ptr != NULL) return return_ptr;
 
     // Search again for a FMB from heap_top to curr_top
-    for (ptr = (ulong *) heap_top; ptr < curr_top; ptr = (ulong *) *ptr)
+    for (ptr = (ulong *) heap_top; ptr < curr_top; ptr = (ulong *) (*ptr & 0xFFFFFFFE))
     {
         if ((*ptr & 1) == 0 && (*ptr - (ulong) ptr > n))
         {
@@ -109,7 +115,8 @@ void *malloc(size_t n)
             r = n % sizeof(ulong);
             temp = n + sizeof(ulong) + ((r)? 4-r : 0);
             curr_top = ptr + temp/sizeof(ulong);
-            *curr_top = *ptr;
+            if (curr_top != (ulong *) *ptr)
+                *curr_top = *ptr;
             *ptr = (ulong) curr_top | 1;
             break;
         }
@@ -177,7 +184,7 @@ int abs(int n)
 #pragma GCC optimize ("O0")
 void exit(int status)
 {
-	printf("\nProgram exit with a status code %d\n", status);
+    printf("\nProgram exit with a status code %d\n", status);
     printf("\n-----------------------------------------------------------");
     printf("------------\nAquila execution finished.\n");
     printf("Press <reset> on the FPGA board to reboot the cpu ...\n\n");
