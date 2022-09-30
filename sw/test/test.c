@@ -57,6 +57,7 @@
 #include <string.h>
 #include <time.h>
 
+int dram_test(void);
 void malloc_test(int nwords);
 void timer_isr_test();
 
@@ -105,6 +106,7 @@ int main(void)
 
     printf("Hello, Aquila %.1f!\n", ver);
     printf("The address of 'ver' is 0x%X\n\n", (unsigned) &ver);
+    dram_test();
 
     printf("First time tick = %d\n\n", clock());
     malloc_test(5000);
@@ -116,6 +118,29 @@ int main(void)
     sleep(5000);
 
     printf("Test finished.\n");
+
+    return 0;
+}
+
+volatile int *trigger = ((int volatile *) 0xF0000010);
+
+int dram_test(void)
+{
+    float ver = 1.0;
+    unsigned long *dram = (unsigned long *) 0x80000000;
+
+    printf("Hello, Aquila %.1f!\n", ver);
+
+    for (int idx = 0; idx < (256*4)*2; idx++)
+        switch (idx % 4) {
+            case 0: dram[idx] = 0x00001111; break;
+            case 1: dram[idx] = 0x22223333; break;
+            case 2: dram[idx] = 0x44445555; break;
+            case 3: dram[idx] = 0x66667777; break;
+        }
+
+    *trigger = 1;
+    printf("[0x80000000] = 0x%x\n", dram[3]);
 
     return 0;
 }

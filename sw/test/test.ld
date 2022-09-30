@@ -53,23 +53,24 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 */
-__heap_start = 0x90000000;
-__heap_size  = 0x1FFF0000;
-__stack_top  = 0xAFFFFFF0;
+
+__stack_size = 0x800;
+__heap_size  = 0xD000000;
+__heap_start = __stack_top + __heap_size;
 
 MEMORY
 {
-    code_ram   (rx!rw) : ORIGIN = 0x80000000, LENGTH = 0x8000
-    data_ram   (rw!x)  : ORIGIN = 0x80008000, LENGTH = 0x1000000
+    code_ram   (rx!rw) : ORIGIN = 0x80000000, LENGTH = 0x1000000
+    data_ram   (rw!x)  : ORIGIN = 0x81000000, LENGTH = 0xE000000
 }
+
+ENTRY(crt0)
 
 SECTIONS
 {
     .text :
     {
-        boot.o(.text)
         *(.text)
-
     } > code_ram
 
     .data :
@@ -77,6 +78,11 @@ SECTIONS
         *(.data)
         *(.bss)
         *(.rodata*)
+    } > data_ram
 
+    .stack : ALIGN(0x10)
+    {
+        . += __stack_size;
+        __stack_top = .;
     } > data_ram
 }
