@@ -15,7 +15,9 @@
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
-//  None.
+//  Sep/23/2022, by Chun-Jen Tsai
+//     Fixed a rounding bug in printf() when printing a floating number with
+//     a fractional part close to 1.0 (e.g. 0.99....).
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -121,8 +123,8 @@ int fputs(const char *str, FILE *stream)
 
 void putd(int num, int prefix_zeros, int positive)
 {
-    unsigned int divisor = 1000000000; /* only for 32-bit integer */
-    int digit, leading_zero = 1;
+    unsigned int n, divisor = 1000000000; /* only for 32-bit integer */
+    unsigned int digit, leading_zero = 1;
 
     if (num == 0)
     {
@@ -130,18 +132,18 @@ void putd(int num, int prefix_zeros, int positive)
         return;
     }
     else if (!positive && num < 0) num = -num, putchar('-');
+    n = (unsigned) num;
 
-    while (prefix_zeros--) putchar('0');
     do
     {
-         digit = num / divisor;
+         digit = n / divisor;
          if (digit)
          {
              leading_zero = 0;
-             num = num - digit * divisor;
+             n = n - digit * divisor;
          }
          divisor /= 10;
-         if (!leading_zero) putchar(digit + '0');
+         if ((!leading_zero) || prefix_zeros) putchar(digit + '0');
     } while (divisor);
 }
 
@@ -150,7 +152,6 @@ void putx(unsigned int num, int upper_case, int prefix_zeros)
     char *HEX[2] = { "0123456789abcdef", "0123456789ABCDEF" };
     int digit, leading_zero = 1;
 
-    while (prefix_zeros--) putchar('0');
     upper_case = upper_case % 2;
     for (int idx = 8; idx > 0; idx --) /* only for 32-bit integer */
     {
@@ -166,14 +167,16 @@ void putx(unsigned int num, int upper_case, int prefix_zeros)
 
 void putf(double f, int ndecimal)
 {
-    double num = f;
+    double num, rounding = 0.5;
     int integer, fractions;
     int idx, power = 1;
 
-    if (num < 0.0) num = -num, putchar('-');
+    for (idx = 0; idx < ndecimal; idx++) rounding /= 10.0;
+    if (f < 0.0) f = -f, putchar('-');
+    num = f + rounding;
     integer = (int) num; /* only an approximation of floor(). */
     for (idx = 0; idx < ndecimal; idx++) power = power * 10;
-    fractions = (int) ((num - integer)*power + 0.5);
+    fractions = (int) ((num - (double) integer)*power);
     for (idx = ndecimal; idx > 0; idx--)
     {
         if (fractions / power != 0) break;
@@ -195,6 +198,7 @@ int printf(char *fmt, ...)
         if (*fmt == '%')
         {
             fmt++;
+
             if (*fmt == '0') prefix_zeros = 1;
             while (*fmt >= '0' && *fmt <= '9') fmt++; /* skip, do nothing */
             if (*fmt == 'u')
@@ -223,6 +227,10 @@ int printf(char *fmt, ...)
 
             case 'd':
                 putd(va_arg(ap, int), 0, positive);
+                break;
+
+            case 'u':
+                putd(va_arg(ap, unsigned), 0, 1);
                 break;
 
             case 'f':

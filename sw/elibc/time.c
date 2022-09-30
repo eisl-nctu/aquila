@@ -54,8 +54,6 @@
 
 #include <time.h>
 
-#define CPU_CLOCK 100 /* MHz */
-
 clock_t clock(void)
 {
     size_t mhz_ticks;
@@ -69,7 +67,7 @@ clock_t clock(void)
     asm volatile ("csrrs %0, mcycle, x0" : "=r" (cycles));
     asm volatile ("csrrs %0, mcycleh, x0" : "=r" (cyclesh));
     mhz_cycles = ((long long) cyclesh << 32) + cycles;
-    mhz_ticks = (size_t) ((mhz_cycles/CPU_FREQ_MHZ) & 0xFFFFFFFFL);
+    mhz_ticks = (size_t) (((mhz_cycles*1000000)/CPU_FREQ_HZ) & 0xFFFFFFFFL);
 
     return mhz_ticks;
 }

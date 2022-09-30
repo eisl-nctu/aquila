@@ -125,7 +125,7 @@ int strcmp(char *s1, char *s2)
         s1++;
         s2++;
     }
-    return (*(unsigned char *) s1) - (*(unsigned char *) s2);
+    return (*s1 - *s2);
 }
 
 char *strncpy(char *dst, char *src, size_t n)
@@ -188,13 +188,12 @@ int strncmp(char *s1, char *s2, size_t n)
         s2 = (char *) a2;
     }
 
-    while (n && *s1 != '\0' && *s1 == *s2)
+    while (--n && *s1 != '\0' && *s1 == *s2)
     {
         s1++;
         s2++;
-        n--;
     }
-    return (*(unsigned char *) s1) - (*(unsigned char *) s2);
+    return (*s1 - *s2);
 }
 
 void *memcpy(void *d, void *s, size_t n)

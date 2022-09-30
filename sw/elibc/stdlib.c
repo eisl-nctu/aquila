@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
-//  Apr/01/2021, by Po-wei Ho:
+//  Apr/01/2021, by Po-Wei Ho:
 //     Fixed two bugs in malloc(). The first bug is that the for-loop index 'ptr'
 //     was sometimes updated without clearing the used/unused flag.
 //     The second bug is that 'curr_top' can somtimes point to itself.
@@ -184,10 +184,16 @@ int abs(int n)
 #pragma GCC optimize ("O0")
 void exit(int status)
 {
-    printf("\nProgram exit with a status code %d\n", status);
-    printf("\n-----------------------------------------------------------");
-    printf("------------\nAquila execution finished.\n");
+    printf("\n-----------------------------------------------------------------------\n");
+    printf("Program exit with a status code %d\n", status);
     printf("Press <reset> on the FPGA board to reboot the cpu ...\n\n");
+
+    // If Aquila is running in a waveform simulator, we can use putchar(03)
+    // to inform the simulator to end simulation if exit() has been called.
+    // However, you need a UART module that invokes $finish() when a 0x03 code
+    // has been sent to the UART device in simulation mode.
+    putchar(03);
+
     while (1);
 }
 #pragma GCC pop_options
@@ -203,4 +209,3 @@ int rand(void)
 {
     return(((rand_seed = rand_seed * 214013L + 2531011L) >> 16) & 0x7fff);
 }
-
