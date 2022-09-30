@@ -1,46 +1,45 @@
 # ======================================================================
-#  This Makefile builds the boot code memory file for Xilinx Vivado
-#  EDA tools.
+#  Builds the boot code memory file for Xilinx Vivado EDA tools.
 #
-#  Chun-Jen Tsai, Nov/04/2019
+#  Chun-Jen Tsai, Nov/29/2021
 # ======================================================================
-#
 
 CROSS = riscv32-unknown-elf
 CCPATH = $(RISCV)/bin
 
 CC = $(CCPATH)/$(CROSS)-gcc
 LD = $(CCPATH)/$(CROSS)-ld
-OC = $(CCPATH)/$(CROSS)-objcopy
 OD = $(CCPATH)/$(CROSS)-objdump
+OC = $(CCPATH)/$(CROSS)-objcopy
 
-CCFLAGS = -Wall -I. -Os -fomit-frame-pointer -march=rv32im -mstrict-align -fno-builtin
-LDFLAGS = -T$(PROJ).ld -Map=$(PROJ).map # -Ttext=0
+CCFLAGS = -Wall -Os -fomit-frame-pointer -fno-builtin -march=rv32im -mstrict-align
+LDFLAGS = -T$(PROJ).ld -Map=$(PROJ).map
 
 OCFLAGS = -O binary
 ODFLAGS = -d
 
-PROJ = bootrom
-OBJS = boot.o uartboot.o io_uart.o
+PROJ = uartboot
+OBJS = boot.o $(PROJ).o io_uart.o
 
 all:
 	make $(PROJ).mem
 
 clean:
-	rm -rf *.s *.o *.bin *.objdump *.map *.mem *.content
+	rm -f *.mem *.objdump *.map *.o
 
 %.o: %.c $(PROJ).ld
 	$(CC) $(CCFLAGS) -c $< -o $@
 
-_$(PROJ).o: $(OBJS)
+$(PROJ).elf: $(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) -o $@
 
-$(PROJ).bin: _$(PROJ).o
+$(PROJ).bin: $(PROJ).elf
 	$(OC) $(OCFLAGS) $< $@
 	$(OD) $(ODFLAGS) $< > $(PROJ).objdump
-	$(OD) -s $< > $(PROJ).content
 	rm $<
 
 $(PROJ).mem: $(PROJ).bin
-	./create_mem.sh $<
+	$(eval BIN_SIZE = $(shell stat -c %s $(PROJ).bin))
+	hexdump -ve '1/4 "%08x\n"' -n $(BIN_SIZE) $(PROJ).bin > $@
+	rm $<
 

@@ -1,6 +1,6 @@
 /*
 // =============================================================================
-//  Program : ultraboot.ld
+//  Program : uartboot.ld
 //  Author  : Chun-Jen Tsai
 //  Date    : Nov/04/2019
 // -----------------------------------------------------------------------------
@@ -9,10 +9,8 @@
 //  None.
 // -----------------------------------------------------------------------------
 //  Description:
-//  This is the boot code for Aquila SoC.  Upon reset, the boot code waiting
-//  for a program to be transferred from the UART port (using [File] -> [Send file]
-//  menu command of TeraTerm). Then the program will be loaded to 0x9000_0000,
-//  and executed. The processor will be halted when the execution is finished.
+//  This is the linker script of the boot code for the Aquila SoC. The boot code
+//  is located at 0x0000_0000 in the tightly-coupled memory (TCM).
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -57,12 +55,12 @@
 // =============================================================================
 */
 
-__stack_top = 0x000000FF0;
+__stack_size = 0x200;
 
 MEMORY
 {
-    code_ram   (rx!rw) : ORIGIN = 0x00000000, LENGTH = 0x600
-    data_ram   (rw!x)  : ORIGIN = 0x00000600, LENGTH = 0x400
+    code_ram   (rx!rw) : ORIGIN = 0x00000000, LENGTH = 0x800
+    data_ram   (rw!x)  : ORIGIN = 0x00000800, LENGTH = 0x800
 }
 
 SECTIONS
@@ -71,7 +69,6 @@ SECTIONS
     {
         boot.o(.text)
         *(.text)
-
     } > code_ram
 
     .data :
@@ -79,6 +76,11 @@ SECTIONS
         *(.data)
         *(.bss)
         *(.rodata*)
+    } > data_ram
 
+    .stack : ALIGN(0x10)
+    {
+        . += __stack_size;
+        __stack_top = .;
     } > data_ram
 }

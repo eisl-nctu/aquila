@@ -63,4 +63,3 @@ void putx(unsigned int, int);
 int puts(char *str);
 int printf(char *fmt, ...);
 void exit(int status);
-

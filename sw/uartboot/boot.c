@@ -51,15 +51,14 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
-#include <io_uart.h>
+#include "io_uart.h"
 
 extern int main(void);
 
 extern unsigned int __stack_top; /* declared in the linker script */
 unsigned int stack_top = (unsigned int) &__stack_top;
 
-void
-boot(void)
+void boot(void)
 {
     // Set the stack pointer. The application expects the top of stack
     // to be located at __stack_top. We must physically assign
@@ -71,4 +70,3 @@ boot(void)
     // Halt the processor.
     exit(0);
 }
-

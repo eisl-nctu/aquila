@@ -54,8 +54,8 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 
-#include <io_uart.h>
 #include <stdarg.h>
+#include "io_uart.h"
 
 // =============================================================================
 //  UART Device single-byte I/O functions.
@@ -202,9 +202,8 @@ int printf(char *fmt, ...)
 #pragma GCC optimize ("O0")
 void exit(int status)
 {
-	printf("\nProgram exit with a status code %d\n", status);
-    printf("\n-----------------------------------------------------------");
-    printf("------------\nAquila execution finished.\n");
+    printf("-----------------------------------------------------------------------\n");
+	printf("Program exit with a status code %d\n", status);
     printf("Press <reset> on the FPGA board to reboot the cpu ...\n\n");
     while (1);
 }
