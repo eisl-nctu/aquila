@@ -406,4 +406,4 @@ typedef struct record
                   } var_3;
           } variant;
       } Rec_Type, *Rec_Pointer;
-#define HZ 100
+

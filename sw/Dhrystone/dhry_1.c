@@ -20,8 +20,6 @@
 #include <time.h>
 #include "dhry.h"
 
-#define FREQ_MHZ 100
-
 /* Global Variables: */
 
 Rec_Pointer     Ptr_Glob,
@@ -255,10 +253,11 @@ main ()
     printf ("%6.1f \n", Dhrystones_Per_Second);
     printf ("VAX MIPS:                                   ");
     printf ("%6.1f \n", Vax_Mips);
-    printf("DMIPS/Mhz:                                   ");
-    printf("%6.2f\n", Vax_Mips/FREQ_MHZ);
-    printf ("\n");
+    printf ("DMIPS/Mhz:                                   ");
+    printf ("%6.2f\n", (Vax_Mips*1000000)/CPU_FREQ_HZ);
   }
+
+  exit(0);
 }
 
 Proc_1 (Ptr_Val_Par)

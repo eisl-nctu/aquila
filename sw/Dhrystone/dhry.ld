@@ -9,7 +9,7 @@
 //  None.
 // -----------------------------------------------------------------------------
 //  Description:
-//  This is the linker script of a program compiled to run from DDRx memory.
+//  This is the linker script of a program compiled to run from TCM memory.
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -53,23 +53,24 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 // =============================================================================
 */
-__heap_start = 0x0000A000;
-__heap_size  = 0x00005000;
-__stack_top  = 0x0000FFF0;
+
+__stack_size = 0x800;
+__heap_size  = 0x5000;
+__heap_start = __stack_top + __heap_size;
 
 MEMORY
 {
     code_ram   (rx!rw) : ORIGIN = 0x00001000, LENGTH = 0x5000
-    data_ram   (rw!x)  : ORIGIN = 0x00006000, LENGTH = 0x4000
+    data_ram   (rw!x)  : ORIGIN = 0x00006000, LENGTH = 0xA000
 }
+
+ENTRY(crt0)
 
 SECTIONS
 {
     .text :
     {
-        boot.o(.text)
         *(.text)
-
     } > code_ram
 
     .data :
@@ -77,6 +78,11 @@ SECTIONS
         *(.data)
         *(.bss)
         *(.rodata*)
+    } > data_ram
 
+    .stack : ALIGN(0x10)
+    {
+        . += __stack_size;
+        __stack_top = .;
     } > data_ram
 }
