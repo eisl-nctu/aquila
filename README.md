@@ -18,6 +18,7 @@ The current version of Aquila is 1.1, with the following specification:
 - The RTL model written in Verilog.
 - SD card I/O support.
 - Multi-threading RTOS support (FreeRTOS).
+- [Networking support](https://github.com/eisl-nctu/aquila-net).
 - SV32 MMU support (to be released soon).
 - Full M, S, U modes support in CSRs (to be released soon).
 - Multi-core support with coherent data cache controller (not in the released RTL model yet).
@@ -25,10 +26,10 @@ The current version of Aquila is 1.1, with the following specification:
 # Performance
 On Xilinx KC-705, we synthesize the Aquila SoC @ 100MHz. Its Dhrystone number is 1.00 DMIPS/MHz and The CoreMark number is 2.07/MHz. Both benchmarks are compiled using GCC 10.2.0.
 
-# Synthesis of Aquila
+# Synthesis of the Aquila SoC
 Aquila is developed and tested using Xilinx KC-705 development platform. Implementing an Aquila SoC would be fairly straightforward if you are familiar with the GUI IDE of Vivado. If you have to modify the boot ROM memory file, its source code and the build script is under sw/uartboot/. Please refer to the User’s Guide for more details about the Aquila SoC.
 
-We will provide Vivado workspace for other less expensive platforms, such as the Arty A7-100, soon. However, KC-705 will be the main development platform for Aquila SoCs.
+We will provide Vivado workspace for other less expensive platforms, such as the Arty A7-100, soon. However, KC-705 will be the main development platform for the Aquila SoCs.
 
 # Simualtion of Aquila (Verilator)
 
