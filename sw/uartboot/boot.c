@@ -57,15 +57,27 @@ extern int main(void);
 
 extern unsigned int __stack_top; /* declared in the linker script */
 unsigned int stack_top = (unsigned int) &__stack_top;
+unsigned int sp_store;
 
 void boot(void)
 {
-    // Set the stack pointer. The application expects the top of stack
-    // to be located at __stack_top. We must physically assign
-    // __stack_top to sp before we run the boot loader.
+    // We must save the return address to the boot loader before
+    // we assign the sp to __stack_top defined in the linker script.
+    asm volatile ("lui t0, %hi(sp_store)");
+    asm volatile ("sw sp, %lo(sp_store)(t0)");
+
+    // Set the stack pointer. The application linker script sets
+    // the top address of the stack area to __stack_top.
     asm volatile("lui t0, %hi(stack_top)");
     asm volatile("lw  sp, %lo(stack_top)(t0)");
+
+    // Enter the main program of the boot loader
     main();
+
+    // Now, we must restore the stack pointer of the boot loader
+    // so that we can execute the epilogue of the boot loader properly.
+    asm volatile ("lui t0, %hi(sp_store)");
+    asm volatile ("lw sp, %lo(sp_store)(t0)");
 
     // Halt the processor.
     exit(0);

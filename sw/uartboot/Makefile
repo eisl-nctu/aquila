@@ -12,7 +12,7 @@ LD = $(CCPATH)/$(CROSS)-ld
 OD = $(CCPATH)/$(CROSS)-objdump
 OC = $(CCPATH)/$(CROSS)-objcopy
 
-CCFLAGS = -Wall -Os -fomit-frame-pointer -fno-builtin -march=rv32im -mstrict-align
+CCFLAGS = -Wall -O2 -fomit-frame-pointer -fno-builtin -march=rv32im -mstrict-align
 LDFLAGS = -T$(PROJ).ld -Map=$(PROJ).map
 
 OCFLAGS = -O binary
@@ -32,6 +32,7 @@ clean:
 
 $(PROJ).elf: $(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) -o $@
+	rm $^
 
 $(PROJ).bin: $(PROJ).elf
 	$(OC) $(OCFLAGS) $< $@

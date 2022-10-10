@@ -1,7 +1,7 @@
 // =============================================================================
 //  Program : uartboot.c
 //  Author  : Chun-Jen Tsai
-//  Date    : Nov/04/2019
+//  Date    : Nov/12/2021
 // -----------------------------------------------------------------------------
 //  Description:
 //  This is the boot code for Aquila SoC.  Upon reset, the boot code waiting
@@ -10,12 +10,9 @@
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
-//  Jan/14/2020, by Chun-Jen Tsai:
-//    Change the *.ebf format to support code loading into either the
-//    on-chip TCM or the DDRx main memory.
-//
-//  Nov/12/2021, by Chun-Jen Tsai
-//    Added the support for loading the *.elf format.
+//  Sep/17/2022, by Chun-Jen Tsai
+//    Modify the ELF loader to perform on-the-fly loading from UART without
+//    using any ELF file loading buffer.
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -65,78 +62,73 @@
 // ------------------------------------------------------------------------------
 //  Memory Map:
 //     0x00000000 ~ 0x0000FFFF: on-chip memory (64KB, boot code)
-//     0x00010000 ~ 0x0001FFFF: on-chip buffer for ELF loading (64KB)
-//     0x80000000 ~ 0x8E000000: main memory (code, data, heap, and stack)
-//     0x8F000000 ~ 0x8FFFEFFF: secondary buffer for ELF loading (16MB)
+//     0x80000000 ~ 0x8FFFFFFF: main memory (code, data, heap, and stack)
 //     0xC0000000 ~ 0xCFFFFFFF: I/O device area
 //     0xF0000000 ~ 0xFFFFFFFF: system device area
 // ------------------------------------------------------------------------------
 
-uint8_t eheader[64];
+uint8_t eheader[64], pheader[128];
 uint8_t *prog;
-uint8_t *elfp = (uint8_t *) 0x00010000UL;
-
-int load_elf(uint8_t *elf_base)
-{
-    Elf32_Ehdr *ehdr = (Elf32_Ehdr *) elf_base;
-    Elf32_Phdr *segments;
-    uint32_t dst_addr, src_addr;
-    int idx, jdx;
-
-    // Load all loadable segments of an ELF image to destination.
-    segments = (Elf32_Phdr *) (elf_base + ehdr->e_phoff);
-    for (idx = 0; idx < ehdr->e_phnum; idx++)
-    {
-        // find segments for CODE and DATA
-        if (segments[idx].p_type == PT_LOAD && segments[idx].p_filesz != 0)
-        {
-            src_addr = (uint32_t) elf_base + segments[idx].p_offset;
-            dst_addr = (uint32_t) segments[idx].p_paddr;
-            for (jdx = 0; jdx < segments[idx].p_filesz; jdx+=sizeof(int))
-            {
-                *(uint32_t *)(dst_addr+jdx) = *(uint32_t *)(src_addr+jdx);
-            }
-            while (jdx < segments[idx].p_memsz)
-            {
-                *(uint32_t *)(dst_addr+jdx) = 0;
-                jdx += sizeof(int);
-            }
-        }
-    }
-
-    return 0;
-}
+char *organization = "EISL@NCTU, Hsinchu, Taiwan";
+int   year = 2022;
 
 int main(void)
 {
     Elf32_Ehdr *ehdr = (Elf32_Ehdr *) eheader;
+    Elf32_Phdr *phdr = (Elf32_Phdr *) pheader;
     uint32_t *magic = (uint32_t *) ELFMAG;
-    uint32_t size, hsize = sizeof(Elf32_Ehdr);
-    int idx, year = 2022;
-    char *organization = "EISL@NCTU, Hsinchu, Taiwan";
+    uint32_t size, skip, current_byte;
+    uint32_t *mem;
+    uint8_t  *dst_addr;
+    int idx, jdx;
 
     printf("=======================================================================\n");
     printf("Copyright (c) 2019-%d, %s.\n", year, organization);
-    printf("The Aquila SoC is ready to go.\n");
+    printf("The Aquila SoC is ready.\n");
     printf("Waiting for an ELF file to be sent from the UART ...\n");
 
-    for (idx = 0; idx < hsize; idx++)
+    // Read the ELF header.
+    current_byte = 0;
+    for (idx = 0; idx < sizeof(Elf32_Ehdr); idx++)
     {
         eheader[idx] = inbyte();
+        current_byte++;
     }
+
     if (*((uint32_t *) ehdr->e_ident) == *magic) // Try to load an *.elf file.
     {
         prog = (uint8_t *) ehdr->e_entry; /* set program entry point */
         size = ehdr->e_shoff + (ehdr->e_shentsize * ehdr->e_shnum);
-        for (idx = 0; idx < size - hsize; idx++)
+
+        // Read the Program headers.
+        for (idx = 0; idx < ehdr->e_phentsize*ehdr->e_phnum; idx++)
         {
-            elfp[idx+hsize] = inbyte();
+            pheader[idx] = inbyte();
+            current_byte++;
         }
-        for (int idx = 0; idx < hsize; idx++)
+
+        // Load CODE and DATA sections into memory.
+        for (idx = 0; idx < ehdr->e_phnum; idx++)
         {
-            elfp[idx] = eheader[idx];
+            if (phdr[idx].p_type == PT_LOAD && phdr[idx].p_filesz != 0)
+            {
+                dst_addr = (uint8_t *) phdr[idx].p_paddr;
+                skip = phdr[idx].p_offset - current_byte;
+                while (skip-- > 0) inbyte(), current_byte++;
+
+                for (jdx = 0; jdx < phdr[idx].p_filesz; jdx++)
+                {
+                    dst_addr[jdx] = inbyte();
+                    current_byte++;
+                }
+                mem = (uint32_t *) &(dst_addr[jdx]);
+                while (jdx < phdr[idx].p_memsz)
+                {
+                    mem[(jdx>>2)] = 0;
+                    jdx += sizeof(int);
+                }
+            }
         }
-        load_elf(elfp);
 
         printf("\nProgram entry point at 0x%x, size = 0x%x.\n", prog, size);
         printf("-----------------------------------------------------------------------\n");

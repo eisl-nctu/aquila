@@ -63,9 +63,9 @@
 
 // Declare the I/O registers of the Xilinx axi_uartlite device.
 // This device requires no initialization.
-volatile unsigned int *uart_rxfifo = (unsigned int *) 0xC0000000;
-volatile unsigned int *uart_txfifo = (unsigned int *) 0xC0000004;
-volatile unsigned int *uart_status = (unsigned int *) 0xC0000008;
+volatile unsigned int *uart_rxfifo = (unsigned int volatile *) 0xC0000000;
+volatile unsigned int *uart_txfifo = (unsigned int volatile *) 0xC0000004;
+volatile unsigned int *uart_status = (unsigned int volatile *) 0xC0000008;
 
 // Declare the axi_uartlite status register control bits.
 #define TX_FIFO_FULL  8
