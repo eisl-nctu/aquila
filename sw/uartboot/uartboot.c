@@ -13,6 +13,10 @@
 //  Sep/17/2022, by Chun-Jen Tsai
 //    Modify the ELF loader to perform on-the-fly loading from UART without
 //    using any ELF file loading buffer.
+//
+//  Oct/15/2022, by Chun-Jen Tsai
+//    Use different schemes for loading into TCM (on-the-fly) and into
+//    DRAM (buffered loasding).
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -59,6 +63,8 @@
 #include <stdint.h>
 #include "io_uart.h"
 
+int load_elf(Elf32_Ehdr *ehdr, uint8_t *elf_base);
+
 // ------------------------------------------------------------------------------
 //  Memory Map:
 //     0x00000000 ~ 0x0000FFFF: on-chip memory (64KB, boot code)
@@ -67,8 +73,9 @@
 //     0xF0000000 ~ 0xFFFFFFFF: system device area
 // ------------------------------------------------------------------------------
 
-uint8_t eheader[64], pheader[128];
 uint8_t *prog;
+uint8_t eheader[64], pheader[128];
+uint8_t *elfp = (uint8_t *) 0x8F000000UL; // ELF buffer for DRAM loading
 char *organization = "EISL@NCTU, Hsinchu, Taiwan";
 int   year = 2022;
 
@@ -77,7 +84,8 @@ int main(void)
     Elf32_Ehdr *ehdr = (Elf32_Ehdr *) eheader;
     Elf32_Phdr *phdr = (Elf32_Phdr *) pheader;
     uint32_t *magic = (uint32_t *) ELFMAG;
-    uint32_t size, skip, current_byte;
+    uint32_t size, hsize = sizeof(Elf32_Ehdr);
+    uint32_t skip, current_byte;
     uint32_t *mem;
     uint8_t  *dst_addr;
     int idx, jdx;
@@ -88,46 +96,61 @@ int main(void)
     printf("Waiting for an ELF file to be sent from the UART ...\n");
 
     // Read the ELF header.
-    current_byte = 0;
-    for (idx = 0; idx < sizeof(Elf32_Ehdr); idx++)
+    for (idx = 0; idx < hsize; idx++)
     {
         eheader[idx] = inbyte();
-        current_byte++;
     }
 
-    if (*((uint32_t *) ehdr->e_ident) == *magic) // Try to load an *.elf file.
+    if (*((uint32_t *) ehdr->e_ident) == *magic)
     {
         prog = (uint8_t *) ehdr->e_entry; /* set program entry point */
         size = ehdr->e_shoff + (ehdr->e_shentsize * ehdr->e_shnum);
 
-        // Read the Program headers.
-        for (idx = 0; idx < ehdr->e_phentsize*ehdr->e_phnum; idx++)
+        if ((uint32_t) prog < 0x10000) // Loading the ELF file to the TCM.
         {
-            pheader[idx] = inbyte();
-            current_byte++;
-        }
+            // We can perform on-the-fly parse-loading from the UART input
+            // directly into the TCM. This is important when the system
+            // has no DRAM to be used as a loading buffer.
 
-        // Load CODE and DATA sections into memory.
-        for (idx = 0; idx < ehdr->e_phnum; idx++)
-        {
-            if (phdr[idx].p_type == PT_LOAD && phdr[idx].p_filesz != 0)
+            // Read the Program headers.
+            current_byte = hsize;
+            for (idx = 0; idx < ehdr->e_phentsize*ehdr->e_phnum; idx++)
             {
-                dst_addr = (uint8_t *) phdr[idx].p_paddr;
-                skip = phdr[idx].p_offset - current_byte;
-                while (skip-- > 0) inbyte(), current_byte++;
+                pheader[idx] = inbyte();
+                current_byte++;
+            }
 
-                for (jdx = 0; jdx < phdr[idx].p_filesz; jdx++)
+            // Load CODE and DATA sections into the target addresses.
+            for (idx = 0; idx < ehdr->e_phnum; idx++)
+            {
+                if (phdr[idx].p_type == PT_LOAD && phdr[idx].p_filesz != 0)
                 {
-                    dst_addr[jdx] = inbyte();
-                    current_byte++;
-                }
-                mem = (uint32_t *) &(dst_addr[jdx]);
-                while (jdx < phdr[idx].p_memsz)
-                {
-                    mem[(jdx>>2)] = 0;
-                    jdx += sizeof(int);
+                    dst_addr = (uint8_t *) phdr[idx].p_paddr;
+                    skip = phdr[idx].p_offset - current_byte;
+                    while (skip-- > 0) inbyte(), current_byte++;
+
+                    for (jdx = 0; jdx < phdr[idx].p_filesz; jdx++)
+                    {
+                        dst_addr[jdx] = inbyte();
+                        current_byte++;
+                    }
+                    mem = (uint32_t *) &(dst_addr[jdx]);
+                    while (jdx < phdr[idx].p_memsz)
+                    {
+                        mem[(jdx>>2)] = 0;
+                        jdx += sizeof(int);
+                    }
                 }
             }
+        }
+        else  // Loading the ELF file to the DDRx main memory.
+        {
+            // Parse-loading of an ELF file directly from the UART
+            // to the main memory is not reliable. So, we save the
+            // ELF image into a main memory buffer first, then
+            // parse-load the ELF image to its destination.
+            for (idx = hsize; idx < size; idx++) elfp[idx] = inbyte();
+            load_elf(ehdr, elfp);
         }
 
         printf("\nProgram entry point at 0x%x, size = 0x%x.\n", prog, size);
@@ -150,3 +173,34 @@ int main(void)
 
     return 0;
 }
+
+int load_elf(Elf32_Ehdr *ehdr, uint8_t *elf_base)
+{
+    Elf32_Phdr *section;
+    uint32_t dst_addr, src_addr;
+    int idx, jdx;
+
+    // Copy all loadable sections of an ELF image to the destination.
+    section = (Elf32_Phdr *) (elf_base + ehdr->e_phoff);
+    for (idx = 0; idx < ehdr->e_phnum; idx++)
+    {
+        // Locate CODE and DATA sections
+        if (section[idx].p_type == PT_LOAD && section[idx].p_filesz != 0)
+        {
+            src_addr = (uint32_t) elf_base + section[idx].p_offset;
+            dst_addr = (uint32_t) section[idx].p_paddr;
+            for (jdx = 0; jdx < section[idx].p_filesz; jdx+=sizeof(int))
+            {
+                *(uint32_t *)(dst_addr+jdx) = *(uint32_t *)(src_addr+jdx);
+            }
+            while (jdx < section[idx].p_memsz)
+            {
+                *(uint32_t *)(dst_addr+jdx) = 0;
+                jdx += sizeof(int);
+            }
+        }
+    }
+
+    return 0;
+}
+

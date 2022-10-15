@@ -55,12 +55,12 @@
 // =============================================================================
 */
 
-__stack_size = 0x200;
+__stack_size = 0x300;
 
 MEMORY
 {
-    code_ram   (rx!rw) : ORIGIN = 0x00000000, LENGTH = 0x800
-    data_ram   (rw!x)  : ORIGIN = 0x00000800, LENGTH = 0x800
+    code_ram   (rx!rw) : ORIGIN = 0x00000000, LENGTH = 0x900
+    data_ram   (rw!x)  : ORIGIN = 0x00000900, LENGTH = 0x800
 }
 
 SECTIONS
