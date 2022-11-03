@@ -9,5 +9,5 @@ To create a complete Xilinx Vivado project workspace, simply download the source
 The created project workspace will be in the directory aquila_soc/. The user IP repository that contains the Aquila core will also be "copied" into this directory. Therefore, your modifications to the Aquila IP source code will be local to your project.
 
 
-Note that, the tcl script, build.tcl, for project creation have tested using Vivado 2022.1.
+Note that, the tcl script, build.tcl, for project creation have been tested using Vivado 2022.1.
 
