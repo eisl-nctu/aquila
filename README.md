@@ -8,7 +8,7 @@ Currently, the microarchitecture of Aquila implements the classical five-stage p
 Aquila is designed for intelligent system SoCs for Xilinx FPGAs. The default behavior of the Aquila SoC, when configured into a Xilinx FPGA, is to execute a boot code stored in pre-initialized on-chip memory, which load a binary executable (ELF file) from the Host PC through the UART connection. We will provide different boot ROMs in the future to boot the system from other devices (such as the SD card) to facilitate the design of a turn-key system.
 
 # Specification
-The current version of Aquila is 1.1, with the following specification:
+The current version of Aquila is 1.2, with the following specification:
 
 - RV32IMA ISA-compliant.
 - CSRs & related instructions for M mode.
@@ -24,7 +24,7 @@ The current version of Aquila is 1.1, with the following specification:
 - Multi-core support with coherent data cache controller (not in the released RTL model yet).
 
 # Performance
-On Xilinx KC-705, we synthesize the Aquila SoC @ 100MHz. Its Dhrystone number is 1.00 DMIPS/MHz and The CoreMark number is 2.07/MHz. Both benchmarks are compiled using GCC 10.2.0.
+On Xilinx KC-705, we synthesize the Aquila SoC @ 100MHz. Its Dhrystone number is 1.00 DMIPS/MHz and The CoreMark number is 2.07/MHz. Both benchmarks are compiled using GCC 10.2.0 and executed from the on-chip SRAM.
 
 # Synthesis of the Aquila SoC
 Aquila is developed and tested using Xilinx KC-705 development platform. Implementing an Aquila SoC would be fairly straightforward if you are familiar with the GUI IDE of Vivado. If you have to modify the boot ROM memory file, its source code and the build script is under sw/uartboot/. Please refer to the User’s Guide for more details about the Aquila SoC.

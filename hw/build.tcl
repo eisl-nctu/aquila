@@ -1,5 +1,5 @@
 #*****************************************************************************************
-# Vivado (TM) v2020.1 (64-bit)
+# Vivado (TM) v2022.1 (64-bit)
 #
 # aquila_soc.tcl: Tcl script for re-creating project 'aquila_soc'
 #
@@ -20,17 +20,17 @@
 #*****************************************************************************************
 
 # Set the user IP repository directory
-set ip_repo_dir "."
+set ip_repo_src "."
 
 # Set the project name
 set proj_name "aquila_soc"
 
 # Create project and set project platform for KC-705
-create_project $proj_name ./$proj_name -part xc7k325tffg900-2
+create_project $proj_name $proj_name -part xc7k325tffg900-2
 set_property -name "board_part" -value "xilinx.com:kc705:part0:1.6" -objects [current_project]
 
 # Create project and set project platform for Genesis II
-#create_project $proj_name ./$proj_name -part xc7a100tcsg324-1
+#create_project $proj_name $proj_name -part xc7a100tcsg324-1
 #set_property -name "board_part" -value "digilentinc.com:arty-a7-100:part0:1.0" -objects [current_project]
 
 # Create 'sources_1' fileset (if not found)
@@ -39,13 +39,18 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 }
 
 # Set IP repository paths
+file copy -force $ip_repo_src/ip_repo $proj_name/
+file rename $proj_name/ip_repo/aquila/hdl/xdc/aquila_ooc_arty.xdc $proj_name/ip_repo/aquila/hdl/xdc/aquila_ooc.xdc
 set obj [get_filesets sources_1]
 if { $obj != {} } {
-   set_property "ip_repo_paths" "[file normalize "$ip_repo_dir/ip_repo"]" $obj
+   set_property "ip_repo_paths" "[file normalize "$proj_name/ip_repo"]" $obj
 
    # Rebuild user ip_repo's index before adding any source files
    update_ip_catalog -rebuild
 }
+
+# Define the target board to "KC705" for synthesis
+set_property verilog_define KC705=true [get_filesets sources_1]
 
 # Proc to create_block_design_aquila_soc
 proc create_block_design_aquila_soc { parentCell } {
@@ -359,7 +364,7 @@ proc create_block_design_aquila_soc { parentCell } {
   set sys_diff_clock [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 sys_diff_clock ]
   set_property -dict [ list \
    CONFIG.FREQ_HZ {100000000} \
-   ] $sys_diff_clock
+  ] $sys_diff_clock
 
 
   # Create ports
@@ -471,42 +476,42 @@ proc create_block_design_aquila_soc { parentCell } {
    "ExpandedHierarchyInLayout":"",
    "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:9.0 non-TLS
 #  -string -flagsOSRD
-preplace port ddr3_sdram -pg 1 -lvl 4 -x 1070 -y 210 -defaultsOSRD
-preplace port rs232_uart -pg 1 -lvl 4 -x 1070 -y 80 -defaultsOSRD
-preplace port sys_diff_clock -pg 1 -lvl 0 -x -10 -y 280 -defaultsOSRD
-preplace port reset -pg 1 -lvl 0 -x -10 -y 300 -defaultsOSRD
-preplace port io0_o_0 -pg 1 -lvl 4 -x 1070 -y 430 -defaultsOSRD
-preplace port io1_i_0 -pg 1 -lvl 4 -x 1070 -y 450 -defaultsOSRD -right
-preplace port sck_o_0 -pg 1 -lvl 4 -x 1070 -y 470 -defaultsOSRD
-preplace portBus ss_o_0 -pg 1 -lvl 4 -x 1070 -y 490 -defaultsOSRD
+preplace port ddr3_sdram -pg 1 -lvl 4 -x 1120 -y 210 -defaultsOSRD
+preplace port rs232_uart -pg 1 -lvl 4 -x 1120 -y 80 -defaultsOSRD
+preplace port sys_diff_clock -pg 1 -lvl 0 -x -20 -y 280 -defaultsOSRD
+preplace port reset -pg 1 -lvl 0 -x -20 -y 60 -defaultsOSRD
+preplace port io0_o_0 -pg 1 -lvl 4 -x 1120 -y 450 -defaultsOSRD
+preplace port io1_i_0 -pg 1 -lvl 0 -x -20 -y 360 -defaultsOSRD
+preplace port sck_o_0 -pg 1 -lvl 4 -x 1120 -y 470 -defaultsOSRD
+preplace portBus ss_o_0 -pg 1 -lvl 4 -x 1120 -y 490 -defaultsOSRD
 preplace inst axi_periph -pg 1 -lvl 2 -x 550 -y 420 -defaultsOSRD
 preplace inst axi_smc -pg 1 -lvl 2 -x 550 -y 170 -defaultsOSRD
-preplace inst axi_uartlite_0 -pg 1 -lvl 3 -x 890 -y 90 -defaultsOSRD
-preplace inst mig_7series_0 -pg 1 -lvl 3 -x 890 -y 260 -defaultsOSRD
-preplace inst rst_mig_7series_0_200M -pg 1 -lvl 1 -x 200 -y 460 -defaultsOSRD
-preplace inst aquila_0 -pg 1 -lvl 1 -x 200 -y 150 -defaultsOSRD
-preplace inst axi_quad_spi_0 -pg 1 -lvl 3 -x 890 -y 460 -defaultsOSRD
-preplace netloc mig_7series_0_mmcm_locked 1 0 4 30 580 NJ 580 NJ 580 1030
-preplace netloc mig_7series_0_ui_addn_clk_0 1 0 4 20 250 380 560 730 570 1040
-preplace netloc mig_7series_0_ui_clk 1 1 3 390 10 NJ 10 1030
-preplace netloc mig_7series_0_ui_clk_sync_rst 1 0 4 20 590 NJ 590 NJ 590 1050
-preplace netloc reset_1 1 0 3 10J 60 NJ 60 720J
-preplace netloc rst_mig_7series_0_200M_peripheral_aresetn 1 0 3 30 240 390 270 700
-preplace netloc axi_quad_spi_0_io0_o 1 3 1 N 430
-preplace netloc io1_i_0_1 1 3 1 N 450
-preplace netloc axi_quad_spi_0_sck_o 1 3 1 N 470
-preplace netloc axi_quad_spi_0_ss_o 1 3 1 N 490
-preplace netloc axi_periph_M00_AXI 1 2 1 690 70n
-preplace netloc aquila_0_M_ICACHE_PORT 1 1 1 N 130
-preplace netloc axi_periph_M01_AXI 1 2 1 N 430
-preplace netloc sys_diff_clock_1 1 0 3 NJ 280 NJ 280 740J
+preplace inst axi_uartlite_0 -pg 1 -lvl 3 -x 900 -y 90 -defaultsOSRD
+preplace inst mig_7series_0 -pg 1 -lvl 3 -x 900 -y 260 -defaultsOSRD
+preplace inst rst_mig_7series_0_200M -pg 1 -lvl 1 -x 190 -y 460 -defaultsOSRD
+preplace inst aquila_0 -pg 1 -lvl 1 -x 190 -y 150 -defaultsOSRD
+preplace inst axi_quad_spi_0 -pg 1 -lvl 3 -x 900 -y 470 -defaultsOSRD
+preplace netloc mig_7series_0_mmcm_locked 1 0 4 20 600 NJ 600 NJ 600 1060
+preplace netloc mig_7series_0_ui_addn_clk_0 1 0 4 20 240 390 270 740 580 1050
+preplace netloc mig_7series_0_ui_clk 1 1 3 390 10 NJ 10 1050
+preplace netloc mig_7series_0_ui_clk_sync_rst 1 0 4 10 610 NJ 610 NJ 610 1070
+preplace netloc reset_1 1 0 3 0J 50 NJ 50 750J
+preplace netloc rst_mig_7series_0_200M_peripheral_aresetn 1 0 3 10 60 370 70 710
+preplace netloc axi_quad_spi_0_io0_o 1 3 1 1080 440n
+preplace netloc io1_i_0_1 1 0 4 N 360 360 590 N 590 1040
+preplace netloc axi_quad_spi_0_sck_o 1 3 1 1080 470n
+preplace netloc axi_quad_spi_0_ss_o 1 3 1 1080 490n
+preplace netloc axi_periph_M00_AXI 1 2 1 720 70n
+preplace netloc axi_periph_M01_AXI 1 2 1 700 430n
+preplace netloc aquila_0_M_DEVICE_PORT 1 1 1 380 170n
+preplace netloc aquila_0_M_DMEM_PORT 1 1 1 N 150
+preplace netloc aquila_0_M_IMEM_PORT 1 1 1 N 130
 preplace netloc axi_uartlite_0_UART 1 3 1 NJ 80
-preplace netloc smartconnect_0_M00_AXI 1 2 1 710 170n
-preplace netloc aquila_0_M_DCACHE_PORT 1 1 1 N 150
-preplace netloc aquila_0_M_DEVICE_PORT 1 1 1 370 170n
 preplace netloc mig_7series_0_DDR3 1 3 1 NJ 210
-levelinfo -pg 1 -10 200 550 890 1070
-pagesize -pg 1 -db -bbox -sgen -160 0 1200 600
+preplace netloc smartconnect_0_M00_AXI 1 2 1 730 170n
+preplace netloc sys_diff_clock_1 1 0 3 NJ 280 NJ 280 730J
+levelinfo -pg 1 -20 190 550 900 1120
+pagesize -pg 1 -db -bbox -sgen -160 0 1250 700
 "
 }
 
@@ -521,7 +526,7 @@ pagesize -pg 1 -db -bbox -sgen -160 0 1200 600
 create_block_design_aquila_soc ""
 
 # Add a constraint file
-set str_xdc_folder "./${proj_name}/${proj_name}.srcs/constrs_1/new"
+set str_xdc_folder "${proj_name}/${proj_name}.srcs/constrs_1/new"
 file mkdir ${str_xdc_folder}
 set str_xdc_file_name ${proj_name}_wrapper.xdc
 set str_xdc_file_path ${str_xdc_folder}/${str_xdc_file_name}
@@ -529,6 +534,6 @@ close [ open ${str_xdc_file_path} w+ ]
 add_files -fileset constrs_1 ${str_xdc_file_path}
 write_constraint_file ${str_xdc_file_path}
 
-make_wrapper -files [get_files ./${proj_name}/${proj_name}.srcs/sources_1/bd/${proj_name}/${proj_name}.bd] -top
-add_files -norecurse ./${proj_name}/${proj_name}.srcs/sources_1/bd/${proj_name}/hdl/${proj_name}_wrapper.v
+make_wrapper -files [get_files ${proj_name}/${proj_name}.srcs/sources_1/bd/${proj_name}/${proj_name}.bd] -top
+add_files -norecurse ${proj_name}/${proj_name}.srcs/sources_1/bd/${proj_name}/hdl/${proj_name}_wrapper.v
 update_compile_order -fileset sources_1
