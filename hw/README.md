@@ -1,3 +1,4 @@
+# How to Create an Vivado Project Workspace for Aquila.
 This is the hardware source tree of the Aquila SoC.
 
 To create a complete Xilinx Vivado project workspace, simply download the source tree to a local directory, then run the following command under a DOS or Linux console:
