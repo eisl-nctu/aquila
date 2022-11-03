@@ -85,8 +85,8 @@ module aquila #
     // Ports of AXI Master Bus Interface M_IMEM_PORT
     input  mem_aclk,
     input  mem_aresetn,
-    output [C_M_IMEM_PORT_ID_WIDTH - 1 : 0] m_imem_port_awid,
-    output [C_M_IMEM_PORT_ADDR_WIDTH - 1 : 0] m_imem_port_awaddr,
+    output [C_M_IMEM_PORT_ID_WIDTH : 0] m_imem_port_awid,
+    output [C_M_IMEM_PORT_ADDR_WIDTH-1 : 0] m_imem_port_awaddr,
     output [7 : 0] m_imem_port_awlen,
     output [2 : 0] m_imem_port_awsize,
     output [1 : 0] m_imem_port_awburst,
@@ -94,22 +94,22 @@ module aquila #
     output [3 : 0] m_imem_port_awcache,
     output [2 : 0] m_imem_port_awprot,
     output [3 : 0] m_imem_port_awqos,
-    output [C_M_IMEM_PORT_AWUSER_WIDTH - 1 : 0] m_imem_port_awuser,
+    output [C_M_IMEM_PORT_AWUSER_WIDTH : 0] m_imem_port_awuser,
     output m_imem_port_awvalid,
     input  m_imem_port_awready,
-    output [C_M_IMEM_PORT_DATA_WIDTH - 1 : 0] m_imem_port_wdata,
-    output [C_M_IMEM_PORT_DATA_WIDTH / 8 - 1 : 0] m_imem_port_wstrb,
+    output [C_M_IMEM_PORT_DATA_WIDTH-1 : 0] m_imem_port_wdata,
+    output [C_M_IMEM_PORT_DATA_WIDTH/8-1 : 0] m_imem_port_wstrb,
     output m_imem_port_wlast,
-    output [C_M_IMEM_PORT_WUSER_WIDTH - 1 : 0] m_imem_port_wuser,
+    output [C_M_IMEM_PORT_WUSER_WIDTH : 0] m_imem_port_wuser,
     output m_imem_port_wvalid,
     input  m_imem_port_wready,
-    input  [C_M_IMEM_PORT_ID_WIDTH - 1 : 0] m_imem_port_bid,
+    input  [C_M_IMEM_PORT_ID_WIDTH : 0] m_imem_port_bid,
     input  [1 : 0] m_imem_port_bresp,
-    input  [C_M_IMEM_PORT_BUSER_WIDTH - 1 : 0] m_imem_port_buser,
+    input  [C_M_IMEM_PORT_BUSER_WIDTH : 0] m_imem_port_buser,
     input  m_imem_port_bvalid,
     output m_imem_port_bready,
-    output [C_M_IMEM_PORT_ID_WIDTH - 1 : 0] m_imem_port_arid,
-    output [C_M_IMEM_PORT_ADDR_WIDTH - 1 : 0] m_imem_port_araddr,
+    output [C_M_IMEM_PORT_ID_WIDTH : 0] m_imem_port_arid,
+    output [C_M_IMEM_PORT_ADDR_WIDTH-1 : 0] m_imem_port_araddr,
     output [7 : 0] m_imem_port_arlen,
     output [2 : 0] m_imem_port_arsize,
     output [1 : 0] m_imem_port_arburst,
@@ -117,20 +117,20 @@ module aquila #
     output [3 : 0] m_imem_port_arcache,
     output [2 : 0] m_imem_port_arprot,
     output [3 : 0] m_imem_port_arqos,
-    output [C_M_IMEM_PORT_ARUSER_WIDTH - 1 : 0] m_imem_port_aruser,
+    output [C_M_IMEM_PORT_ARUSER_WIDTH : 0] m_imem_port_aruser,
     output m_imem_port_arvalid,
     input  m_imem_port_arready,
-    input  [C_M_IMEM_PORT_ID_WIDTH - 1 : 0] m_imem_port_rid,
-    input  [C_M_IMEM_PORT_DATA_WIDTH - 1 : 0] m_imem_port_rdata,
+    input  [C_M_IMEM_PORT_ID_WIDTH : 0] m_imem_port_rid,
+    input  [C_M_IMEM_PORT_DATA_WIDTH-1 : 0] m_imem_port_rdata,
     input  [1 : 0] m_imem_port_rresp,
     input  m_imem_port_rlast,
-    input  [C_M_IMEM_PORT_RUSER_WIDTH - 1 : 0] m_imem_port_ruser,
+    input  [C_M_IMEM_PORT_RUSER_WIDTH : 0] m_imem_port_ruser,
     input  m_imem_port_rvalid,
     output m_imem_port_rready,
 
     // Ports of AXI Master Bus Interface M_DMEM_PORT
-    output [C_M_DMEM_PORT_ID_WIDTH - 1 : 0] m_dmem_port_awid,
-    output [C_M_DMEM_PORT_ADDR_WIDTH - 1 : 0] m_dmem_port_awaddr,
+    output [C_M_DMEM_PORT_ID_WIDTH : 0] m_dmem_port_awid,
+    output [C_M_DMEM_PORT_ADDR_WIDTH : 0] m_dmem_port_awaddr,
     output [7 : 0] m_dmem_port_awlen,
     output [2 : 0] m_dmem_port_awsize,
     output [1 : 0] m_dmem_port_awburst,
@@ -138,22 +138,22 @@ module aquila #
     output [3 : 0] m_dmem_port_awcache,
     output [2 : 0] m_dmem_port_awprot,
     output [3 : 0] m_dmem_port_awqos,
-    output [C_M_DMEM_PORT_AWUSER_WIDTH - 1 : 0] m_dmem_port_awuser,
+    output [C_M_DMEM_PORT_AWUSER_WIDTH : 0] m_dmem_port_awuser,
     output m_dmem_port_awvalid,
     input  m_dmem_port_awready,
-    output [C_M_DMEM_PORT_DATA_WIDTH - 1 : 0] m_dmem_port_wdata,
-    output [C_M_DMEM_PORT_DATA_WIDTH / 8 - 1 : 0] m_dmem_port_wstrb,
+    output [C_M_DMEM_PORT_DATA_WIDTH-1 : 0] m_dmem_port_wdata,
+    output [C_M_DMEM_PORT_DATA_WIDTH/8-1 : 0] m_dmem_port_wstrb,
     output m_dmem_port_wlast,
-    output [C_M_DMEM_PORT_WUSER_WIDTH - 1 : 0] m_dmem_port_wuser,
+    output [C_M_DMEM_PORT_WUSER_WIDTH : 0] m_dmem_port_wuser,
     output m_dmem_port_wvalid,
     input  m_dmem_port_wready,
-    input  [C_M_DMEM_PORT_ID_WIDTH - 1 : 0] m_dmem_port_bid,
+    input  [C_M_DMEM_PORT_ID_WIDTH : 0] m_dmem_port_bid,
     input  [1 : 0] m_dmem_port_bresp,
-    input  [C_M_DMEM_PORT_BUSER_WIDTH - 1 : 0] m_dmem_port_buser,
+    input  [C_M_DMEM_PORT_BUSER_WIDTH : 0] m_dmem_port_buser,
     input  m_dmem_port_bvalid,
     output m_dmem_port_bready,
-    output [C_M_DMEM_PORT_ID_WIDTH - 1 : 0] m_dmem_port_arid,
-    output [C_M_DMEM_PORT_ADDR_WIDTH - 1 : 0] m_dmem_port_araddr,
+    output [C_M_DMEM_PORT_ID_WIDTH : 0] m_dmem_port_arid,
+    output [C_M_DMEM_PORT_ADDR_WIDTH-1 : 0] m_dmem_port_araddr,
     output [7 : 0] m_dmem_port_arlen,
     output [2 : 0] m_dmem_port_arsize,
     output [1 : 0] m_dmem_port_arburst,
@@ -161,14 +161,14 @@ module aquila #
     output [3 : 0] m_dmem_port_arcache,
     output [2 : 0] m_dmem_port_arprot,
     output [3 : 0] m_dmem_port_arqos,
-    output [C_M_DMEM_PORT_ARUSER_WIDTH - 1 : 0] m_dmem_port_aruser,
+    output [C_M_DMEM_PORT_ARUSER_WIDTH : 0] m_dmem_port_aruser,
     output m_dmem_port_arvalid,
     input  m_dmem_port_arready,
-    input  [C_M_DMEM_PORT_ID_WIDTH - 1 : 0] m_dmem_port_rid,
-    input  [C_M_DMEM_PORT_DATA_WIDTH - 1 : 0] m_dmem_port_rdata,
+    input  [C_M_DMEM_PORT_ID_WIDTH : 0] m_dmem_port_rid,
+    input  [C_M_DMEM_PORT_DATA_WIDTH-1 : 0] m_dmem_port_rdata,
     input  [1 : 0] m_dmem_port_rresp,
     input  m_dmem_port_rlast,
-    input  [C_M_DMEM_PORT_RUSER_WIDTH - 1 : 0] m_dmem_port_ruser,
+    input  [C_M_DMEM_PORT_RUSER_WIDTH : 0] m_dmem_port_ruser,
     input  m_dmem_port_rvalid,
     output m_dmem_port_rready,
 
@@ -196,24 +196,26 @@ module aquila #
     output  m_device_port_rready
 );
 
+localparam MAX_CLSIZE    = `CLP;    // Size of a cache line in bits.
+
 // Declaration of local signals.
 wire                                      RISCV_rst;
 wire                                      M_IMEM_strobe, M_IMEM_done;
 wire                                      M_DMEM_strobe, M_DMEM_done;
 wire                                      M_DMEM_rw;
-wire [C_M_IMEM_PORT_DATA_WIDTH - 1 : 0]   M_IMEM_addr;
-wire [C_M_DMEM_PORT_DATA_WIDTH - 1 : 0]   M_DMEM_addr;
-wire [255 : 0] M_IMEM_datain, M_DMEM_datain, M_DMEM_dataout;
+wire [C_M_IMEM_PORT_DATA_WIDTH-1 : 0]     M_IMEM_addr;
+wire [C_M_DMEM_PORT_DATA_WIDTH-1 : 0]     M_DMEM_addr;
+wire [MAX_CLSIZE-1 : 0]                   M_IMEM_datain, M_DMEM_datain, M_DMEM_dataout;
 wire [7 : 0]                              M_IMEM_burst_len = `CLP/32; // in XLEN-bit words
 wire [7 : 0]                              M_DMEM_burst_len = `CLP/32; // in XLEN-bit words
 
 wire                                      M_DEVICE_strobe;
-wire [C_M_DEVICE_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_addr;
+wire [C_M_DEVICE_PORT_DATA_WIDTH-1 : 0]   M_DEVICE_addr;
 wire                                      M_DEVICE_rw;
 wire [C_M_DEVICE_PORT_DATA_WIDTH/8-1 : 0] M_DEVICE_byte_enable;
-wire [C_M_DEVICE_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_core2dev_data;
+wire [C_M_DEVICE_PORT_DATA_WIDTH-1 : 0]   M_DEVICE_core2dev_data;
 wire                                      M_DEVICE_data_ready;
-wire [C_M_DEVICE_PORT_DATA_WIDTH - 1 : 0] M_DEVICE_dev2core_data;
+wire [C_M_DEVICE_PORT_DATA_WIDTH-1 : 0]   M_DEVICE_dev2core_data;
 
 // The CPU reset signal.
 assign RISCV_rst = ~device_aresetn;

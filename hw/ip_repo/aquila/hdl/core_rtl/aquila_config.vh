@@ -53,8 +53,8 @@
 // Parameters and Integers
 //==============================================================================================
 
-// Target Board
-`define KC705
+// The target board can be ARTY or KC705, the MACRO is defined globally
+//   in the TCL script when the project was created
 
 `ifdef ARTY
     `define CLP   128             // Cache line size
@@ -73,7 +73,7 @@
 `endif
 
 // Tightly-Coupled Memory Size
-`define TCM_SIZE_IN_WORDS 32768   // 128KB
+`define TCM_SIZE_IN_WORDS 16384   // 64KB
 
 // Instruction and Data Caches
 `define ICACHE_SIZE 16  // Instruction cache size in KB

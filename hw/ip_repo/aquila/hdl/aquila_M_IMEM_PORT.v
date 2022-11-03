@@ -88,7 +88,7 @@ module aquila_M_IMEM_PORT #
     input                           M_AXI_ARESETN, // AXI reset singal (Active Low).
 
     // Write Address Channel Signals.
-    output [AXI_ID_WIDTH-1   : 0]   M_AXI_AWID,    // Write Addr ID.
+    output [AXI_ID_WIDTH : 0]       M_AXI_AWID,    // Write Addr ID.
     output [AXI_ADDR_WIDTH-1 : 0]   M_AXI_AWADDR,  // Write Address.
     output [7 : 0]                  M_AXI_AWLEN,   // The # of beats in a burst.
     output [2 : 0]                  M_AXI_AWSIZE,  // The size of a beat in a burst.
@@ -97,7 +97,7 @@ module aquila_M_IMEM_PORT #
     output [3 : 0]                  M_AXI_AWCACHE, // Memory type.
     output [2 : 0]                  M_AXI_AWPROT,  // Protection (privilege) type.
     output [3 : 0]                  M_AXI_AWQOS,   // QoS identifier for write op.
-    output [AXI_AWUSER_WIDTH-1 : 0] M_AXI_AWUSER,  // User-defined.
+    output [AXI_AWUSER_WIDTH : 0]   M_AXI_AWUSER,  // User-defined.
     output                          M_AXI_AWVALID, // Write addr/ctrl are valid.
     input                           M_AXI_AWREADY, // Slave ready to fetch addr.
 
@@ -107,17 +107,17 @@ module aquila_M_IMEM_PORT #
     output [AXI_DATA_WIDTH/8-1 : 0] M_AXI_WSTRB,   // Write byte-enable.
     output                          M_AXI_WVALID,  // Write data is valid.
     input                           M_AXI_WREADY,  // Salve ready to fetch data.
-    output [AXI_WUSER_WIDTH-1 : 0]  M_AXI_WUSER,   // User-defined.
+    output [AXI_WUSER_WIDTH : 0]    M_AXI_WUSER,   // User-defined.
 
     // Write Response Channel Signals.
-    input  [AXI_ID_WIDTH-1 : 0]     M_AXI_BID,     // Write response ID.
+    input  [AXI_ID_WIDTH : 0]       M_AXI_BID,     // Write response ID.
     input  [1 : 0]                  M_AXI_BRESP,   // Write response.
-    input  [AXI_BUSER_WIDTH-1 : 0]  M_AXI_BUSER,   // User-defined.
+    input  [AXI_BUSER_WIDTH : 0]    M_AXI_BUSER,   // User-defined.
     input                           M_AXI_BVALID,  // Slave sent write response.
     output                          M_AXI_BREADY,  // Master ready for the response.
 
     // Read Address Channel Signals.
-    output [AXI_ID_WIDTH-1 : 0]     M_AXI_ARID,    // Read Addr ID.
+    output [AXI_ID_WIDTH : 0]       M_AXI_ARID,    // Read Addr ID.
     output [AXI_ADDR_WIDTH-1 : 0]   M_AXI_ARADDR,  // Read Address.
     output [7 : 0]                  M_AXI_ARLEN,   // The # of beats in a burst.
     output [2 : 0]                  M_AXI_ARSIZE,  // The size of a beat in a burst.
@@ -128,16 +128,16 @@ module aquila_M_IMEM_PORT #
     output [3 : 0]                  M_AXI_ARQOS,   // QoS identifier for write op.
     output                          M_AXI_ARVALID, // Read addr/ctrl are valid.
     input                           M_AXI_ARREADY, // Slave ready to fetch addr.
-    output [AXI_ARUSER_WIDTH-1 : 0] M_AXI_ARUSER,  // User-defined.
+    output [AXI_ARUSER_WIDTH : 0]   M_AXI_ARUSER,  // User-defined.
 
     // Read Data Channel Signals.
-    input  [AXI_ID_WIDTH-1 : 0]     M_AXI_RID,     // Read data ID.
+    input  [AXI_ID_WIDTH : 0]       M_AXI_RID,     // Read data ID.
     input                           M_AXI_RLAST,   // Flag last transfer in a burst.
     input  [AXI_DATA_WIDTH-1 : 0]   M_AXI_RDATA,   // Read data.
     input  [1 : 0]                  M_AXI_RRESP,   // Read response.
     input                           M_AXI_RVALID,  // Read data is valid.
     output                          M_AXI_RREADY,  // Master ready to fetch data.
-    input  [AXI_RUSER_WIDTH-1 : 0]  M_AXI_RUSER    // User-defined.
+    input  [AXI_RUSER_WIDTH : 0]    M_AXI_RUSER    // User-defined.
 );
 
 // Declare local parameters.

@@ -3,7 +3,7 @@
   <spirit:vendor>xilinx.com</spirit:vendor>
   <spirit:library>user</spirit:library>
   <spirit:name>aquila</spirit:name>
-  <spirit:version>1.0</spirit:version>
+  <spirit:version>1.2</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>M_IMEM_PORT</spirit:name>
@@ -912,32 +912,6 @@
       </spirit:parameters>
     </spirit:busInterface>
     <spirit:busInterface>
-      <spirit:name>M_DMEM_PORT_CLK</spirit:name>
-      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
-      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
-      <spirit:slave/>
-      <spirit:portMaps>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>CLK</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>mem_aclk</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-      </spirit:portMaps>
-      <spirit:parameters>
-        <spirit:parameter>
-          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_DMEM_PORT_CLK.ASSOCIATED_BUSIF">M_DMEM_PORT:M_IMEM_PORT</spirit:value>
-        </spirit:parameter>
-        <spirit:parameter>
-          <spirit:name>ASSOCIATED_RESET</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_DMEM_PORT_CLK.ASSOCIATED_RESET">mem_aresetn</spirit:value>
-        </spirit:parameter>
-      </spirit:parameters>
-    </spirit:busInterface>
-    <spirit:busInterface>
       <spirit:name>M_IMEM_PORT_RST</spirit:name>
       <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0"/>
       <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl" spirit:version="1.0"/>
@@ -960,7 +934,7 @@
       </spirit:parameters>
     </spirit:busInterface>
     <spirit:busInterface>
-      <spirit:name>M_IMEM_PORT_CLK</spirit:name>
+      <spirit:name>M_MEM_PORT_CLK</spirit:name>
       <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
       <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
       <spirit:slave/>
@@ -977,11 +951,11 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>ASSOCIATED_BUSIF</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_IMEM_PORT_CLK.ASSOCIATED_BUSIF">M_IMEM_PORT:M_DMEM_PORT</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_MEM_PORT_CLK.ASSOCIATED_BUSIF">M_IMEM_PORT:M_DMEM_PORT</spirit:value>
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>ASSOCIATED_RESET</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_IMEM_PORT_CLK.ASSOCIATED_RESET">mem_aresetn</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_MEM_PORT_CLK.ASSOCIATED_RESET">mem_aresetn</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -1062,12 +1036,6 @@
         <spirit:fileSetRef>
           <spirit:localName>xilinx_verilogsynthesis_view_fileset</spirit:localName>
         </spirit:fileSetRef>
-        <spirit:parameters>
-          <spirit:parameter>
-            <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>16ae6f96</spirit:value>
-          </spirit:parameter>
-        </spirit:parameters>
       </spirit:view>
       <spirit:view>
         <spirit:name>xilinx_verilogbehavioralsimulation</spirit:name>
@@ -1081,7 +1049,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>93fa6d60</spirit:value>
+            <spirit:value>b7b6cb55</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1160,7 +1128,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1177,7 +1145,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_awid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_awid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -1319,7 +1287,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_AWUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_AWUSER_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1422,7 +1390,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_WUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_WUSER_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1478,7 +1446,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1495,7 +1463,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_bid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_bid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -1525,7 +1493,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_BUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_BUSER_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1581,7 +1549,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1598,7 +1566,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_arid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_arid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -1740,7 +1708,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ARUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ARUSER_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1796,7 +1764,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1813,7 +1781,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_rid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_imem_port_rid" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH&apos;)) >0">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -1879,7 +1847,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_RUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_IMEM_PORT_RUSER_WIDTH&apos;))">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1935,7 +1903,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -1962,7 +1930,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ADDR_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ADDR_WIDTH&apos;))">32</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2094,7 +2062,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_AWUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_AWUSER_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2197,7 +2165,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_WUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_WUSER_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2253,7 +2221,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2300,7 +2268,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_BUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_BUSER_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2356,7 +2324,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2515,7 +2483,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ARUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ARUSER_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2571,7 +2539,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_ID_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2654,7 +2622,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_RUSER_WIDTH&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_DMEM_PORT_RUSER_WIDTH&apos;))">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -3105,7 +3073,7 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_M_IMEM_PORT_ID_WIDTH</spirit:name>
         <spirit:displayName>C M IMEM PORT ID WIDTH</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH">1</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH">0</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_M_IMEM_PORT_ADDR_WIDTH</spirit:name>
@@ -3164,8 +3132,14 @@
     <spirit:fileSet>
       <spirit:name>xilinx_verilogsynthesis_view_fileset</spirit:name>
       <spirit:file>
+        <spirit:name>hdl/xdc/aquila_ooc.xdc</spirit:name>
+        <spirit:userFileType>xdc</spirit:userFileType>
+        <spirit:userFileType>USED_IN_out_of_context</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>hdl/core_rtl/aquila_config.vh</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:isIncludeFile>true</spirit:isIncludeFile>
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/core_rtl/alu.v</spirit:name>
@@ -3282,7 +3256,7 @@
       <spirit:file>
         <spirit:name>hdl/aquila.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_b6b5e860</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_e2a55bd8</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -3290,6 +3264,7 @@
       <spirit:file>
         <spirit:name>hdl/core_rtl/aquila_config.vh</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:isIncludeFile>true</spirit:isIncludeFile>
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/core_rtl/alu.v</spirit:name>
@@ -3439,7 +3414,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/aquila_v1_0.tcl</spirit:name>
+        <spirit:name>xgui/aquila_v1_2.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_24d590c9</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
@@ -3453,7 +3428,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>A RISC-V Processor Core</spirit:description>
+  <spirit:description>A RISC-V RV32IMA Processor Core</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>C_M_DMEM_PORT_ID_WIDTH</spirit:name>
@@ -3543,7 +3518,7 @@
     <spirit:parameter>
       <spirit:name>C_M_IMEM_PORT_ID_WIDTH</spirit:name>
       <spirit:displayName>C_M_IMEM_PORT_AWUSER_WIDTH</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH">1</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_IMEM_PORT_ID_WIDTH">0</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>C_M_IMEM_PORT_ADDR_WIDTH</spirit:name>
@@ -3584,174 +3559,22 @@
   <spirit:vendorExtensions>
     <xilinx:coreExtensions>
       <xilinx:supportedFamilies>
+        <xilinx:family xilinx:lifeCycle="Production">artix7</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">artix7l</xilinx:family>
         <xilinx:family xilinx:lifeCycle="Production">kintex7</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">kintex7l</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">zynq</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">zynquplus</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">virtexuplus</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">kintexuplus</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Production">artixuplus</xilinx:family>
       </xilinx:supportedFamilies>
       <xilinx:taxonomies>
         <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>aquila</xilinx:displayName>
-      <xilinx:coreRevision>234</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2022-09-30T00:23:52Z</xilinx:coreCreationDateTime>
-      <xilinx:tags>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@86d0fc5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3cf9faaa_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b28a743_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@12293a5c_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1adb7313_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4fed81aa_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@16d98d8c_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3aae3411_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@75abe983_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@326e6da6_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@37cdc684_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@54566f8a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d0be706_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b56d2c0_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@35ba6274_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@13182c5a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3e040d9d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d0bef08_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@141430e4_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@74d38470_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@40eb3af_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@26fed11e_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7bc836d5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2a603188_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1eff7061_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@32749a20_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3598eb88_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b88d447_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@78897951_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@29164408_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1e2591c2_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@31667a47_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@25aa76c1_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e13ee7a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@16dc3362_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@492e41bc_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@150589c0_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6c2e9972_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@52edce4d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@45555c05_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@75ee840a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2446fae5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d77200d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@27190ea2_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@338cb6a8_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@791e0318_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@255a2635_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@623a28f_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7453d6e9_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5df61f56_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@61ffe88a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@333188af_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f737e96_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e9c3e1f_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@18e1255d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5dfbc82c_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4363d218_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d71678_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ce5a742_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ebaba3d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e587805_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@30ebbd3d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@48a735b_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2bd0f99_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c491e24_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@645a6dd_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c046a34_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2ccbbcf1_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2766425e_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@71e70142_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3c3a8f76_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5488ce3_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f9d96e5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5212638_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@53213ed4_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7a28cf0e_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@244d0cac_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@619d5d16_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@513900c2_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@79d5f937_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c1d4fd_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@25564fa9_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@15c2693b_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@cde36c9_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a0cb824_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@49318f6b_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@119e09c8_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2744efff_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7607ba49_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@658c6b44_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@fb27ad5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@47de3b1a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7622f2e_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@76549041_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@61d3ce04_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a3b42e5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@ef82496_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3605aaa5_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ce5ad30_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@552215e0_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@42785475_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ac86756_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f217bb8_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ba2a324_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@dfbfcb6_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5825478_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@32bd686f_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2eafefb4_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@607bd48b_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ed5f9b6_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@54c8517e_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@722937f4_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@33199ff0_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d41f8b9_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7af1767b_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@395c634_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b20d166_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f022376_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@118ad2b3_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@37211894_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d39ea3_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@332b9dd9_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@377ffc5a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f5218dd_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@490c882c_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7b730571_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@60bac794_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@794185db_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f0d5c38_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@56d03ea2_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@60207970_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@41b709a_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@10d80e1c_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d5a380f_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a601cab_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7579870f_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7113afb_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e6e84d_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@11ae9693_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@463e6885_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6130eb40_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@79ea9906_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@763f6d96_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@299b1075_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@253df897_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f2b536e_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@15321ee4_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ffac8e3_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@7216e285_ARCHIVE_LOCATION">d:/research/riscv/code/aquila_soc/kc705_build/ip_repo/aquila</xilinx:tag>
-      </xilinx:tags>
+      <xilinx:coreRevision>241</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2022-11-02T04:28:46Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
-    <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2022.1</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="5cedf788"/>
-      <xilinx:checksum xilinx:scope="addressSpaces" xilinx:value="84af0654"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="51c1b493"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="34fae76d"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="b9da5b82"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="d94ff406"/>
-    </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>
