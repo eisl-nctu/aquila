@@ -12,6 +12,11 @@
 //    Replace strcpy(), strncpy(), strncmp(), and strcmp() with code extracted
 //    from the RISC-V port of Newlib at https://github.com/riscv/riscv-newlib.
 //    These functions boost DMIPS by 28.5%.
+//
+//  Sep/15/2023, by Hao-Yu Yang:
+//    Fix a bug in mempcy(). The original code fails when there are 0s in the
+//    memory blocks to be copied.
+//  
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -222,8 +227,7 @@ void *memcpy(void *d, void *s, size_t n)
 
     // Copying trailing bytes for aligned memory block, or the entire
     // memory block if not aligned.
-    while ((*d0++ = *s0++) && n-- > 0) ;
-    if (++n == 0) *d0 = 0;
+    while (n-- > 0) *d0++ = *s0++;
 
     return d;
 }
