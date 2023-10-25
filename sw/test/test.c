@@ -72,7 +72,7 @@ void sleep(int msec)
 
 void volatile timer_isr()
 {
-    printf("\nISR responded! Wait a few seconds...\n\n");
+    printf("\n<<ISR responded!>>\n\n");
 
     asm volatile ("addi t0, zero, 0");
     asm volatile ("csrw mie, zero");
@@ -102,18 +102,15 @@ unsigned int addr = 0;
 
 int main(void)
 {
-    float ver = 1.0;
+    float ver = 1.02;
 
-    printf("Hello, Aquila %.1f!\n", ver);
+    printf("Hello, Aquila %.3f!\n", ver);
     printf("The address of 'ver' is 0x%X\n\n", (unsigned) &ver);
     dram_test();
 
-    printf("First time tick = %d\n\n", clock());
     malloc_test(5000);
-    printf("\nSecond time tick = %d\n\n", clock());
 
     timer_isr_test();
-    printf("Waiting for timer ISR ...\n");
     // busy waiting ...
     sleep(5000);
 
@@ -126,21 +123,23 @@ volatile int *trigger = ((int volatile *) 0xF0000010);
 
 int dram_test(void)
 {
-    float ver = 1.0;
     unsigned long *dram = (unsigned long *) 0x80000000;
+    int idx;
 
-    printf("Hello, Aquila %.1f!\n", ver);
+    printf("\nDRAM writing test:\n");
 
-    for (int idx = 0; idx < (256*4)*2; idx++)
+    for (idx = 0; idx < 256; idx++)
+    {
         switch (idx % 4) {
             case 0: dram[idx] = 0x00001111; break;
             case 1: dram[idx] = 0x22223333; break;
             case 2: dram[idx] = 0x44445555; break;
             case 3: dram[idx] = 0x66667777; break;
         }
+    }
 
-    *trigger = 1;
-    printf("[0x80000000] = 0x%x\n", dram[3]);
+    *trigger = 1, idx = 3;
+    printf("[0x%x] = 0x%x\n", &(dram[idx]), dram[idx]);
 
     return 0;
 }
@@ -149,7 +148,8 @@ void malloc_test(int nwords)
 {
     int *buf, idx;
 
-    printf("Memory allocation test of %d words:\n", nwords);
+    printf("\nMemory allocation test of %d words:\n", nwords);
+    printf("First time tick = %d\n", clock());
     if ((buf = (int *) malloc(nwords*4)) == NULL)
     {
         printf("Error: Out of memory.\n");
@@ -168,32 +168,24 @@ void malloc_test(int nwords)
     }
     free(buf);
     printf("Buffer freed.\n");
+    printf("Second time tick = %d\n", clock());
 }
 
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 void timer_isr_test()
 {
-    char str[10];
-    int n;
-
-    printf("Timer ISR test:\n");
+    printf("\nTimer ISR test:\n");
+    printf("Waiting for timer ISR ...\n");
 
     // Set the ISR address.
     install_isr((unsigned int) timer_isr);
 
-    // Input the timer interrupt duration.
-    do
-    {
-        printf("Input the interrupt duration (in msec): ");
-        fgets(str, sizeof(str), stdin);
-        n = atoi(str);
-    } while (n == 0);
-
-    // Set the interrupt duration.
-    set_timer_period(n);
+    // Set the interrupt duration to 1 sec.
+    set_timer_period(1000);
 
     // Enable the timer interrupts.
     enable_core_timer();
 }
 #pragma GCC pop_options
+

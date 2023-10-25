@@ -19,7 +19,7 @@ GCCVERSION = $(shell $(CC) --version | grep gcc | sed 's/^.* //g')
 LIBC = ../elibc
 LIBC_OBJS = $(LIBC)/crt0.o $(LIBC)/stdio.o $(LIBC)/stdlib.o $(LIBC)/string.o $(LIBC)/time.o $(LIBC)/uart.o
 
-CCFLAGS = -Wall -O2 -I$(LIBC) -fomit-frame-pointer -fno-builtin -march=rv32ima -mstrict-align -mabi=ilp32
+CCFLAGS = -Wall -O2 -I$(LIBC) -fomit-frame-pointer -fno-builtin -march=rv32ima_zicsr_zifencei -mstrict-align -mabi=ilp32
 LDFLAGS = -L. -T$*.ld -Map=$*.map
 LD_SOFT_FP = -L$(RISCV)/lib/gcc/riscv32-unknown-elf/$(GCCVERSION) -lgcc
 
