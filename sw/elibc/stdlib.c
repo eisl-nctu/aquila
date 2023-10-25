@@ -13,7 +13,6 @@
 //     was sometimes updated without clearing the used/unused flag.
 //     The second bug is that 'curr_top' can somtimes point to itself.
 //
-//  None.
 // -----------------------------------------------------------------------------
 //  License information:
 //

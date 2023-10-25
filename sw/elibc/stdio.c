@@ -8,16 +8,18 @@
 //  functions for the uart device. Simple FAT32 file system support for SD card
 //  will be added in the future.
 //
-//  The supported formating characters in printf() are x, X, d, f, and s.
-//  for 'f' format, you can specify a single-digit decimal points. For example,
-//  to print a float with four decimal points, you can use "%.4f" in the
-//  formating string. All other formating characters l, and numbers will be skipped.
+//  The supported formatting characters in printf() are x, X, d, f, and s.
+//  Width-formating descriptors also work. The 'l' descriptors only works for
+//  'd'. We try to keep the code small.
 // -----------------------------------------------------------------------------
 //  Revision information:
 //
 //  Sep/23/2022, by Chun-Jen Tsai
 //     Fixed a rounding bug in printf() when printing a floating number with
 //     a fractional part close to 1.0 (e.g. 0.99....).
+//
+//  Oct/20/2023, by Chun-Jen Tsai
+//     Added support for width-formatting digits, e.g. "%016.9f", "%4d", etc.
 // -----------------------------------------------------------------------------
 //  License information:
 //
@@ -84,7 +86,7 @@ char *fgets(char *s, int n, FILE *stream)
     char *rtn = s;
     if (stream != stdin)
     {
-        fputs("\nfgets() only supports input from stdin.\n\n", stdin);
+        fputs("\nfgets() only supports input from stdin.\n\n", stdout);
         rtn = NULL;
     }
     else
@@ -112,7 +114,7 @@ int fputs(const char *str, FILE *stream)
 {
     if (stream != stdout)
     {
-        fputs("\nfgets() only supports input from stdin.\n", stdin);
+        fputs("\nfputs() only supports output to stdout.\n", stdout);
     }
     else
     {
@@ -121,19 +123,16 @@ int fputs(const char *str, FILE *stream)
     return putchar('\n');
 }
 
-void putd(int num, int prefix_zeros, int positive)
+void putd(int num, int width, int prefix_zeros, int is_unsigned)
 {
     unsigned int n, divisor = 1000000000; /* only for 32-bit integer */
     unsigned int digit, leading_zero = 1;
+    int idx, negative = 0;
+    char stemp[16];
 
-    if (num == 0)
-    {
-        putchar('0');
-        return;
-    }
-    else if (!positive && num < 0) num = -num, putchar('-');
+    if (!is_unsigned && num < 0) num = -num, negative = 1, width--;
+    idx = 0;
     n = (unsigned) num;
-
     do
     {
          digit = n / divisor;
@@ -143,98 +142,166 @@ void putd(int num, int prefix_zeros, int positive)
              n = n - digit * divisor;
          }
          divisor /= 10;
-         if ((!leading_zero) || prefix_zeros) putchar(digit + '0');
+         if (!leading_zero) stemp[idx++] = digit + '0';
     } while (divisor);
+    if (leading_zero) idx = 1, stemp[0] = '0';
+    stemp[idx] = '\0';
+
+    if (prefix_zeros)
+    {
+        if (negative) putchar('-');
+        while (--width >= idx) putchar('0');
+    }
+    else
+    {
+        while (--width >= idx) putchar(' ');
+        if (negative) putchar('-');
+    }
+    for (n = 0; n < idx; n++) putchar(stemp[n]);
 }
 
-void putx(unsigned int num, int upper_case, int prefix_zeros)
+void putx(unsigned int num, int width, int prefix_zeros, int upper_case)
 {
     char *HEX[2] = { "0123456789abcdef", "0123456789ABCDEF" };
-    int digit, leading_zero = 1;
+    int digit, leading_zero = 1, idx, n;
+    char stemp[12];
 
+    idx = 0;
     upper_case = upper_case % 2;
-    for (int idx = 8; idx > 0; idx --) /* only for 32-bit integer */
+    for (n = 8; n > 0; n--) /* only for 32-bit integer */
     {
-        digit = num >> ((idx-1)*4);
+        digit = num >> ((n-1)*4);
         if (digit)
         {
             leading_zero = 0;
-            num = (num << ((9 - idx)*4)) >> ((9 - idx)*4);
+            num = (num << ((9 - n)*4)) >> ((9 - n)*4);
         }
-        if ((!leading_zero) || prefix_zeros) putchar(HEX[upper_case][digit]);
+        if ((!leading_zero) || prefix_zeros) stemp[idx++] = HEX[upper_case][digit];
     }
+    stemp[idx] = '\0';
+
+    while (--width >= idx) (prefix_zeros)? putchar('0') : putchar(' ');
+    for (n = 0; n < idx; n++) putchar(stemp[n]);
 }
 
-void putf(double f, int ndecimal)
+void putld(int64_t num, int width, int prefix_zeros, int is_unsigned)
 {
-    double num, rounding = 0.5;
-    int integer, fractions;
-    int idx, power = 1;
+    uint64_t n, divisor = 100000000000000000LL; /* good for 64-bit integer */
+    unsigned int digit, leading_zero = 1;
+    int idx, negative = 0;
+    char stemp[24];
 
-    for (idx = 0; idx < ndecimal; idx++) rounding /= 10.0;
-    if (f < 0.0) f = -f, putchar('-');
+    if (!is_unsigned && num < 0) num = -num, negative = 1, width--;
+    n = (uint64_t) num;
+    idx = 0;
+    do
+    {
+         digit = n / divisor;
+         if (digit)
+         {
+             leading_zero = 0;
+             n = n - digit * divisor;
+         }
+         divisor /= 10;
+         if (!leading_zero) stemp[idx++] = digit + '0';
+    } while (divisor);
+    if (leading_zero) idx = 1, stemp[0] = '0';
+    stemp[idx] = '\0';
+
+    if (prefix_zeros)
+    {
+        if (negative) putchar('-');
+        while (--width >= idx) putchar('0');
+    }
+    else
+    {
+        while (--width >= idx) putchar(' ');
+        if (negative) putchar('-');
+    }
+    for (n = 0; n < idx; n++) putchar(stemp[n]);
+}
+
+void putf(double f, int width, int prefix_zeros, int ndecimal)
+{
+    double num, rounding = 0.5, power = 1.0;
+    int integer;
+    uint64_t fractions;
+    int idx, itemp, negative = 0;
+
+    for (idx = 0; idx < ndecimal; idx++)
+    {
+        rounding /= 10.0;
+        power *= 10.0;
+    }
+
+    if (f < 0.0) f = -f, negative = 1;
     num = f + rounding;
     integer = (int) num; /* only an approximation of floor(). */
-    for (idx = 0; idx < ndecimal; idx++) power = power * 10;
-    fractions = (int) ((num - (double) integer)*power);
+    fractions = (uint64_t) ((num - (double) integer)*power);
+    integer = (negative)? -1 * integer : integer;
+
     for (idx = ndecimal; idx > 0; idx--)
     {
         if (fractions / power != 0) break;
         power = power / 10;
     }
-    (integer)? putd(integer, 0, 1) : putchar('0');
-    putchar('.'); putd(fractions, ndecimal - idx - 1, 1);
+    itemp = width-ndecimal-1;
+    width = (itemp > 0)? itemp : 0;
+    putd(integer, width, prefix_zeros, 0);
+    putchar('.');
+    putld(fractions, ndecimal, 1, 1);
 }
 
 int printf(char *fmt, ...)
 {
     char *str;
     va_list ap;
-    int nd = 6, positive = 0;
-    int prefix_zeros = 0;
+    int nd = 6, nd_tmp, prefix_zeros, width;
 
     for (va_start(ap, fmt); *fmt; fmt++)
     {
         if (*fmt == '%')
         {
-            fmt++;
+            fmt++, prefix_zeros = width = 0;
 
             if (*fmt == '0') prefix_zeros = 1;
-            while (*fmt >= '0' && *fmt <= '9') fmt++; /* skip, do nothing */
-            if (*fmt == 'u')
+            while (*fmt >= '0' && *fmt <= '9')
             {
-                positive = 1;
+                width = width * 10 + (*fmt - '0');
                 fmt++;
             }
             if (*fmt == 'l') fmt++; /* skip, do nothing */
             if (*fmt == '.')
             {
-                fmt++;
-                nd = (*fmt - '0') % 10;
-                fmt++;
-                while (*fmt >= '0' && *fmt <= '9') fmt++; /* skip, do nothing */
+                fmt++, nd_tmp = 0;
+                while (*fmt >= '0' && *fmt <= '9')
+                {
+                    nd_tmp = nd_tmp * 10 + (*fmt - '0');
+                    fmt++;
+                }
+                nd = nd_tmp;
             }
 
             switch(*fmt)
             {
             case 'x':
-                putx(va_arg(ap, int), 0, prefix_zeros);
+                putx(va_arg(ap, int), width, prefix_zeros, 0);
                 break;
 
             case 'X':
-                putx(va_arg(ap, int), 1, prefix_zeros);
+                putx(va_arg(ap, int), width, prefix_zeros, 1);
                 break;
 
             case 'd':
-                putd(va_arg(ap, int), 0, positive);
+                putd(va_arg(ap, int), width, prefix_zeros, 0 /* signed */);
                 break;
 
             case 'u':
-                putd(va_arg(ap, unsigned), 0, 1);
+                putd(va_arg(ap, unsigned), width, prefix_zeros, 1 /* unsigned */);
                 break;
 
             case 'f':
-                putf(va_arg(ap, double), nd);
+                putf(va_arg(ap, double), width, prefix_zeros, nd);
                 break;
 
             case 's':
